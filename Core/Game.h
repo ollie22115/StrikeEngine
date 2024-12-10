@@ -14,4 +14,6 @@ private:
 		COMBAT = 2,
 		RESULTS_SCREEN = 3
 	};
+
+	
 };

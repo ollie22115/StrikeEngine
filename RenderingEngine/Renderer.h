@@ -5,16 +5,18 @@
 #include "Scene.h"
 
 //the engine that handles rendering graphics to the screen
-class RenderingEngine {
+class SceneRenderer {
 	//TODO!!!
 public:
-	RenderingEngine();
+	SceneRenderer();
 
-	bool loadScene();
+	bool loadScene(Scene* scene);
 
-	void onDraw();
+	void drawScene();
 
-	void setUniformf(const std::string& uniformName, float value);
+	inline Program& getProgram() { return program; }
+
+	~SceneRenderer();
 
 private:
 	Scene* scene;

@@ -7,8 +7,11 @@ TODO:
 	-glad
 	-stb_image
 	
-	-VectorsAndMatrices
 	-GLP
+
+2: figure out how input is going to work
+	-bitsheet
+	-blocking
 */
 
 int main(){

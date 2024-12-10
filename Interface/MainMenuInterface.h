@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../RenderingEngine/Scene.h"
+#include "../Core/Input.h"
 
 //the controller for the main menu interface
 class MainMenuInterface {
@@ -8,7 +9,7 @@ class MainMenuInterface {
 public:
 	MainMenuInterface();
 
-	void onUpdate(KeyCode userInput);
+	void onUpdate(const KeyCode& userInput);
 
 	~MainMenuInterface();
 

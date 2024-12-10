@@ -8,7 +8,6 @@
 #include "Strike.h"
 #include "Combatant.h"
 
-
 class ActionCommand : public TimeWindow {
 	//TODO!!!
 public:
@@ -19,7 +18,7 @@ public:
 		
 		if (!isDirectionalKey(userInput)) return;
 		else if (userInput == correctInput) successful = true;
-		else { TimeWindow::onUpdate(this->elapsedTime()); }
+		else { TimeWindow::onUpdate(getElapsedTime()); }
 	}
 
 	inline Combatant& getTarget() { return *target; }
@@ -33,7 +32,7 @@ private:
 };
 
 //controls the logic of the combat
-struct Combat {
+class Combat {
 	//TODO!!!
 public:
 	enum State {

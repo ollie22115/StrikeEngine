@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../RenderingEngine/Scene.h"
+#include "../Core/Input.h"
 
 //controller for the results screen interface
 class ResultsInterface {
@@ -8,7 +9,7 @@ class ResultsInterface {
 public:
 	ResultsInterface();
 
-	void onUpdate(KeyCode userInput);
+	void onUpdate(const KeyCode& userInput);
 
 	~ResultsInterface();
 

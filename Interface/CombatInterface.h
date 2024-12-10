@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../RenderingEngine/Scene.h"
+#include "../Core/Input.h"
+#include "../Combat/Combat.h"
 
 //the interface controller for combat
 class CombatInterface {
@@ -8,7 +10,7 @@ class CombatInterface {
 public:
 	CombatInterface(Combat combat);
 
-	void onUpdate(KeyCode userInput);
+	void onUpdate(const KeyCode& userInput);
 	void onRender();
 
 	~CombatInterface();

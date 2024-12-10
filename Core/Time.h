@@ -20,5 +20,5 @@ public:
 	inline bool isActive() { return elapsedTime > 0; }
 	inline bool isFinished() { !isActive(); }
 
-	inline int32_t elapsedTime() { return elapsedTime; }
+	inline int32_t getElapsedTime() { return elapsedTime; }
 };
