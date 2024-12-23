@@ -1,16 +1,45 @@
 #include "Game.h"
+#include <Windows.h>
 
-KeyCode Game::getInput(){
-	//at some point upgrade this method so it can
-	// A) record multiple keys and
-	// B) record the state of each of those keys 
-	// 
-	//TODO!!! TEST
+void Game::handleInput() {
+	//TODO!!!
 
-	for (const KeyCode& key : keyListeners) {
-		KeyState state = getKeyState(key);
-		if (state != KeyState::IDLE) return key;
+	//Handling key input - NEED TO TEST!!!
+	for (int i = 0; i < 256; i++) {
+		if (Input::getInput(i)) {
+
+			if (eventState.keysPressed.getKeyState(i) || eventState.keysHeld.getKeyState(i)) {
+				eventState.keysPressed.unsetKey(i);
+				eventState.keysHeld.setKey(i);
+				eventState.keysReleased.unsetKey(i);
+
+			} else {
+				eventState.keysPressed.setKey(i);
+				eventState.keysHeld.unsetKey(i);
+				eventState.keysReleased.unsetKey(i);
+
+			}
+
+		} else {
+
+			if (eventState.keysPressed.getKeyState(i) || eventState.keysHeld.getKeyState(i)) {
+				eventState.keysPressed.unsetKey(i);
+				eventState.keysHeld.unsetKey(i);
+				eventState.keysReleased.setKey(i);
+
+			} else {
+				eventState.keysPressed.unsetKey(i);
+				eventState.keysHeld.unsetKey(i);
+				eventState.keysReleased.unsetKey(i);
+
+			}
+
+		}
 	}
+}
 
-	return KeyCode::KEY_NONE;
+void Game::update() {
+	handleInput();
+	//updateScene();
+	//drawScene();
 }

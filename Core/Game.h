@@ -2,7 +2,8 @@
 
 #include <vector>
 #include "Time.h"
-#include "Input.h"
+#include "EventsAndInput/EventState.h"
+#include "EventsAndInput/Input.h"
 
 class Game {
 public:
@@ -16,12 +17,12 @@ public:
 private:
 	enum State {
 		PAUSED = 0,
-		MAIN_MENU = 1,
-		COMBAT = 2,
-		RESULTS_SCREEN = 3
+		ACTIVE = 1
 	};
 
-	std::vector<KeyCode> keyListeners;		//the keys game program will "listen to"
+	void handleInput();
+	void update();
 
-	KeyCode getInput();
+	State gameState;
+	EventState eventState;
 };
