@@ -3,8 +3,10 @@
 #include <vector>
 #include <array>
 #include <string>
-#include "../Dependencies/VectorsAndMatrices/Include/Vector.h"
-#include "../Dependencies/VectorsAndMatrices/Include/Matrix.h"
+#include <Vector.h>
+#include <Matrix.h>
+
+#include "EventsAndInput/EventState.h"
 
 //describes the position and texture coordinates of a vertex to be drawn
 struct Vertex {
@@ -64,9 +66,14 @@ struct Object {
 class Scene {
 	//TODO!!!
 public:
-	Scene() = default;
+	inline Scene(const std::string& vertexSourceFile, const std::string& fragSourceFile) : 
+		vertexSourceFile(vertexSourceFile), fragSourceFile(fragSourceFile) {};
 
 	void addObject(Object& obj, float minX, float minY, float maxX, float maxY, float resX, float resY);
+
+	virtual void onStart() = 0;	//method that is called when a scene is being loaded
+	virtual void onUpdate(const EventState& eventState) = 0;		//method that is called upon every update call
+	virtual void onFinish() = 0;	//method that is called when a scene is being unloaded
 
 	~Scene();
 

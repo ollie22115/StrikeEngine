@@ -18,6 +18,8 @@ const std::array<uint64_t, 64> BIT_PATTERNS = generateBitShiftPatterns();
 
 template <typename T, uint16_t size>
 struct KeyMap {
+	//TODO!!! Replace uint64_t with the template T in some areas of the code
+
 	std::array<T, size> keyMaps;
 
 	inline KeyMap() { 

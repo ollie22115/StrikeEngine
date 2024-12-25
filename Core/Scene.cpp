@@ -5,7 +5,7 @@
 void Scene::addObject(Object& obj, float minX, float minY, float maxX, float maxY, float resX, float resY){
 	//TODO!!! TEST IT'S PROBABLY BUGGY
 
-#ifdef LOC_DEBUG == 1
+#ifdef STRIKE_DEBUG == 1
 	for (Object& object : objects) if (object.id == obj.id)
 		std::cout << "ERROR: id of object already exists in objects\n";
 #endif

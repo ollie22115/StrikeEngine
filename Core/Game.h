@@ -4,25 +4,33 @@
 #include "Time.h"
 #include "EventsAndInput/EventState.h"
 #include "EventsAndInput/Input.h"
+#include "Scene.h"
 
 class Game {
 public:
 	Game();
 
-	bool onStart();
-	bool onFinish();
+	void run();
+	void loadScene(const Scene& scene);
 
 	~Game();
 
 private:
 	enum State {
 		PAUSED = 0,
-		ACTIVE = 1
+		LOADING = 1,
+		ACTIVE = 2,
 	};
-
-	void handleInput();
-	void update();
 
 	State gameState;
 	EventState eventState;
+
+	Scene* currentScene;
+
+
+
+	void OnFinish();
+
+	void handleInput();
+	void update();
 };

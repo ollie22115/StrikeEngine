@@ -2,7 +2,11 @@
 
 #include <string>
 
-#include "Scene.h"
+#include <Buffer.h>
+#include <Program.h>
+#include <Texture.h>
+
+#include "../Scene.h"
 
 struct RenderableObject {
 	Object* object;

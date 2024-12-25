@@ -1,19 +1,17 @@
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <glfw/glfw3.h>
 #include <iostream>
 
 /*
 TODO:
-1: setup dependencies
-	-stb_image
-	
-	-GLP
+1: replace VectorsAndMatrices with glm
+
 */
 
 int main(void)
 {
     GLFWwindow* window;
-
+    
     /* Initialize the library */
     if (!glfwInit())
         return -1;

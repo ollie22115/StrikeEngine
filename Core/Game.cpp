@@ -4,7 +4,7 @@
 void Game::handleInput() {
 	//TODO!!!
 
-	//Handling key input - NEED TO TEST!!!
+	//Handling key and mouse input - NEED TO TEST!!!
 	for (int i = 0; i < 256; i++) {
 		if (Input::getInput(i)) {
 
