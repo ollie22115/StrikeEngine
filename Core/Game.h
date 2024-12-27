@@ -1,19 +1,17 @@
 #pragma once
 
 #include <vector>
-#include "Time.h"
 #include "EventsAndInput/EventState.h"
 #include "EventsAndInput/Input.h"
-#include "Scene.h"
+#include <iostream>
+//#include "Scene.h"
+//#include "Rendering/Renderer.h"
 
 class Game {
 public:
-	Game();
+	Game() = default;
 
 	void run();
-	void loadScene(const Scene& scene);
-
-	~Game();
 
 private:
 	enum State {
@@ -22,14 +20,10 @@ private:
 		ACTIVE = 2,
 	};
 
+	bool running;
+
 	State gameState;
 	EventState eventState;
-
-	Scene* currentScene;
-
-
-
-	void OnFinish();
 
 	void handleInput();
 	void update();

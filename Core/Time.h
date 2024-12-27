@@ -2,12 +2,7 @@
 #include <chrono>
 
 //returns the current time
-int64_t currentTime() {
-	auto time = std::chrono::system_clock::now();
-	auto duration = time.time_since_epoch();
-
-	return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-}
+int64_t currentTimeMS();
 
 class TimeWindow {
 	int32_t elapsedTime;

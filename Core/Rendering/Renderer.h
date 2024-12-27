@@ -17,14 +17,14 @@ struct RenderableObject {
 	inline RenderableObject(Object* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), size(size), offset(offset), textureID(textureID) {}
 };
 
-/*
+
 //the engine that handles rendering graphics to the screen
 class SceneRenderer {
 	//TODO!!!
 public:
 	SceneRenderer();
 
-	bool loadScene(Scene* scene);
+	bool loadScene(const Scene* scene);
 
 	void drawScene();
 
@@ -38,4 +38,3 @@ private:
 	IndexBuffer ib;
 	Program program;
 };
-*/
