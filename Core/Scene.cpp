@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 
+/*
 void Scene::addObject(Object& obj, float minX, float minY, float maxX, float maxY, float resX, float resY){
 	//TODO!!! TEST IT'S PROBABLY BUGGY
 
@@ -48,3 +49,4 @@ void Scene::addObject(Object& obj, float minX, float minY, float maxX, float max
 
 	objects.push_back(obj);
 }
+*/

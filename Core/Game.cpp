@@ -1,8 +1,11 @@
 #include "Game.h"
 #include <Windows.h>
 #include <iostream>
+#include <glm/glm.hpp>
 
 void Game::run(){
+	glm::vec2 vector;
+
 	while (running) {
 		update();
 	}

@@ -2,12 +2,13 @@
 
 #include <string>
 
-#include <Buffer.h>
-#include <Program.h>
-#include <Texture.h>
+//#include <Buffer.h>
+//#include <Program.h>
+//#include <Texture.h>
 
 #include "../Scene.h"
 
+/*
 struct RenderableObject {
 	Object* object;
 	int32_t size;
@@ -18,7 +19,7 @@ struct RenderableObject {
 };
 
 
-//the engine that handles rendering graphics to the screen
+//engine that handles rendering graphics to the screen
 class SceneRenderer {
 	//TODO!!!
 public:
@@ -38,3 +39,4 @@ private:
 	IndexBuffer ib;
 	Program program;
 };
+*/

@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include <stb.h>
 
 Texture::Texture(const char* src, bool mipmap, int32_t bitsPerPixel, 
 							GLenum sParam, GLenum tParam, 

@@ -6,7 +6,8 @@ project "StrikeEngine"
         "Dependencies/Vendor/glfw/include",         
         "Dependencies/Vendor/glad/include",
         "Dependencies/GLP",
-        "Dependencies/Vendor/stbImage"
+        "Dependencies/Vendor/stbImage",
+        "Dependencies/Vendor/glm"
     }
 
     files {"**.cpp", "**.h"}

@@ -4,8 +4,8 @@
 #include "EventsAndInput/EventState.h"
 #include "EventsAndInput/Input.h"
 #include <iostream>
-//#include "Scene.h"
-//#include "Rendering/Renderer.h"
+#include "Scene.h"
+#include "Rendering/Renderer.h"
 
 class Game {
 public:

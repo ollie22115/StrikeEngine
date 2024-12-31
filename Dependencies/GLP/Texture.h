@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <glad/glad.h>
-#include <stb.h>
 
 class Texture {
 public:

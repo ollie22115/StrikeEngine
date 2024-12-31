@@ -3,6 +3,8 @@
 #include <vector>
 #include <array>
 #include <string>
+
+/*
 #include <Vector.h>
 #include <Matrix.h>
 
@@ -82,3 +84,4 @@ private:
 	std::string vertexSourceFile;
 	std::string fragSourceFile;
 };
+*/
