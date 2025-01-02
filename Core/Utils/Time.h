@@ -8,7 +8,7 @@ class TimeWindow {
 	int32_t elapsedTime;
 
 public:
-	inline TimeWindow(int32_t& elapsedTime) : elapsedTime(elapsedTime) {};
+	inline TimeWindow(int32_t& elapsedTime) : elapsedTime(elapsedTime) {}
 
 	inline void onUpdate(const int32_t& timeStep) { elapsedTime -= timeStep; }
 

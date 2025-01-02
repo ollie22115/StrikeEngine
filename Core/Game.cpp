@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <glm/glm.hpp>
+#include "Debugging/Log.h"
 
 void Game::run(){
 	glm::vec2 vector;
@@ -54,6 +55,10 @@ void Game::handleInput() {
 
 		}
 	}
+
+#ifdef STRIKE_DEBUG
+	Log::logKeyState(eventState);
+#endif
 }
 
 void Game::update() {

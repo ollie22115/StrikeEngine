@@ -2,6 +2,9 @@ project "StrikeEngine"
     kind "StaticLib"
     language "C++"
 
+    targetdir("bin/" .. OutputDir)
+    objdir("bin-int/" .. OutputDir)
+
     includedirs {
         "Dependencies/Vendor/glfw/include",         
         "Dependencies/Vendor/glad/include",

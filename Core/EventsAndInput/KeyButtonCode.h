@@ -45,8 +45,7 @@
 #define LOC_KEY_WINDOWS					38
 #define LOC_KEY_LEFT_ALT					39
 #define LOC_KEY_RIGHT_ALT					40
-#define LOC_KEY_ FN           					41
-#define LOC_KEY_EXCLAMATION			42
+#define LOC_KEY_FN           					41
 #define LOC_KEY_DQUOTE	 					43
 #define LOC_KEY_POUND						44
 #define LOC_KEY_DOLLAR						45

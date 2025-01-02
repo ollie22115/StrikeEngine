@@ -4,17 +4,15 @@
 #include <array>
 #include <string>
 
-/*
-#include <Vector.h>
-#include <Matrix.h>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "EventsAndInput/EventState.h"
 
 //describes the position and texture coordinates of a vertex to be drawn
 struct Vertex {
 	//TODO!!!
-	Vec4<float> pos;
-	Vec2<float> texCoords;
+	glm::vec4 pos;
+	glm::vec2 texCoords;
 };
 
 //describes a drawable triangle made of Vertex vertices
@@ -28,37 +26,37 @@ struct Object {
 	std::vector<Triangle> triangles;
 	std::string textureName;
 	bool visibility = true;
-	Mat4<float> transform = Mat4<float>::genIdentityMatrix();
+    glm::mat4 transform = glm::mat4();
 
 	//returns the x value of the vertex in the object thats the furthest along in the -x direction
 	inline float minPosX() {
-		float minPosX = triangles[0].vertices[0].pos.x();
+		float minPosX = triangles[0].vertices[0].pos.x;
 		for (const Triangle& tri : triangles) for (const Vertex& vert : tri.vertices)
-			if (minPosX < vert.pos.x()) minPosX = vert.pos.x();
+			if (minPosX < vert.pos.x) minPosX = vert.pos.x;
 
 		return minPosX;
 	}
 	//returns the y value of the vertex in the object thats the furthest along in the -y direction
 	float minPosY() {
-		float minPosY = triangles[0].vertices[0].pos.y();
+		float minPosY = triangles[0].vertices[0].pos.y;
 		for (const Triangle& tri : triangles) for (const Vertex& vert : tri.vertices)
-			if (minPosY < vert.pos.y()) minPosY = vert.pos.y();
+			if (minPosY < vert.pos.y) minPosY = vert.pos.y;
 
 		return minPosY;
 	}
 	//returns the x value of the vertex in the object thats the furthest along in the x direction
 	float maxPosX() {
-		float maxPosX = triangles[0].vertices[0].pos.x();
+		float maxPosX = triangles[0].vertices[0].pos.x;
 		for (const Triangle& tri : triangles) for (const Vertex& vert : tri.vertices)
-			if (maxPosX > vert.pos.x()) maxPosX = vert.pos.x();
+			if (maxPosX > vert.pos.x) maxPosX = vert.pos.x;
 
 		return maxPosX;
 	}
 	//returns the y value of the vertex in the object thats the furthest along in the y direction
 	float maxPosY() {
-		float maxPosY = triangles[0].vertices[0].pos.y();
+		float maxPosY = triangles[0].vertices[0].pos.y;
 		for (const Triangle& tri : triangles) for (const Vertex& vert : tri.vertices)
-			if (maxPosY > vert.pos.y()) maxPosY = vert.pos.y();
+			if (maxPosY > vert.pos.y) maxPosY = vert.pos.y;
 
 		return maxPosY;
 	}
@@ -84,4 +82,3 @@ private:
 	std::string vertexSourceFile;
 	std::string fragSourceFile;
 };
-*/
