@@ -27,6 +27,10 @@ Shader::~Shader(){
 }
 
 
+void Program::init(){
+	id = glCreateProgram();
+}
+
 void Program::compileShader(GLenum type, const char* src){
 	shaders.emplace_back(type);
 	shaders[shaders.size() - 1].compileShader(src);

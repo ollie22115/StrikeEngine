@@ -1,6 +1,6 @@
 #include "Buffer.h"
 
-Buffer::Buffer(const GLenum target) : target(target) {
+void Buffer::init(){
 	glGenBuffers(1, &id);
 }
 

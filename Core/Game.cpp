@@ -4,27 +4,31 @@
 #include <glm/glm.hpp>
 #include "Debugging/Log.h"
 
+Game::Game() : renderer(&window) {}
+
+void Game::loadScene(Scene& scene) {
+	loadedScene = &scene;
+	renderer.loadScene(&scene);
+
+	scene.onStart();
+}
+
 void Game::run(){
 	glm::vec2 vector;
 
 	while (running) {
+		if (glfwWindowShouldClose(window)) break;
 		update();
 	}
 }
-
-/*
-void Game::loadScene(Scene& scene){
-	//TODO!!! CHECK OVER
-	scene.onStart();
-	//renderer.loadScene(&scene);
-}
-*/
 
 void Game::handleInput() {
 	//TODO!!! CHECK OVER
 
 	//Handling key and mouse input - NEED TO TEST!!!
 	for (int i = 0; i < 256; i++) {
+		uint16_t input = Input::getInput(i);
+
 		if (Input::getInput(i)) {
 
 			if (eventState.keysPressed.getKeyState(i) || eventState.keysHeld.getKeyState(i)) {
@@ -62,16 +66,8 @@ void Game::handleInput() {
 }
 
 void Game::update() {
+	glfwPollEvents();	//Here for the time being may want to move it elsewhere
 	handleInput();
 	//loadedScene->onUpdate(eventState);
-	//renderer.drawScene();
-
-	if (eventState.keysPressed.getKeyState(LOC_KEY_A))
-		std::cout << "A\n";
-
-	if (eventState.keysPressed.getKeyState(LOC_KEY_B) || eventState.keysHeld.getKeyState(LOC_KEY_B))
-		std::cout << "B\n";
-
-	if (eventState.keysReleased.getKeyState(LOC_KEY_C))
-		std::cout << "C\n";
+	renderer.drawScene(window);
 }

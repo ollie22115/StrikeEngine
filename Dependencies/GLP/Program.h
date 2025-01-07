@@ -29,7 +29,9 @@ private:
 
 class Program {
 public:
-	Program() : id(glCreateProgram()) {};
+	Program() = default;
+
+	void init();
 
 	inline GLuint getID() { return id; }
 	inline GLuint getID() const { return id; }

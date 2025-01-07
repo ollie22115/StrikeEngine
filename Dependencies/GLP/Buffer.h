@@ -4,7 +4,9 @@
 
 class Buffer {
 public:
-	Buffer(const GLenum target);
+	inline Buffer(const GLenum target) : target(target), id(0) {};
+
+	void init();
 
 	inline GLuint getID() { return id; };
 	inline GLuint getID() const { return id; };

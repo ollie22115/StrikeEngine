@@ -6,11 +6,14 @@
 #include <iostream>
 #include "Scene.h"
 #include "Rendering/Renderer.h"
+#include <glad/glad.h>
+#include <glfw/glfw3.h>
 
 class Game {
 public:
-	Game() = default;
+	Game();
 
+	void loadScene(Scene& scene);
 	void run();
 
 private:
@@ -21,6 +24,11 @@ private:
 	};
 
 	bool running;
+
+	GLFWwindow* window;
+
+	Scene* loadedScene;
+	SceneRenderer renderer;
 
 	State gameState;
 	EventState eventState;

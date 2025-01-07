@@ -1,5 +1,7 @@
 #include "Log.h"
 
+#include "Logger.h"
+
 void Log::logKeyState(const EventState& eventState){
 	//TODO!!! Test
 
@@ -16,6 +18,12 @@ void Log::logKeyState(const EventState& eventState){
 
 		Console::changeConsoleColour(COLOUR::WHITE);
 	}
+}
+
+void Log::logError(const std::string& errorMsg){
+	Console::changeConsoleColour(COLOUR::RED);
+	std::cout << "ERROR: " << errorMsg << "\n";
+	Console::changeConsoleColour(COLOUR::WHITE);
 }
 
 std::string Log::logKey(const uint16_t& keyCode){
@@ -186,4 +194,6 @@ std::string Log::logKey(const uint16_t& keyCode){
 		case LOC_KEY_Z:
 			return "Z";
 	}
+
+	return "";
 }

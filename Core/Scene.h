@@ -21,7 +21,7 @@ struct Triangle {
 };
 
 //describes a collection of triangles and a texture that make up a object used in rendering
-struct Object {
+struct RenderableObject {
 	std::string id;
 	std::vector<Triangle> triangles;
 	std::string textureName;
@@ -69,16 +69,16 @@ public:
 	inline Scene(const std::string& vertexSourceFile, const std::string& fragSourceFile) : 
 		vertexSourceFile(vertexSourceFile), fragSourceFile(fragSourceFile) {};
 
-	void addObject(Object& obj, float minX, float minY, float maxX, float maxY, float resX, float resY);
+	void addObject(RenderableObject& obj, float minX, float minY, float maxX, float maxY, float resX, float resY);
 
 	virtual void onStart() = 0;	//method that is called when a scene is being loaded
-	virtual void onUpdate(const EventState& eventState) = 0;		//method that is called upon every update call
+	virtual void onUpdate(const EventState& eventState) = 0;		//method that is called every frame upon every update call
 	virtual void onFinish() = 0;	//method that is called when a scene is being unloaded
 
-	~Scene();
+	~Scene() = default;
 
 private:
-	std::vector<Object> objects;
+	std::vector<RenderableObject> renderableObjects;
 	std::string vertexSourceFile;
 	std::string fragSourceFile;
 };

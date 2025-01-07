@@ -2,36 +2,36 @@
 
 #include <string>
 
-//#include <Buffer.h>
-//#include <Program.h>
-//#include <Texture.h>
+#include <Buffer.h>
+#include <Program.h>
+#include <Texture.h>
+#include <glad/glad.h>
+#include <glfw/glfw3.h>
 
 #include "../Scene.h"
 
-/*
-struct RenderableObject {
-	Object* object;
+struct RenderableObjectData {
+	RenderableObject* object;
 	int32_t size;
 	int32_t offset;
 	uint32_t textureID;
 
-	inline RenderableObject(Object* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), size(size), offset(offset), textureID(textureID) {}
+	inline RenderableObjectData(RenderableObject* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), size(size), offset(offset), textureID(textureID) {}
 };
-
 
 //engine that handles rendering graphics to the screen
 class SceneRenderer {
 	//TODO!!!
 public:
-	SceneRenderer();
+	SceneRenderer(GLFWwindow** window);
 
 	bool loadScene(const Scene* scene);
 
-	void drawScene();
+	void drawScene(GLFWwindow* window);
 
 	inline Program& getProgram() { return program; }
 
-	~SceneRenderer();
+	~SceneRenderer() = default;
 
 private:
 	Scene* scene;
@@ -39,4 +39,3 @@ private:
 	IndexBuffer ib;
 	Program program;
 };
-*/

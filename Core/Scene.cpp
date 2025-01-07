@@ -2,11 +2,11 @@
 
 #include "Scene.h"
 
-void Scene::addObject(Object& obj, float minX, float minY, float maxX, float maxY, float resX, float resY){
+void Scene::addObject(RenderableObject& obj, float minX, float minY, float maxX, float maxY, float resX, float resY){
 	//TODO!!! TEST IT'S PROBABLY BUGGY
 
-#ifdef STRIKE_DEBUG == 1
-	for (Object& object : objects) if (object.id == obj.id)
+#ifdef STRIKE_DEBUG
+	for (RenderableObject& object : renderableObjects) if (object.id == obj.id)
 		std::cout << "ERROR: id of object already exists in objects\n";
 #endif
 
@@ -46,5 +46,5 @@ void Scene::addObject(Object& obj, float minX, float minY, float maxX, float max
 	//applying transform to object
 	obj.transform = transform;
 
-	objects.push_back(obj);
+	renderableObjects.push_back(obj);
 }
