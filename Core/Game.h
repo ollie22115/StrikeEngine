@@ -34,5 +34,6 @@ private:
 	EventState eventState;
 
 	void handleInput();
+	void handleWindowEvents();
 	void update();
 };

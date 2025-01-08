@@ -10,3 +10,9 @@ std::array<uint64_t, 64>& generateBitShiftPatterns() {
 
 	return bitPatternGenerator;
 }
+
+const std::array<uint64_t, 64> BIT_PATTERNS = generateBitShiftPatterns();
+
+const std::array<uint64_t, 64>& getBitPatterns(){
+	return BIT_PATTERNS;
+}

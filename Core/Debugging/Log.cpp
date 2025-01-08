@@ -8,16 +8,29 @@ void Log::logKeyState(const EventState& eventState){
 	for (uint16_t i = 0; i < 256; i++) {
 		Console::changeConsoleColour(COLOUR::GREEN);
 		
-		if (eventState.keysPressed.getKeyState(i)) 
+		if (eventState.keysPressed.getEventState(i)) 
 			std::cout << logKey(i) << " Key Pressed!\n";
-		else if(eventState.keysHeld.getKeyState(i))
+		else if(eventState.keysHeld.getEventState(i))
 			std::cout << logKey(i) << " Key Held!\n";
-		else if (eventState.keysReleased.getKeyState(i)) {
+		else if (eventState.keysReleased.getEventState(i)) {
 			std::cout << logKey(i) << " Key Released!\n";
 		}
 
 		Console::changeConsoleColour(COLOUR::WHITE);
 	}
+}
+
+void Log::logWindowEventsState(const EventState& eventState) {
+	Console::changeConsoleColour(COLOUR::GREEN);
+
+	if (eventState.windowEvents.getEventState(0))
+		std::cout << "Window Closed!\n";
+	else if (eventState.windowEvents.getEventState(1))
+		std::cout << "Window Maximised!\n";
+	else if (eventState.windowEvents.getEventState(2))
+		std::cout << "Window Minimised!\n";
+
+	Console::changeConsoleColour(COLOUR::WHITE);
 }
 
 void Log::logError(const std::string& errorMsg){

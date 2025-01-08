@@ -3,6 +3,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include "Debugging/Log.h"
+#include "EventsAndInput/WindowEventCode.h"
 
 Game::Game() : renderer(&window) {}
 
@@ -14,10 +15,9 @@ void Game::loadScene(Scene& scene) {
 }
 
 void Game::run(){
-	glm::vec2 vector;
-
 	while (running) {
-		if (glfwWindowShouldClose(window)) break;
+		if (eventState.windowEvents.getEventState(LOC_WINDOW_CLOSED)) break;
+
 		update();
 	}
 }
@@ -31,29 +31,29 @@ void Game::handleInput() {
 
 		if (Input::getInput(i)) {
 
-			if (eventState.keysPressed.getKeyState(i) || eventState.keysHeld.getKeyState(i)) {
-				eventState.keysPressed.unsetKey(i);
-				eventState.keysHeld.setKey(i);
-				eventState.keysReleased.unsetKey(i);
+			if (eventState.keysPressed.getEventState(i) || eventState.keysHeld.getEventState(i)) {
+				eventState.keysPressed.unsetEvent(i);
+				eventState.keysHeld.setEvent(i);
+				eventState.keysReleased.unsetEvent(i);
 
 			} else {
-				eventState.keysPressed.setKey(i);
-				eventState.keysHeld.unsetKey(i);
-				eventState.keysReleased.unsetKey(i);
+				eventState.keysPressed.setEvent(i);
+				eventState.keysHeld.unsetEvent(i);
+				eventState.keysReleased.unsetEvent(i);
 
 			}
 
 		} else {
 
-			if (eventState.keysPressed.getKeyState(i) || eventState.keysHeld.getKeyState(i)) {
-				eventState.keysPressed.unsetKey(i);
-				eventState.keysHeld.unsetKey(i);
-				eventState.keysReleased.setKey(i);
+			if (eventState.keysPressed.getEventState(i) || eventState.keysHeld.getEventState(i)) {
+				eventState.keysPressed.unsetEvent(i);
+				eventState.keysHeld.unsetEvent(i);
+				eventState.keysReleased.setEvent(i);
 
 			} else {
-				eventState.keysPressed.unsetKey(i);
-				eventState.keysHeld.unsetKey(i);
-				eventState.keysReleased.unsetKey(i);
+				eventState.keysPressed.unsetEvent(i);
+				eventState.keysHeld.unsetEvent(i);
+				eventState.keysReleased.unsetEvent(i);
 
 			}
 
@@ -65,8 +65,24 @@ void Game::handleInput() {
 #endif
 }
 
+void Game::handleWindowEvents(){
+	if (glfwWindowShouldClose(window)) eventState.windowEvents.setEvent(LOC_WINDOW_CLOSED);
+	else {
+		eventState.windowEvents.unsetEvent(LOC_WINDOW_MAXIMISE);
+		eventState.windowEvents.unsetEvent(LOC_WINDOW_MINIMISE);
+	}
+	//TODO!!!: expand this function once you have figured out how window events will work
+
+#ifdef STRIKE_DEBUG
+	Log::logWindowEventsState(eventState);
+#endif
+}
+
+
+
 void Game::update() {
-	glfwPollEvents();	//Here for the time being may want to move it elsewhere
+	glfwPollEvents();
+	handleWindowEvents();
 	handleInput();
 	//loadedScene->onUpdate(eventState);
 	renderer.drawScene(window);
