@@ -3,16 +3,14 @@
 #include "Logger.h"
 
 void Log::logKeyState(const EventState& eventState){
-	//TODO!!! Test
-
 	for (uint16_t i = 0; i < 256; i++) {
 		Console::changeConsoleColour(COLOUR::GREEN);
 		
-		if (eventState.keysPressed.getEventState(i)) 
+		if (eventState.keysPressed.getStateOf(i)) 
 			std::cout << logKey(i) << " Key Pressed!\n";
-		else if(eventState.keysHeld.getEventState(i))
+		else if(eventState.keysHeld.getStateOf(i))
 			std::cout << logKey(i) << " Key Held!\n";
-		else if (eventState.keysReleased.getEventState(i)) {
+		else if (eventState.keysReleased.getStateOf(i)) {
 			std::cout << logKey(i) << " Key Released!\n";
 		}
 
@@ -23,11 +21,11 @@ void Log::logKeyState(const EventState& eventState){
 void Log::logWindowEventsState(const EventState& eventState) {
 	Console::changeConsoleColour(COLOUR::GREEN);
 
-	if (eventState.windowEvents.getEventState(0))
+	if (eventState.windowEvents.getStateOf(0))
 		std::cout << "Window Closed!\n";
-	else if (eventState.windowEvents.getEventState(1))
+	else if (eventState.windowEvents.getStateOf(1))
 		std::cout << "Window Maximised!\n";
-	else if (eventState.windowEvents.getEventState(2))
+	else if (eventState.windowEvents.getStateOf(2))
 		std::cout << "Window Minimised!\n";
 
 	Console::changeConsoleColour(COLOUR::WHITE);
@@ -40,7 +38,6 @@ void Log::logError(const std::string& errorMsg){
 }
 
 std::string Log::logKey(const uint16_t& keyCode){
-	//TODO!!!
 	switch (keyCode) {
 		case LOC_KEY_LEFT:
 			return "Left Arrow";
@@ -115,16 +112,20 @@ std::string Log::logKey(const uint16_t& keyCode){
 			return "Tab";
 		case LOC_KEY_ICOMMA:
 			return "`";
-		case LOC_KEY_SHIFT:
-			return "Shift";
+		case LOC_KEY_LEFT_SHIFT:
+			return "Left Shift";
+		case LOC_KEY_RIGHT_SHIFT:
+			return "Right Shift";
 		case LOC_KEY_CAPS_LOCK:
 			return "Caps Lock";
 		case LOC_KEY_LEFT_CONTROL:
 			return "Left Control";
 		case LOC_KEY_RIGHT_CONTROL:
 			return "Right Control";
-		case LOC_KEY_WINDOWS:
-			return "Windows";
+		case LOC_KEY_LEFT_WINDOWS:
+			return "Left Windows";
+		case LOC_KEY_RIGHT_WINDOWS:
+			return "Right Windows";
 		case LOC_KEY_LEFT_ALT:
 			return "Left Alt";
 		case LOC_KEY_RIGHT_ALT:

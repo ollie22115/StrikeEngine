@@ -16,7 +16,7 @@ void Game::loadScene(Scene& scene) {
 
 void Game::run(){
 	while (running) {
-		if (eventState.windowEvents.getEventState(LOC_WINDOW_CLOSED)) break;
+		if (eventState.windowEvents.getStateOf(LOC_WINDOW_CLOSED)) break;
 
 		update();
 	}
@@ -26,34 +26,34 @@ void Game::handleInput() {
 	//TODO!!! CHECK OVER
 
 	//Handling key and mouse input - NEED TO TEST!!!
-	for (int i = 0; i < 256; i++) {
+	for (uint16_t i = 0; i < LOC_TOTAL_KEYS; i++) {
 		uint16_t input = Input::getInput(i);
 
 		if (Input::getInput(i)) {
 
-			if (eventState.keysPressed.getEventState(i) || eventState.keysHeld.getEventState(i)) {
-				eventState.keysPressed.unsetEvent(i);
-				eventState.keysHeld.setEvent(i);
-				eventState.keysReleased.unsetEvent(i);
+			if (eventState.keysPressed.getStateOf(i) || eventState.keysHeld.getStateOf(i)) {
+				eventState.keysPressed.setStateFalse(i);
+				eventState.keysHeld.setStateTrue(i);
+				eventState.keysReleased.setStateFalse(i);
 
 			} else {
-				eventState.keysPressed.setEvent(i);
-				eventState.keysHeld.unsetEvent(i);
-				eventState.keysReleased.unsetEvent(i);
+				eventState.keysPressed.setStateTrue(i);
+				eventState.keysHeld.setStateFalse(i);
+				eventState.keysReleased.setStateFalse(i);
 
 			}
 
 		} else {
 
-			if (eventState.keysPressed.getEventState(i) || eventState.keysHeld.getEventState(i)) {
-				eventState.keysPressed.unsetEvent(i);
-				eventState.keysHeld.unsetEvent(i);
-				eventState.keysReleased.setEvent(i);
+			if (eventState.keysPressed.getStateOf(i) || eventState.keysHeld.getStateOf(i)) {
+				eventState.keysPressed.setStateFalse(i);
+				eventState.keysHeld.setStateFalse(i);
+				eventState.keysReleased.setStateTrue(i);
 
 			} else {
-				eventState.keysPressed.unsetEvent(i);
-				eventState.keysHeld.unsetEvent(i);
-				eventState.keysReleased.unsetEvent(i);
+				eventState.keysPressed.setStateFalse(i);
+				eventState.keysHeld.setStateFalse(i);
+				eventState.keysReleased.setStateFalse(i);
 
 			}
 
@@ -66,10 +66,10 @@ void Game::handleInput() {
 }
 
 void Game::handleWindowEvents(){
-	if (glfwWindowShouldClose(window)) eventState.windowEvents.setEvent(LOC_WINDOW_CLOSED);
+	if (glfwWindowShouldClose(window)) eventState.windowEvents.setStateTrue(LOC_WINDOW_CLOSED);
 	else {
-		eventState.windowEvents.unsetEvent(LOC_WINDOW_MAXIMISE);
-		eventState.windowEvents.unsetEvent(LOC_WINDOW_MINIMISE);
+		eventState.windowEvents.setStateFalse(LOC_WINDOW_MAXIMISE);
+		eventState.windowEvents.setStateFalse(LOC_WINDOW_MINIMISE);
 	}
 	//TODO!!!: expand this function once you have figured out how window events will work
 

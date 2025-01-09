@@ -38,26 +38,28 @@
 #define LOC_KEY_DELETE						31
 #define LOC_KEY_TAB								32
 #define LOC_KEY_ICOMMA						33
-#define LOC_KEY_SHIFT							34
-#define LOC_KEY_CAPS_LOCK					35
-#define LOC_KEY_LEFT_CONTROL			36
-#define LOC_KEY_RIGHT_CONTROL		37
-#define LOC_KEY_WINDOWS					38
-#define LOC_KEY_LEFT_ALT					39
-#define LOC_KEY_RIGHT_ALT					40
-#define LOC_KEY_FN           					41
-#define LOC_KEY_DQUOTE	 					43
-#define LOC_KEY_POUND						44
-#define LOC_KEY_DOLLAR						45
-#define LOC_KEY_PERCENTAGE				46
-#define LOC_KEY_CARET							47
-#define LOC_KEY_AMPERSAND				48
-#define LOC_KEY_DASH							49
-#define LOC_KEY_UNDERLINE					50
-#define LOC_KEY_LBRACKET					51
-#define LOC_KEY_RBRAKCET					52
-#define LOC_KEY_ANGULAR_LBRACKET	53
-#define LOC_KEY_ANGULAR_RBRACKET	54
+#define LOC_KEY_LEFT_SHIFT				34
+#define LOC_KEY_RIGHT_SHIFT				35
+#define LOC_KEY_CAPS_LOCK					36
+#define LOC_KEY_LEFT_CONTROL			37
+#define LOC_KEY_RIGHT_CONTROL		38
+#define LOC_KEY_LEFT_WINDOWS		39
+#define LOC_KEY_RIGHT_WINDOWS		40
+#define LOC_KEY_LEFT_ALT					41
+#define LOC_KEY_RIGHT_ALT					42
+#define LOC_KEY_FN           					43
+#define LOC_KEY_DQUOTE	 					44
+#define LOC_KEY_POUND						45
+#define LOC_KEY_DOLLAR						46
+#define LOC_KEY_PERCENTAGE				47
+#define LOC_KEY_CARET							48
+#define LOC_KEY_AMPERSAND				49
+#define LOC_KEY_DASH							50
+#define LOC_KEY_UNDERLINE					51
+#define LOC_KEY_LBRACKET					52
+#define LOC_KEY_RBRAKCET					53
+#define LOC_KEY_ANGULAR_LBRACKET	54
+#define LOC_KEY_ANGULAR_RBRACKET	55
 
 #define LOC_KEY_A									65
 #define LOC_KEY_B									66
@@ -86,3 +88,5 @@
 #define LOC_KEY_Y									89
 #define LOC_KEY_Z									90
 
+
+#define LOC_TOTAL_KEYS						91
