@@ -1,4 +1,4 @@
-#include "KeyMap.h"
+#include "StateMap.h"
 
 std::array<uint64_t, 64>& generateBitShiftPatterns() {
 	std::array<uint64_t, 64> bitPatternGenerator;

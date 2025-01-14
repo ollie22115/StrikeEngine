@@ -1,29 +1,32 @@
 #include <iostream>
 
 #include "Scene.h"
+#include "Debugging/Log.h"
 
-void Scene::addObject(RenderableObject& obj, float minX, float minY, float maxX, float maxY, float resX, float resY){
+void Scene::addObject(RenderableComponent& obj, float minX, float minY, float maxX, float maxY, float resX, float resY, bool doCenter){
 	//TODO!!! TEST IT'S PROBABLY BUGGY
 
 #ifdef STRIKE_DEBUG
-	for (RenderableObject& object : renderableObjects) if (object.id == obj.id)
-		std::cout << "ERROR: id of object already exists in objects\n";
+	for (RenderableComponent& object : renderableObjects) if (object.id == obj.id)
+		Log::logError("error id: " + object.id + "already exists!");
 #endif
 
 	//centering object in place
-	if (obj.minPosX() + obj.maxPosX() != 0) {
-		float lengthX = obj.maxPosX() - obj.minPosX();
-		float adjustmentX = (lengthX / 2) - obj.maxPosX();
+	if (doCenter) {
+		if (obj.minPosX() + obj.maxPosX() != 0) {
+			float lengthX = obj.maxPosX() - obj.minPosX();
+			float adjustmentX = (lengthX / 2) - obj.maxPosX();
 
-		for (Triangle& tri : obj.triangles) for (Vertex& vert : tri.vertices)
-			vert.pos.x += adjustmentX;
-	}
-	if (obj.minPosY() + obj.maxPosY() != 0) {
-		float lengthY = obj.maxPosY() - obj.minPosY();
-		float adjustmentY = (lengthY / 2) - obj.maxPosY();
+			for (Triangle& tri : obj.triangles) for (Vertex& vert : tri.vertices)
+				vert.pos.x += adjustmentX;
+		}
+		if (obj.minPosY() + obj.maxPosY() != 0) {
+			float lengthY = obj.maxPosY() - obj.minPosY();
+			float adjustmentY = (lengthY / 2) - obj.maxPosY();
 
-		for (Triangle& tri : obj.triangles) for (Vertex& vert : tri.vertices)
-			vert.pos.y += adjustmentY;
+			for (Triangle& tri : obj.triangles) for (Vertex& vert : tri.vertices)
+				vert.pos.y += adjustmentY;
+		}
 	}
 
 	glm::mat4 transform(1.0f);

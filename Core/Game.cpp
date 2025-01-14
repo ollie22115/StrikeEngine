@@ -5,11 +5,13 @@
 #include "Debugging/Log.h"
 #include "EventsAndInput/WindowEventCode.h"
 
-Game::Game() : renderer(&window) {}
+Game::Game() : renderer(&window), loadedScene(nullptr) {}
 
 void Game::loadScene(Scene& scene) {
 	loadedScene = &scene;
 	renderer.loadScene(&scene);
+
+	loadedScene->onStart();
 
 	scene.onStart();
 }
@@ -84,6 +86,6 @@ void Game::update() {
 	glfwPollEvents();
 	handleWindowEvents();
 	handleInput();
-	//loadedScene->onUpdate(eventState);
+	loadedScene->onUpdate(eventState);
 	renderer.drawScene(window);
 }

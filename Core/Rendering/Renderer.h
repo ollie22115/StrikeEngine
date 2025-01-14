@@ -11,12 +11,12 @@
 #include "../Scene.h"
 
 struct RenderableObjectData {
-	RenderableObject* object;
+	RenderableComponent* object;
 	int32_t size;
 	int32_t offset;
 	uint32_t textureID;
 
-	inline RenderableObjectData(RenderableObject* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), size(size), offset(offset), textureID(textureID) {}
+	inline RenderableObjectData(RenderableComponent* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), size(size), offset(offset), textureID(textureID) {}
 };
 
 //engine that handles rendering graphics to the screen
