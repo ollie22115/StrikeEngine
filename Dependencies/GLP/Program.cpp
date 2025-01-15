@@ -1,4 +1,7 @@
 #include "Program.h"
+#include <fstream>
+#include <string>
+#include <iostream>
 
 Shader::Shader(const GLenum type) : type(type){
 	id = glCreateShader(type);
@@ -8,14 +11,16 @@ int Shader::compileShader(const char* src){
 	glShaderSource(id, 1, &src, NULL);
 	glCompileShader(id);
 
-	GLint compilationResult;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &compilationResult);
+	GLint compilationResult = GL_TRUE;
 
 #ifdef GLP_DEBUG
+	glGetShaderiv(id, GL_COMPILE_STATUS, &compilationResult);
+
 	char infoLog[512];
 	if (!compilationResult) {
 		glGetShaderInfoLog(id, 512, NULL, infoLog);
-		std::cout << infoLog << std::endl;
+		std::cout << "Shader Failed to Load!\n";
+		std::cout << infoLog << "\n";
 	}
 #endif
 
@@ -29,6 +34,18 @@ Shader::~Shader(){
 
 void Program::init(){
 	id = glCreateProgram();
+}
+
+void Program::compileShaderFile(GLenum type, const char* path){
+	//TODO!!! Test
+	std::ifstream file(path);
+
+	std::string line;
+	std::string src;
+	while (getline(file, line))
+		src += line + "\n";
+	
+	compileShader(type, src.c_str());
 }
 
 void Program::compileShader(GLenum type, const char* src){

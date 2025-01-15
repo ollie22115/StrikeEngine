@@ -36,6 +36,7 @@ public:
 	inline GLuint getID() { return id; }
 	inline GLuint getID() const { return id; }
 
+	void compileShaderFile(GLenum type, const char* path);
 	void compileShader(GLenum type, const char* src);
 	GLint linkProgram();
 	void useProgram();

@@ -1,7 +1,7 @@
 #pragma once
 #include <chrono>
 
-//returns the current time
+//returns the current time in milli seconds
 int64_t currentTimeMS();
 
 class TimeWindow {

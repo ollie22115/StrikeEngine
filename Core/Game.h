@@ -25,6 +25,11 @@ private:
 
 	bool running;
 
+	uint64_t prevRecordedTime;
+	uint64_t currentTime;
+
+	uint64_t elapsedTime = 0;
+
 	GLFWwindow* window;
 
 	Scene* loadedScene;

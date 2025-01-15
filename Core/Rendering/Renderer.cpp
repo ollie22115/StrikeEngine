@@ -4,7 +4,7 @@
 #include "../Debugging/Log.h"
 #endif
 
-SceneRenderer::SceneRenderer(GLFWwindow** window){
+SceneRenderer::SceneRenderer(GLFWwindow** window) {
 	int glfwInitResult = glfwInit();
 
 #ifdef STRIKE_DEBUG
@@ -40,6 +40,11 @@ SceneRenderer::SceneRenderer(GLFWwindow** window){
 
 bool SceneRenderer::loadScene(const Scene* scene) {
     //TODO!!!
+	program.compileShaderFile(GL_VERTEX_SHADER, scene->getVertexSourceFilePath().c_str());
+	program.compileShaderFile(GL_FRAGMENT_SHADER, scene->getFragSourceFilePath().c_str());
+	program.linkProgram();
+	program.useProgram();
+
     return false;
 }
 

@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include "Debugging/Log.h"
 #include "EventsAndInput/WindowEventCode.h"
+#include "Utils/Time.h"
 
 Game::Game() : renderer(&window), loadedScene(nullptr) {}
 
@@ -17,6 +18,9 @@ void Game::loadScene(Scene& scene) {
 }
 
 void Game::run(){
+	currentTime = currentTimeMS();
+	prevRecordedTime = currentTime;
+
 	while (running) {
 		if (eventState.windowEvents.getStateOf(LOC_WINDOW_CLOSED)) break;
 
@@ -83,9 +87,14 @@ void Game::handleWindowEvents(){
 
 
 void Game::update() {
+	currentTime = currentTimeMS();
+	uint64_t timeStep = currentTime - prevRecordedTime;
+	prevRecordedTime = currentTime;
+	elapsedTime += timeStep;
+
 	glfwPollEvents();
 	handleWindowEvents();
 	handleInput();
-	loadedScene->onUpdate(eventState);
+	loadedScene->onUpdate(eventState, timeStep);
 	renderer.drawScene(window);
 }
