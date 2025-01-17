@@ -11,12 +11,12 @@
 #include "../Scene.h"
 
 struct RenderableObjectData {
-	RenderableComponent* object;
+	Object* object;
 	int32_t size;
 	int32_t offset;
 	uint32_t textureID;
 
-	inline RenderableObjectData(RenderableComponent* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), size(size), offset(offset), textureID(textureID) {}
+	inline RenderableObjectData(Object* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), size(size), offset(offset), textureID(textureID) {}
 };
 
 //engine that handles rendering graphics to the screen
@@ -25,7 +25,7 @@ class SceneRenderer {
 public:
 	SceneRenderer(GLFWwindow** window);
 
-	bool loadScene(const Scene* scene);
+	bool loadScene(Scene* scene);
 
 	void drawScene(GLFWwindow* window);
 

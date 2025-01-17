@@ -13,16 +13,10 @@
 class Scene {
 	//TODO!!!
 public:
-	inline Scene(const std::string& vertexSourceFile, const std::string& fragSourceFile) : 
-		vertexSourceFilePath(vertexSourceFile), fragSourceFilePath(fragSourceFile) {};
+	inline Scene() = default;
 
-	inline std::string& getVertexSourceFilePath() { return vertexSourceFilePath; }
-	inline std::string getVertexSourceFilePath() const { return vertexSourceFilePath; }
-
-	inline std::string& getFragSourceFilePath() { return fragSourceFilePath; }
-	inline std::string getFragSourceFilePath() const { return fragSourceFilePath; }
-
-	void addObject(RenderableComponent& obj, float minX, float minY, float maxX, float maxY, float resX, float resY, bool doCenter = true);
+	inline RenderableComponent& getRenderableComponent() { return renderableComponent; }
+	inline const RenderableComponent& getRenderableComponent() const { return renderableComponent; }
 
 	virtual void onStart() = 0;	//method that is called when a scene is being loaded
 	virtual void onUpdate(const EventState& eventState, uint64_t timeStep) = 0;		//method that is called every frame upon every update call
@@ -30,8 +24,6 @@ public:
 
 	~Scene() = default;
 
-private:
-	std::vector<RenderableComponent> renderableObjects;
-	std::string vertexSourceFilePath;
-	std::string fragSourceFilePath;
+protected:
+	RenderableComponent renderableComponent;
 };

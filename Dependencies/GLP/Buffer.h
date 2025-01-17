@@ -1,6 +1,7 @@
 #pragma once
 #include <glad/glad.h>
 #include <vector>
+#include "VertexLayout.h"
 
 class Buffer {
 public:
@@ -30,26 +31,10 @@ class VertexBuffer : public Buffer{
 
 public:
 
-	VertexBuffer() : Buffer(GL_ARRAY_BUFFER), size(0) {};
+	VertexBuffer() : Buffer(GL_ARRAY_BUFFER) {};
 
-	void pushAttribute(GLenum type, GLenum normalised, unsigned int count);
-	void initAttributes();	
-private:
-	struct VertexAttribute {
-		GLenum type;
-		GLenum normalised;
-		unsigned int count;
-
-		VertexAttribute(GLenum type, GLenum normalised, unsigned int count) : type(type), normalised(normalised), count(count) {};
-		int getSize();
-	};
-
-	unsigned int size;
-	std::vector<VertexAttribute> attributes;
+	void initAttributes(VertexLayout& vertexLayout);
 };
-
-
-
 
 class IndexBuffer : public Buffer {
 public:

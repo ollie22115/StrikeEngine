@@ -25,8 +25,8 @@ private:
 
 	bool running;
 
-	uint64_t prevRecordedTime;
-	uint64_t currentTime;
+	uint64_t prevRecordedTime = 0;
+	uint64_t currentTime = 0;
 
 	uint64_t elapsedTime = 0;
 

@@ -38,14 +38,27 @@ SceneRenderer::SceneRenderer(GLFWwindow** window) {
 	program.init();
 }
 
-bool SceneRenderer::loadScene(const Scene* scene) {
+bool SceneRenderer::loadScene(Scene* scene) {
     //TODO!!!
-	program.compileShaderFile(GL_VERTEX_SHADER, scene->getVertexSourceFilePath().c_str());
-	program.compileShaderFile(GL_FRAGMENT_SHADER, scene->getFragSourceFilePath().c_str());
+	this->scene = scene;
+	
+	program.compileShaderFile(GL_VERTEX_SHADER, scene->getRenderableComponent().vertexSourceFilePath.c_str());
+	program.compileShaderFile(GL_FRAGMENT_SHADER, scene->getRenderableComponent().fragSourceFilePath.c_str());
 	program.linkProgram();
 	program.useProgram();
 
-    return false;
+	RenderableComponent& renderableComponent = scene->getRenderableComponent();
+
+	renderableComponent.configureBuffers(vb, ib);
+
+	std::vector<float> vertices;
+	std::vector<uint32_t> indices;
+	for (Object& object : renderableComponent.objects) {
+		//TODO!!!
+
+	}
+
+    return true;
 }
 
 void SceneRenderer::drawScene(GLFWwindow* window) {

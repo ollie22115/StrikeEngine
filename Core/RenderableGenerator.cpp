@@ -1,9 +1,9 @@
 #include "RenderableGenerator.h"
 
-RenderableComponent genRec(const std::string& id, const std::string textureFile, 
+Object genRec(const std::string& id, const std::string textureFile, 
 	float width, float height, float layer, glm::vec3 origin, glm::vec4 texCoords, glm::vec4 colour) {
 	//TODO!!! Remember to include texture files and id
-	RenderableComponent rec;
+	Object rec;
 	rec.id = id;
 	rec.textureName = textureFile;
 	
@@ -40,16 +40,16 @@ RenderableComponent genRec(const std::string& id, const std::string textureFile,
 	return rec;
 }
 
-RenderableComponent& genTriangle(float p0, float p1, float p2, glm::vec3 origin) {
+Object genTriangle(float p0, float p1, float p2, glm::vec3 origin) {
 	//TODO!!!
 
-	RenderableComponent triangle;
+	Object triangle;
 	return triangle;
 }
 
-RenderableComponent& genCircle(float radius, glm::vec3 origin) {
+Object genCircle(float radius, glm::vec3 origin) {
 	//TODO!!!
 
-	RenderableComponent circle;
+	Object circle;
 	return circle;
 }

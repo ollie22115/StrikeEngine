@@ -6,20 +6,20 @@
 #include "EventsAndInput/WindowEventCode.h"
 #include "Utils/Time.h"
 
-Game::Game() : renderer(&window), loadedScene(nullptr) {}
+Game::Game() : renderer(&window), loadedScene(nullptr), running(false) {}
 
 void Game::loadScene(Scene& scene) {
 	loadedScene = &scene;
 	renderer.loadScene(&scene);
 
 	loadedScene->onStart();
-
-	scene.onStart();
 }
 
 void Game::run(){
 	currentTime = currentTimeMS();
 	prevRecordedTime = currentTime;
+
+	running = true;
 
 	while (running) {
 		if (eventState.windowEvents.getStateOf(LOC_WINDOW_CLOSED)) break;

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <glm/glm.hpp>
+#include <Buffer.h>
 
 //describes the position and texture coordinates of a vertex to be drawn
 struct Vertex {
@@ -17,8 +18,7 @@ struct Triangle {
 	std::array<Vertex, 3> vertices;
 };
 
-//describes a collection of triangles and a texture that make up a object used in rendering
-struct RenderableComponent {
+struct Object {
 	std::string id;
 	std::vector<Triangle> triangles;
 	std::string textureName;
@@ -57,4 +57,20 @@ struct RenderableComponent {
 
 		return maxPosY;
 	}
+};
+
+//describes a collection of triangles and a texture that make up a object used in rendering
+struct RenderableComponent {
+	std::vector<Object> objects;
+
+	std::string vertexSourceFilePath = "";
+	std::string fragSourceFilePath = "";
+
+	VertexLayout vertexLayout;
+
+	void addObject(Object& obj, float minX, float minY, float maxX, float maxY, 
+		float resX, float resY, 
+		bool doCenter = true, bool defaultVisibility = true);
+
+	void configureBuffers(VertexBuffer& vb, IndexBuffer& ib);
 };
