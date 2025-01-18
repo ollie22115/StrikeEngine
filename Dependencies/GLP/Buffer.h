@@ -3,45 +3,49 @@
 #include <vector>
 #include "VertexLayout.h"
 
-class Buffer {
-public:
-	inline Buffer(const GLenum target) : target(target), id(0) {};
+namespace GLP {
 
-	void init();
+	class Buffer {
+	public:
+		inline Buffer(const GLenum target) : target(target), id(0) {};
 
-	inline GLuint getID() { return id; };
-	inline GLuint getID() const { return id; };
+		void init();
 
-	inline GLenum getTarget() { return target; }
-	inline GLenum getTarget() const { return target; }
+		inline GLuint getID() { return id; };
+		inline GLuint getID() const { return id; };
 
-	template <typename T>
-	void setData(T* data, unsigned int count, GLenum usage);
-	
-	void bind();
+		inline GLenum getTarget() { return target; }
+		inline GLenum getTarget() const { return target; }
 
-	~Buffer();
+		template <typename T>
+		void setData(T* data, unsigned int count, GLenum usage);
 
-private:
-	const GLenum target;
-	GLuint id;
-};
+		void bind();
 
-class VertexBuffer : public Buffer{
+		~Buffer();
 
-public:
+	private:
+		const GLenum target;
+		GLuint id;
+	};
 
-	VertexBuffer() : Buffer(GL_ARRAY_BUFFER) {};
+	class VertexBuffer : public Buffer {
 
-	void initAttributes(VertexLayout& vertexLayout);
-};
+	public:
 
-class IndexBuffer : public Buffer {
-public:
-	IndexBuffer() : Buffer(GL_ELEMENT_ARRAY_BUFFER) {};
-};
+		VertexBuffer() : Buffer(GL_ARRAY_BUFFER) {};
 
-template<typename T>
-inline void Buffer::setData(T* data, unsigned int count, GLenum usage){
-	glBufferData(target, sizeof(T) * count, data, usage);
+		void initAttributes(VertexLayout& vertexLayout);
+	};
+
+	class IndexBuffer : public Buffer {
+	public:
+		IndexBuffer() : Buffer(GL_ELEMENT_ARRAY_BUFFER) {};
+	};
+
+	template<typename T>
+	inline void Buffer::setData(T* data, unsigned int count, GLenum usage) {
+		glBufferData(target, sizeof(T) * count, data, usage);
+	}
+
 }

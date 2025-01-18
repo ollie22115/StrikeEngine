@@ -1,19 +1,23 @@
 #pragma once
 #include <chrono>
 
-//returns the current time in milli seconds
-int64_t currentTimeMS();
+namespace Strike {
 
-class TimeWindow {
-	int32_t elapsedTime;
+	//returns the current time in milli seconds
+	int64_t currentTimeMS();
 
-public:
-	inline TimeWindow(int32_t& elapsedTime) : elapsedTime(elapsedTime) {}
+	class TimeWindow {
+		int32_t elapsedTime;
 
-	inline void onUpdate(const int32_t& timeStep) { elapsedTime -= timeStep; }
+	public:
+		inline TimeWindow(int32_t& elapsedTime) : elapsedTime(elapsedTime) {}
 
-	inline bool isActive() { return elapsedTime > 0; }
-	inline bool isFinished() { !isActive(); }
+		inline void onUpdate(const int32_t& timeStep) { elapsedTime -= timeStep; }
 
-	inline int32_t getElapsedTime() { return elapsedTime; }
-};
+		inline bool isActive() { return elapsedTime > 0; }
+		inline bool isFinished() { !isActive(); }
+
+		inline int32_t getElapsedTime() { return elapsedTime; }
+	};
+
+}

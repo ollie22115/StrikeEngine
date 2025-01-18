@@ -1,14 +1,16 @@
 #include "Input.h"
 #include <Windows.h>
 
-uint16_t Input::getInput(uint16_t keyCode) {
-    return GetAsyncKeyState(keyCodeLOCtoWindows(keyCode));
-}
+namespace Strike {
 
-uint16_t Input::keyCodeLOCtoWindows(uint16_t windowsCode) {
-    //TODO!!! Continue implementing different keys
+    uint16_t Input::getInput(uint16_t keyCode) {
+        return GetAsyncKeyState(keyCodeLOCtoWindows(keyCode));
+    }
 
-    switch (windowsCode) {
+    uint16_t Input::keyCodeLOCtoWindows(uint16_t windowsCode) {
+        //TODO!!! Continue implementing different keys
+
+        switch (windowsCode) {
         case LOC_KEY_LEFT:
             return VK_LEFT;
 
@@ -78,7 +80,7 @@ uint16_t Input::keyCodeLOCtoWindows(uint16_t windowsCode) {
             return VK_F10;
         case LOC_KEY_F11:
             return VK_F11;
-        case LOC_KEY_F12: 
+        case LOC_KEY_F12:
             return VK_F12;
 
 
@@ -115,7 +117,9 @@ uint16_t Input::keyCodeLOCtoWindows(uint16_t windowsCode) {
 
         case LOC_KEY_COMMA:
             return VK_OEM_COMMA;
+        }
+
+        return windowsCode;
     }
 
-    return windowsCode;
 }

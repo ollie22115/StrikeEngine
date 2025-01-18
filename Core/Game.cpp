@@ -6,95 +6,102 @@
 #include "EventsAndInput/WindowEventCode.h"
 #include "Utils/Time.h"
 
-Game::Game() : renderer(&window), loadedScene(nullptr), running(false) {}
+namespace Strike {
 
-void Game::loadScene(Scene& scene) {
-	loadedScene = &scene;
-	renderer.loadScene(&scene);
+	Game::Game() : renderer(&window), loadedScene(nullptr), running(false) {}
 
-	loadedScene->onStart();
-}
+	void Game::loadScene(Scene& scene) {
+		loadedScene = &scene;
+		renderer.loadScene(&scene);
 
-void Game::run(){
-	currentTime = currentTimeMS();
-	prevRecordedTime = currentTime;
-
-	running = true;
-
-	while (running) {
-		if (eventState.windowEvents.getStateOf(LOC_WINDOW_CLOSED)) break;
-
-		update();
+		loadedScene->onStart();
 	}
-}
 
-void Game::handleInput() {
-	//TODO!!! CHECK OVER
+	void Game::run() {
+		currentTime = currentTimeMS();
+		prevRecordedTime = currentTime;
 
-	//Handling key and mouse input - NEED TO TEST!!!
-	for (uint16_t i = 0; i < LOC_TOTAL_KEYS; i++) {
-		uint16_t input = Input::getInput(i);
+		running = true;
 
-		if (Input::getInput(i)) {
+		while (running) {
+			if (eventState.windowEvents.getStateOf(LOC_WINDOW_CLOSED)) break;
 
-			if (eventState.keysPressed.getStateOf(i) || eventState.keysHeld.getStateOf(i)) {
-				eventState.keysPressed.setStateFalse(i);
-				eventState.keysHeld.setStateTrue(i);
-				eventState.keysReleased.setStateFalse(i);
-
-			} else {
-				eventState.keysPressed.setStateTrue(i);
-				eventState.keysHeld.setStateFalse(i);
-				eventState.keysReleased.setStateFalse(i);
-
-			}
-
-		} else {
-
-			if (eventState.keysPressed.getStateOf(i) || eventState.keysHeld.getStateOf(i)) {
-				eventState.keysPressed.setStateFalse(i);
-				eventState.keysHeld.setStateFalse(i);
-				eventState.keysReleased.setStateTrue(i);
-
-			} else {
-				eventState.keysPressed.setStateFalse(i);
-				eventState.keysHeld.setStateFalse(i);
-				eventState.keysReleased.setStateFalse(i);
-
-			}
-
+			update();
 		}
 	}
 
-#ifdef STRIKE_DEBUG
-	Log::logKeyState(eventState);
-#endif
-}
+	void Game::handleInput() {
+		//TODO!!! CHECK OVER
 
-void Game::handleWindowEvents(){
-	if (glfwWindowShouldClose(window)) eventState.windowEvents.setStateTrue(LOC_WINDOW_CLOSED);
-	else {
-		eventState.windowEvents.setStateFalse(LOC_WINDOW_MAXIMISE);
-		eventState.windowEvents.setStateFalse(LOC_WINDOW_MINIMISE);
+		//Handling key and mouse input - NEED TO TEST!!!
+		for (uint16_t i = 0; i < LOC_TOTAL_KEYS; i++) {
+			uint16_t input = Input::getInput(i);
+
+			if (Input::getInput(i)) {
+
+				if (eventState.keysPressed.getStateOf(i) || eventState.keysHeld.getStateOf(i)) {
+					eventState.keysPressed.setStateFalse(i);
+					eventState.keysHeld.setStateTrue(i);
+					eventState.keysReleased.setStateFalse(i);
+
+				}
+				else {
+					eventState.keysPressed.setStateTrue(i);
+					eventState.keysHeld.setStateFalse(i);
+					eventState.keysReleased.setStateFalse(i);
+
+				}
+
+			}
+			else {
+
+				if (eventState.keysPressed.getStateOf(i) || eventState.keysHeld.getStateOf(i)) {
+					eventState.keysPressed.setStateFalse(i);
+					eventState.keysHeld.setStateFalse(i);
+					eventState.keysReleased.setStateTrue(i);
+
+				}
+				else {
+					eventState.keysPressed.setStateFalse(i);
+					eventState.keysHeld.setStateFalse(i);
+					eventState.keysReleased.setStateFalse(i);
+
+				}
+
+			}
+		}
+
+#ifdef STRIKE_DEBUG
+		Log::logKeyState(eventState);
+#endif
 	}
-	//TODO!!!: expand this function once you have figured out how window events will work
+
+	void Game::handleWindowEvents() {
+		if (glfwWindowShouldClose(window)) eventState.windowEvents.setStateTrue(LOC_WINDOW_CLOSED);
+		else {
+			eventState.windowEvents.setStateFalse(LOC_WINDOW_MAXIMISE);
+			eventState.windowEvents.setStateFalse(LOC_WINDOW_MINIMISE);
+		}
+		//TODO!!!: expand this function once you have figured out how window events will work
 
 #ifdef STRIKE_DEBUG
-	Log::logWindowEventsState(eventState);
+		Log::logWindowEventsState(eventState);
 #endif
-}
+	}
 
 
 
-void Game::update() {
-	currentTime = currentTimeMS();
-	uint64_t timeStep = currentTime - prevRecordedTime;
-	prevRecordedTime = currentTime;
-	elapsedTime += timeStep;
+	void Game::update() {
+		currentTime = currentTimeMS();
+		uint64_t timeStep = currentTime - prevRecordedTime;
+		prevRecordedTime = currentTime;
+		elapsedTime += timeStep;
 
-	glfwPollEvents();
-	handleWindowEvents();
-	handleInput();
-	loadedScene->onUpdate(eventState, timeStep);
-	renderer.drawScene(window);
+		glfwPollEvents();
+		handleWindowEvents();
+		handleInput();
+		loadedScene->onUpdate(eventState, timeStep);
+		renderer.drawScene(window);
+	}
+
 }

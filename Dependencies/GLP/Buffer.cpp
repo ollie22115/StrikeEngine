@@ -1,20 +1,20 @@
 #include "Buffer.h"
 
-void Buffer::init(){
+void GLP::Buffer::init(){
 	glGenBuffers(1, &id);
 }
 
-void Buffer::bind(){
+void GLP::Buffer::bind(){
 	glBindBuffer(target, id);
 }
 
-Buffer::~Buffer(){
+GLP::Buffer::~Buffer(){
 	glDeleteBuffers(1, &id);
 }
 
 
 
-void VertexBuffer::initAttributes(VertexLayout& vertexLayout){
+void GLP::VertexBuffer::initAttributes(VertexLayout& vertexLayout){
 	int index = 0;
 	int pointer = 0;
 

@@ -7,23 +7,27 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "EventsAndInput/EventState.h"
-#include "RenderableComponent.h"
+#include "Rendering/RenderableComponent.h"
 
-//describes a scene to be rendered
-class Scene {
-	//TODO!!!
-public:
-	inline Scene() = default;
+namespace Strike {
 
-	inline RenderableComponent& getRenderableComponent() { return renderableComponent; }
-	inline const RenderableComponent& getRenderableComponent() const { return renderableComponent; }
+	//describes a scene to be rendered
+	class Scene {
+		//TODO!!!
+	public:
+		inline Scene() = default;
 
-	virtual void onStart() = 0;	//method that is called when a scene is being loaded
-	virtual void onUpdate(const EventState& eventState, uint64_t timeStep) = 0;		//method that is called every frame upon every update call
-	virtual void onFinish() = 0;	//method that is called when a scene is being unloaded
+		inline RenderableComponent& getRenderableComponent() { return renderableComponent; }
+		inline const RenderableComponent& getRenderableComponent() const { return renderableComponent; }
 
-	~Scene() = default;
+		virtual void onStart() = 0;	//method that is called when a scene is being loaded
+		virtual void onUpdate(const EventState& eventState, uint64_t timeStep) = 0;		//method that is called every frame upon every update call
+		virtual void onFinish() = 0;	//method that is called when a scene is being unloaded
 
-protected:
-	RenderableComponent renderableComponent;
-};
+		~Scene() = default;
+
+	protected:
+		RenderableComponent renderableComponent;
+	};
+
+}

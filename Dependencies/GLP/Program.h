@@ -7,46 +7,49 @@
 #include <iostream>
 #endif
 
+namespace GLP {
 
-class Shader {
-public:
-	Shader(const GLenum target);
+	class Shader {
+	public:
+		Shader(const GLenum target);
 
-	inline GLuint getID() { return id; };
-	inline GLuint getID() const { return id; };
+		inline GLuint getID() { return id; };
+		inline GLuint getID() const { return id; };
 
-	inline GLenum getType() { return type; }
-	inline GLenum getType() const { return type; }
+		inline GLenum getType() { return type; }
+		inline GLenum getType() const { return type; }
 
-	int compileShader(const char* src);
+		int compileShader(const char* src);
 
-	~Shader();
+		~Shader();
 
-private:
-	const GLenum type;
-	GLuint id;
-};
+	private:
+		const GLenum type;
+		GLuint id;
+	};
 
-class Program {
-public:
-	Program() = default;
+	class Program {
+	public:
+		Program() = default;
 
-	void init();
+		void init();
 
-	inline GLuint getID() { return id; }
-	inline GLuint getID() const { return id; }
+		inline GLuint getID() { return id; }
+		inline GLuint getID() const { return id; }
 
-	void compileShaderFile(GLenum type, const char* path);
-	void compileShader(GLenum type, const char* src);
-	GLint linkProgram();
-	void useProgram();
+		void compileShaderFile(GLenum type, const char* path);
+		void compileShader(GLenum type, const char* src);
+		GLint linkProgram();
+		void useProgram();
 
-	bool setUniform4f(const char* uniformName, float f1, float f2, float f3, float f4);
+		bool setUniform4f(const char* uniformName, float f1, float f2, float f3, float f4);
 
-	~Program();
+		~Program();
 
-private:
-	GLuint id;
-	std::vector<Shader> shaders;
-	std::unordered_map<const char*, GLint> uniforms;
-};
+	private:
+		GLuint id;
+		::std::vector<Shader> shaders;
+		::std::unordered_map<const char*, GLint> uniforms;
+	};
+
+}

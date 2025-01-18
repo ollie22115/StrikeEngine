@@ -2,30 +2,34 @@
 #include <iostream>
 #include <glad/glad.h>
 
-class Texture {
-public:
-	Texture(const char* src, bool mipmap = true, int32_t bitsPerPixel = 4,
-		GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
-		GLenum magFilterParam = GL_LINEAR_MIPMAP_LINEAR,
-		GLenum minFilterParam = GL_LINEAR);
+namespace GLP {
 
-	inline GLuint getId() { return id; }
-	inline GLuint getId() const { return id; }
+	class Texture {
+	public:
+		Texture(const char* src, bool mipmap = true, int32_t bitsPerPixel = 4,
+			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
+			GLenum magFilterParam = GL_LINEAR_MIPMAP_LINEAR,
+			GLenum minFilterParam = GL_LINEAR);
 
-	inline int32_t getWidth() { return width; }
-	inline int32_t getWidth() const { return width; }
+		inline GLuint getId() { return id; }
+		inline GLuint getId() const { return id; }
 
-	inline int32_t getHeight() { return height; }
-	inline int32_t getHeight() const { return height; }
+		inline int32_t getWidth() { return width; }
+		inline int32_t getWidth() const { return width; }
 
-	inline int32_t getBitsPerPixel() { return bitsPerPixel; }
-	inline int32_t getBitsPerPixel() const { return bitsPerPixel; }
+		inline int32_t getHeight() { return height; }
+		inline int32_t getHeight() const { return height; }
 
-	void bind(unsigned int slot = 0);
+		inline int32_t getBitsPerPixel() { return bitsPerPixel; }
+		inline int32_t getBitsPerPixel() const { return bitsPerPixel; }
 
-	~Texture();
+		void bind(unsigned int slot = 0);
 
-private:
-	GLuint id;
-	int32_t width, height, bitsPerPixel;
-};
+		~Texture();
+
+	private:
+		GLuint id;
+		int32_t width, height, bitsPerPixel;
+	};
+
+}

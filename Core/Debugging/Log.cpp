@@ -2,43 +2,45 @@
 
 #include "Logger.h"
 
-void Log::logKeyState(const EventState& eventState){
-	for (uint16_t i = 0; i < 256; i++) {
-		Console::changeConsoleColour(COLOUR::GREEN);
-		
-		if (eventState.keysPressed.getStateOf(i)) 
-			std::cout << logKey(i) << " Key Pressed!\n";
-		else if(eventState.keysHeld.getStateOf(i))
-			std::cout << logKey(i) << " Key Held!\n";
-		else if (eventState.keysReleased.getStateOf(i)) {
-			std::cout << logKey(i) << " Key Released!\n";
+namespace Strike {
+
+	void Log::logKeyState(const EventState& eventState) {
+		for (uint16_t i = 0; i < 256; i++) {
+			Console::changeConsoleColour(COLOUR::GREEN);
+
+			if (eventState.keysPressed.getStateOf(i))
+				std::cout << logKey(i) << " Key Pressed!\n";
+			else if (eventState.keysHeld.getStateOf(i))
+				std::cout << logKey(i) << " Key Held!\n";
+			else if (eventState.keysReleased.getStateOf(i)) {
+				std::cout << logKey(i) << " Key Released!\n";
+			}
+
+			Console::changeConsoleColour(COLOUR::WHITE);
 		}
+	}
+
+	void Log::logWindowEventsState(const EventState& eventState) {
+		Console::changeConsoleColour(COLOUR::GREEN);
+
+		if (eventState.windowEvents.getStateOf(0))
+			std::cout << "Window Closed!\n";
+		else if (eventState.windowEvents.getStateOf(1))
+			std::cout << "Window Maximised!\n";
+		else if (eventState.windowEvents.getStateOf(2))
+			std::cout << "Window Minimised!\n";
 
 		Console::changeConsoleColour(COLOUR::WHITE);
 	}
-}
 
-void Log::logWindowEventsState(const EventState& eventState) {
-	Console::changeConsoleColour(COLOUR::GREEN);
+	void Log::logError(const std::string& errorMsg) {
+		Console::changeConsoleColour(COLOUR::RED);
+		std::cout << "ERROR: " << errorMsg << "\n";
+		Console::changeConsoleColour(COLOUR::WHITE);
+	}
 
-	if (eventState.windowEvents.getStateOf(0))
-		std::cout << "Window Closed!\n";
-	else if (eventState.windowEvents.getStateOf(1))
-		std::cout << "Window Maximised!\n";
-	else if (eventState.windowEvents.getStateOf(2))
-		std::cout << "Window Minimised!\n";
-
-	Console::changeConsoleColour(COLOUR::WHITE);
-}
-
-void Log::logError(const std::string& errorMsg){
-	Console::changeConsoleColour(COLOUR::RED);
-	std::cout << "ERROR: " << errorMsg << "\n";
-	Console::changeConsoleColour(COLOUR::WHITE);
-}
-
-std::string Log::logKey(const uint16_t& keyCode){
-	switch (keyCode) {
+	std::string Log::logKey(const uint16_t& keyCode) {
+		switch (keyCode) {
 		case LOC_KEY_LEFT:
 			return "Left Arrow";
 		case LOC_KEY_RIGHT:
@@ -207,7 +209,9 @@ std::string Log::logKey(const uint16_t& keyCode){
 			return "Y";
 		case LOC_KEY_Z:
 			return "Z";
+		}
+
+		return "";
 	}
 
-	return "";
 }

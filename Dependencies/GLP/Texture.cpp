@@ -1,7 +1,7 @@
 #include "Texture.h"
 #include <stb.h>
 
-Texture::Texture(const char* src, bool mipmap, int32_t bitsPerPixel, 
+GLP::Texture::Texture(const char* src, bool mipmap, int32_t bitsPerPixel, 
 							GLenum sParam, GLenum tParam, 
 							GLenum magFilterParam, GLenum minFilterParam) : id(0), width(0), height(0), bitsPerPixel(bitsPerPixel) {
 
@@ -25,11 +25,11 @@ Texture::Texture(const char* src, bool mipmap, int32_t bitsPerPixel,
 	stbi_image_free(data);
 }
 
-void Texture::bind(unsigned int slot){
+void GLP::Texture::bind(unsigned int slot){
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 
-Texture::~Texture(){
+GLP::Texture::~Texture(){
 	glDeleteTextures(1, &id);
 }

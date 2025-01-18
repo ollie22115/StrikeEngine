@@ -3,22 +3,26 @@
 #include <iostream>
 #include <string>
 
-enum class COLOUR {
-	WHITE,
-	GRAY,
-	RED,
-	GREEN,
-	BLUE,
-	YELLOW
-};
+namespace Strike {
 
-struct Console {
-	static void logText(const char* text, const COLOUR& colour = COLOUR::WHITE, const bool& newLine = true);
-	static void logText(const std::string& text, const COLOUR& colour = COLOUR::WHITE);
+	enum class COLOUR {
+		WHITE,
+		GRAY,
+		RED,
+		GREEN,
+		BLUE,
+		YELLOW
+	};
 
-	static void changeConsoleColour(const COLOUR& colour);
+	struct Console {
+		static void logText(const char* text, const COLOUR& colour = COLOUR::WHITE, const bool& newLine = true);
+		static void logText(const std::string& text, const COLOUR& colour = COLOUR::WHITE);
 
-	static void resetColour();
+		static void changeConsoleColour(const COLOUR& colour);
 
-	static void clearConsole();
-};
+		static void resetColour();
+
+		static void clearConsole();
+	};
+
+}

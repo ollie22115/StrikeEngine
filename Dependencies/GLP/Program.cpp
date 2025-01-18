@@ -3,11 +3,11 @@
 #include <string>
 #include <iostream>
 
-Shader::Shader(const GLenum type) : type(type){
+GLP::Shader::Shader(const GLenum type) : type(type){
 	id = glCreateShader(type);
 }
 
-int Shader::compileShader(const char* src){
+int GLP::Shader::compileShader(const char* src){
 	glShaderSource(id, 1, &src, NULL);
 	glCompileShader(id);
 
@@ -27,16 +27,16 @@ int Shader::compileShader(const char* src){
 	return compilationResult;
 }
 
-Shader::~Shader(){
+GLP::Shader::~Shader(){
 	glDeleteShader(id);
 }
 
 
-void Program::init(){
+void GLP::Program::init(){
 	id = glCreateProgram();
 }
 
-void Program::compileShaderFile(GLenum type, const char* path){
+void GLP::Program::compileShaderFile(GLenum type, const char* path){
 	//TODO!!! Test
 	std::ifstream file(path);
 
@@ -48,13 +48,13 @@ void Program::compileShaderFile(GLenum type, const char* path){
 	compileShader(type, src.c_str());
 }
 
-void Program::compileShader(GLenum type, const char* src){
+void GLP::Program::compileShader(GLenum type, const char* src){
 	shaders.emplace_back(type);
 	shaders[shaders.size() - 1].compileShader(src);
 	glAttachShader(id, shaders[shaders.size() - 1].getID());
 }
 
-GLint Program::linkProgram() {
+GLint GLP::Program::linkProgram() {
 	glLinkProgram(id);
 	shaders.clear();
 
@@ -72,11 +72,11 @@ GLint Program::linkProgram() {
 	return linkResult;
 }
 
-void Program::useProgram(){
+void GLP::Program::useProgram(){
 	glUseProgram(id);
 }
 
-bool Program::setUniform4f(const char* uniformName, float f1, float f2, float f3, float f4){
+bool GLP::Program::setUniform4f(const char* uniformName, float f1, float f2, float f3, float f4){
 	
 	if (uniforms.find(uniformName) == uniforms.end()) {
 		int uniformLocation = glGetUniformLocation(id, uniformName);
@@ -90,6 +90,6 @@ bool Program::setUniform4f(const char* uniformName, float f1, float f2, float f3
 	return true;
 }
 
-Program::~Program() {
+GLP::Program::~Program() {
 	glDeleteProgram(id);
 }
