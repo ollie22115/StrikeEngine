@@ -41,7 +41,7 @@ namespace Strike {
 	}
 
 	bool GLRenderer::loadScene(Scene* scene) {
-		//TODO!!!
+		//TODO!!! Test
 		this->scene = scene;
 
 		program.compileShaderFile(GL_VERTEX_SHADER, scene->getRenderableComponent().vertexSourceFilePath.c_str());
@@ -50,24 +50,63 @@ namespace Strike {
 		program.useProgram();
 
 		RenderableComponent& renderableComponent = scene->getRenderableComponent();
-
 		renderableComponent.configureBuffers(vb, ib);
 
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
-		std::vector<std::string> loadedTextures;
+		std::unordered_map<std::string, GLuint> texturePathMap;
 		for (RenderableObject& object : renderableComponent.objects) {
-			//TODO!!!
+			
+			//data for creating GLObject
+			int32_t vertexCountForGLObject = object.triangles.size() * 10;
+			int32_t offsetInBufferForGLObject = indices.size();
+			uint32_t textureIdForGLObject;
 
+			//textures
+			if (texturePathMap.find(object.texture->filePath) == texturePathMap.end()) {
+				GLP::Texture texture(object.texture->filePath.c_str(), object.texture->mipmap);
+
+				textureMap[texture.getId()] = texture;
+
+				texturePathMap[object.texture->filePath] = texture.getId();
+				textureIdForGLObject = texture.getId();
+			}
+			textureIdForGLObject = texturePathMap[object.texture->filePath];
+
+			//iniitalising vertex and index buffers
+			for (Triangle& triangle : object.triangles) for (Vertex& vertex : triangle.vertices) {
+				int16_t index = -1;
+				for (int16_t i = 0; i < vertices.size(); i++) if (vertices[i] == vertex) {
+					index = i;
+					break;
+				}
+
+				if (index < 0) {
+					vertices.push_back(vertex);
+					index = vertices.size() - 1;
+				}
+
+				indices.push_back(index);
+			}
+
+			rendererObjects.emplace_back(&object, vertexCountForGLObject, offsetInBufferForGLObject, textureIdForGLObject);
 		}
+		
+		if(!vertices.empty()) vb.setData<float>((float*) &vertices[0], Vertex::count() * vertices.size(), GL_STATIC_DRAW);
+		if(!indices.empty()) ib.setData<uint32_t>(&indices[0], indices.size(), GL_STATIC_DRAW);
 
 		return true;
 	}
 
 	void GLRenderer::drawScene(GLFWwindow* window) {
-		//TODO!!!
+		//TODO!!! Test
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		for (GLObject& object : rendererObjects) if (object.object->visibility) {
+			textureMap[object.textureID].bind();
+			glDrawElements(GL_TRIANGLES, object.vertexCount, GL_UNSIGNED_INT, (const void*) object.offset);
+		}
 
 		glfwSwapBuffers(window);
 	}

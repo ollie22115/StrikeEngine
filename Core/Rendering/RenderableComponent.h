@@ -21,6 +21,8 @@ namespace Strike {
 			pos(pos), texCoords(texCoords), colour(colour) {
 		};
 
+		inline static uint32_t count() { return 10; }
+
 		bool operator ==(const Vertex& other);
 	};
 

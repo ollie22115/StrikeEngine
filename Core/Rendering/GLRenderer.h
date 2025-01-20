@@ -30,11 +30,12 @@ namespace Strike {
 	private:
 		struct GLObject {
 			RenderableObject* object;
-			int32_t size;
+			int32_t vertexCount;
 			int32_t offset;
 			uint32_t textureID;
 
-			inline GLObject(RenderableObject* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), size(size), offset(offset), textureID(textureID) {}
+			GLObject() = default;
+			inline GLObject(RenderableObject* object, int32_t size, int32_t offset, uint32_t textureID) : object(object), vertexCount(size), offset(offset), textureID(textureID) {}
 		};
 
 		Scene* scene;
@@ -42,6 +43,7 @@ namespace Strike {
 		GLP::VertexBuffer vb;
 		GLP::IndexBuffer ib;
 		std::unordered_map<GLuint, GLP::Texture> textureMap;
+		std::vector<GLObject> rendererObjects;
 	};
 
 }

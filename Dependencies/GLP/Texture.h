@@ -6,6 +6,7 @@ namespace GLP {
 
 	class Texture {
 	public:
+		Texture() = default;	//TODO!!! look over this class and give it a better constructor
 		Texture(const char* src, bool mipmap = true, int32_t bitsPerPixel = 4,
 			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
 			GLenum magFilterParam = GL_LINEAR_MIPMAP_LINEAR,
