@@ -35,6 +35,13 @@ namespace Strike {
 		if (!gladLoadResult) Log::logError("Failed to initialize GLAD!");
 #endif
 
+		glViewport(0, 0, 1280, 800);
+
+		//TODO!!! Figure out what to do with vertex arrays
+		GLuint vertexArrayID;
+		glGenVertexArrays(1, &vertexArrayID);
+		glBindVertexArray(vertexArrayID);
+
 		vb.init();
 		ib.init();
 		program.init();
@@ -58,8 +65,8 @@ namespace Strike {
 		for (RenderableObject& object : renderableComponent.objects) {
 			
 			//data for creating GLObject
-			int32_t vertexCountForGLObject = object.triangles.size() * 10;
-			int32_t offsetInBufferForGLObject = indices.size();
+			int32_t vertexCountForGLObject = object.triangles.size() * 3;
+			int32_t offsetInBufferForGLObject = indices.size() * 4;
 			uint32_t textureIdForGLObject;
 
 			//textures
@@ -102,6 +109,9 @@ namespace Strike {
 		//TODO!!! Test
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		vb.bind();
+		ib.bind();
 
 		for (GLObject& object : rendererObjects) if (object.object->visibility) {
 			textureMap[object.textureID].bind();

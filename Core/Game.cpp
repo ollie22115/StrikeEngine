@@ -89,19 +89,17 @@ namespace Strike {
 #endif
 	}
 
-
-
 	void Game::update() {
 		currentTime = currentTimeMS();
 		uint64_t timeStep = currentTime - prevRecordedTime;
 		prevRecordedTime = currentTime;
 		elapsedTime += timeStep;
 
-		glfwPollEvents();
 		handleWindowEvents();
 		handleInput();
 		loadedScene->onUpdate(eventState, timeStep);
 		renderer.drawScene(window);
+		glfwPollEvents();
 	}
 
 }

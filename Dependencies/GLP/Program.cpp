@@ -45,7 +45,7 @@ void GLP::Program::compileShaderFile(GLenum type, const char* path){
 	while (getline(file, line))
 		src += line + "\n";
 	
-	compileShader(type, src.c_str());
+ 	compileShader(type, src.c_str());
 }
 
 void GLP::Program::compileShader(GLenum type, const char* src){
