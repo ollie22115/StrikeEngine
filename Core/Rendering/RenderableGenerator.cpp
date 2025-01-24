@@ -3,7 +3,7 @@
 namespace Strike {
 
 	RenderableObject genRec(const std::string& id, StrikeTexture& texture,
-		float width, float height, float layer, glm::vec3 origin, glm::vec4 texCoords, glm::vec4 colour) {
+		float width, float height, float layer, glm::vec4 texCoords, glm::vec4 colour) {
 		//TODO!!! Check over especially texture coordinates
 
 		RenderableObject rec;
@@ -11,9 +11,9 @@ namespace Strike {
 		rec.texture = &texture;
 
 		Triangle t1;
-		t1.vertices[0].pos = glm::vec4(-(width/2) + origin.x, (- height/2) + origin.y, layer, 1.0f);
-		t1.vertices[1].pos = glm::vec4((width/2) + origin.x, (-height/2) + origin.y, layer, 1.0f);
-		t1.vertices[2].pos = glm::vec4((width/2) + origin.x, (height/2) + origin.y, layer, 1.0f);
+		t1.vertices[0].pos = glm::vec4(-(width/2), (- height/2), layer, 1.0f);
+		t1.vertices[1].pos = glm::vec4((width/2), (-height/2), layer, 1.0f);
+		t1.vertices[2].pos = glm::vec4((width/2), (height/2), layer, 1.0f);
 
 		t1.vertices[0].texCoords = glm::vec2(texCoords[0], texCoords[1]);
 		t1.vertices[1].texCoords = glm::vec2(texCoords[2], texCoords[1]);
@@ -25,9 +25,9 @@ namespace Strike {
 
 
 		Triangle t2;
-		t2.vertices[0].pos = glm::vec4((-width/2) + origin.x, (-height/2) + origin.y, layer, 1.0f);
-		t2.vertices[1].pos = glm::vec4((width/2) + origin.x, (height/2) + origin.y, layer, 1.0f);
-		t2.vertices[2].pos = glm::vec4((-width/2) + origin.x, (height/2) + origin.y, layer, 1.0f);
+		t2.vertices[0].pos = glm::vec4((-width/2), (-height/2), layer, 1.0f);
+		t2.vertices[1].pos = glm::vec4((width/2), (height/2), layer, 1.0f);
+		t2.vertices[2].pos = glm::vec4((-width/2), (height/2), layer, 1.0f);
 
 		t2.vertices[0].texCoords = glm::vec2(texCoords[0], texCoords[1]);
 		t2.vertices[1].texCoords = glm::vec2(texCoords[2], texCoords[3]);
@@ -43,7 +43,7 @@ namespace Strike {
 		return rec;
 	}
 
-	RenderableObject genTriangle(const std::string& id, StrikeTexture& texture, glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec3 origin,
+	RenderableObject genTriangle(const std::string& id, StrikeTexture& texture, glm::vec3 p0, glm::vec3 p1, glm::vec3 p2,
 		glm::vec2 texCoord0, glm::vec2 texCoord1, glm::vec2 texCoord2, glm::vec4 colour) {
 		
 		RenderableObject triangle;

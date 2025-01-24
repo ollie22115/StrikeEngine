@@ -5,24 +5,40 @@
 
 namespace Strike {
 
-	enum class COLOUR {
-		WHITE,
-		GRAY,
-		RED,
-		GREEN,
-		BLUE,
-		YELLOW
+	class LogColour {
+	public:
+		inline static LogColour black() {
+			return LogColour(0);
+		}
+		inline static LogColour white() {
+			return LogColour(1);
+		}
+		inline static LogColour gray() {
+			return LogColour(2);
+		}
+		inline static LogColour red() {
+			return LogColour(3);
+		}
+		inline static LogColour green() {
+			return LogColour(4);
+		}
+		inline static LogColour blue() {
+			return LogColour(5);
+		}
+		inline static LogColour yellow() {
+			return LogColour(6);
+		}
+
+		friend std::ostream& operator<<(std::ostream& os, const LogColour& colour) {
+			os << getColourCode(colour.colourCode);
+			return os;
+		}
+
+	private:
+		uint32_t colourCode;
+
+		inline LogColour(uint32_t colourCode) : colourCode(colourCode) {}
+
+		static std::string getColourCode(uint32_t colourCode);
 	};
-
-	struct Console {
-		static void logText(const char* text, const COLOUR& colour = COLOUR::WHITE, const bool& newLine = true);
-		static void logText(const std::string& text, const COLOUR& colour = COLOUR::WHITE);
-
-		static void changeConsoleColour(const COLOUR& colour);
-
-		static void resetColour();
-
-		static void clearConsole();
-	};
-
 }

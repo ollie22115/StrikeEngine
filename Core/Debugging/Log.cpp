@@ -6,7 +6,7 @@ namespace Strike {
 
 	void Log::logKeyState(const EventState& eventState) {
 		for (uint16_t i = 0; i < 256; i++) {
-			Console::changeConsoleColour(COLOUR::GREEN);
+			std::cout << LogColour::green();
 
 			if (eventState.keysPressed.getStateOf(i))
 				std::cout << logKey(i) << " Key Pressed!\n";
@@ -16,12 +16,12 @@ namespace Strike {
 				std::cout << logKey(i) << " Key Released!\n";
 			}
 
-			Console::changeConsoleColour(COLOUR::WHITE);
+			std::cout << LogColour::white();
 		}
 	}
 
 	void Log::logWindowEventsState(const EventState& eventState) {
-		Console::changeConsoleColour(COLOUR::GREEN);
+		std::cout << LogColour::green();
 
 		if (eventState.windowEvents.getStateOf(0))
 			std::cout << "Window Closed!\n";
@@ -30,13 +30,23 @@ namespace Strike {
 		else if (eventState.windowEvents.getStateOf(2))
 			std::cout << "Window Minimised!\n";
 
-		Console::changeConsoleColour(COLOUR::WHITE);
+		std::cout << LogColour::white();
 	}
 
 	void Log::logError(const std::string& errorMsg) {
-		Console::changeConsoleColour(COLOUR::RED);
-		std::cout << "ERROR: " << errorMsg << "\n";
-		Console::changeConsoleColour(COLOUR::WHITE);
+		std::cout << LogColour::red() << "ERROR: " << errorMsg << LogColour::white() << "\n";
+	}
+
+	void Log::logVector4(glm::vec4 vector) {
+		std::cout << "x: " << vector[0] << " y: " << vector[1] << " z: " << vector[2] << " a: " << vector[3] << "\n";
+	}
+
+	void Log::logVector3(glm::vec3 vector) {
+		std::cout << "x: " << vector[0] << " y: " << vector[1] << " z: " << vector[2] << "\n";
+	}
+
+	void Log::logVector2(glm::vec2 vector) {
+		std::cout << "x: " << vector[0] << "y: " << vector[1] << "\n";
 	}
 
 	std::string Log::logKey(const uint16_t& keyCode) {

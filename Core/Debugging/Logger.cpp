@@ -2,51 +2,30 @@
 
 namespace Strike {
 
-	void Console::logText(const char* text, const COLOUR& colour, const bool& newLine) {
-		changeConsoleColour(colour);
-		std::cout << text;
-		if (newLine) std::cout << "\n";
-	}
+	std::string LogColour::getColourCode(uint32_t colourCode) {
 
-	void Console::logText(const std::string& text, const COLOUR& colour) {
-		changeConsoleColour(colour);
-		std::cout << text;
-	}
+		switch (colourCode) {
+		case 1:
+			return "\033[37m";
 
-	void Console::changeConsoleColour(const COLOUR& colour) {
-		switch (colour) {
-		case COLOUR::WHITE:
-			std::cout << "\033[37m";
-			break;
+		case 2:
+			return "\033[90m";
 
-		case COLOUR::GRAY:
-			std::cout << "\033[90m";
-			break;
+		case 3:
+			return "\033[31m";
 
-		case COLOUR::RED:
-			std::cout << "\033[31m";
-			break;
+		case 4:
+			return "\033[32m";
 
-		case COLOUR::GREEN:
-			std::cout << "\033[32m";
-			break;
 
-		case COLOUR::BLUE:
-			std::cout << "\033[34m";
-			break;
+		case 5:
+			return "\033[34m";
 
-		case COLOUR::YELLOW:
-			std::cout << "\033[33m";
-			break;
+		case 6:
+			return "\033[33m";
 		}
-	}
 
-	void Console::resetColour() {
-		changeConsoleColour(COLOUR::WHITE);
-	}
+		return "";
 
-	void Console::clearConsole() {
-		system("cls");
 	}
-
 }
