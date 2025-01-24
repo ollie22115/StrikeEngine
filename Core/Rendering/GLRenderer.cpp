@@ -71,12 +71,11 @@ namespace Strike {
 
 			//textures
 			if (texturePathMap.find(object.texture->filePath) == texturePathMap.end()) {
-				GLP::Texture texture(object.texture->filePath.c_str(), object.texture->mipmap);
+				GLP::Texture* texture = new GLP::Texture(object.texture->filePath.c_str(), object.texture->mipmap);
+				textureMap[texture->getId()] = texture;
 
-				textureMap[texture.getId()] = texture;
-
-				texturePathMap[object.texture->filePath] = texture.getId();
-				textureIdForGLObject = texture.getId();
+				texturePathMap[object.texture->filePath] = texture->getId();
+				textureIdForGLObject = texture->getId();
 			}
 			textureIdForGLObject = texturePathMap[object.texture->filePath];
 
@@ -98,7 +97,7 @@ namespace Strike {
 
 			rendererObjects.emplace_back(&object, vertexCountForGLObject, offsetInBufferForGLObject, textureIdForGLObject);
 		}
-		
+
 		if(!vertices.empty()) vb.setData<float>((float*) &vertices[0], Vertex::count() * vertices.size(), GL_STATIC_DRAW);
 		if(!indices.empty()) ib.setData<uint32_t>(&indices[0], indices.size(), GL_STATIC_DRAW);
 
@@ -114,7 +113,8 @@ namespace Strike {
 		ib.bind();
 
 		for (GLObject& object : rendererObjects) if (object.object->visibility) {
-			textureMap[object.textureID].bind();
+			textureMap[object.textureID]->bind();
+
 			glDrawElements(GL_TRIANGLES, object.vertexCount, GL_UNSIGNED_INT, (const void*) object.offset);
 		}
 

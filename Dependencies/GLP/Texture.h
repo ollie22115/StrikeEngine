@@ -4,6 +4,8 @@
 
 namespace GLP {
 
+	//add move constructor to this class
+
 	class Texture {
 	public:
 		Texture() = default;	//TODO!!! look over this class and give it a better constructor

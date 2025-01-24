@@ -46,7 +46,7 @@ namespace Strike {
 	}
 
 	void Log::logVector2(glm::vec2 vector) {
-		std::cout << "x: " << vector[0] << "y: " << vector[1] << "\n";
+		std::cout << "x: " << vector[0] << " y: " << vector[1] << "\n";
 	}
 
 	std::string Log::logKey(const uint16_t& keyCode) {

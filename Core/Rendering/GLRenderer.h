@@ -42,7 +42,7 @@ namespace Strike {
 		GLP::Program program;
 		GLP::VertexBuffer vb;
 		GLP::IndexBuffer ib;
-		std::unordered_map<GLuint, GLP::Texture> textureMap;
+		std::unordered_map<GLuint, GLP::Texture*> textureMap;
 		std::vector<GLObject> rendererObjects;
 	};
 
