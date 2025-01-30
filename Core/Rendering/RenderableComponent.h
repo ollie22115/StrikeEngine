@@ -14,14 +14,13 @@ namespace Strike {
 		//TODO!!!
 		glm::vec4 pos;
 		glm::vec2 texCoords = glm::vec2(0.0f, 0.0f);
-		glm::vec4 colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 		Vertex() = default;
 		inline Vertex(const glm::vec4& pos, const glm::vec2& texCoords, const glm::vec4& colour) :
-			pos(pos), texCoords(texCoords), colour(colour) {
+			pos(pos), texCoords(texCoords) {
 		};
 
-		inline static uint32_t count() { return 10; }
+		inline static uint32_t count() { return 6; }
 
 		bool operator ==(const Vertex& other);
 	};
@@ -36,13 +35,14 @@ namespace Strike {
 		std::vector<Triangle> triangles;
 		StrikeTexture* texture;
 		bool visibility = true;
+		glm::vec4 colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		glm::mat4 transform = glm::mat4();
 
 		//returns the x value of the vertex in the object thats the furthest along in the -x direction
-		inline float minPosX() {
+		float minPosX() {
 			float minPosX = triangles[0].vertices[0].pos.x;
 			for (const Triangle& tri : triangles) for (const Vertex& vert : tri.vertices)
-				if (minPosX < vert.pos.x) minPosX = vert.pos.x;
+				if (minPosX > vert.pos.x) minPosX = vert.pos.x;
 
 			return minPosX;
 		}
@@ -50,7 +50,7 @@ namespace Strike {
 		float minPosY() {
 			float minPosY = triangles[0].vertices[0].pos.y;
 			for (const Triangle& tri : triangles) for (const Vertex& vert : tri.vertices)
-				if (minPosY < vert.pos.y) minPosY = vert.pos.y;
+				if (minPosY > vert.pos.y) minPosY = vert.pos.y;
 
 			return minPosY;
 		}
@@ -58,7 +58,7 @@ namespace Strike {
 		float maxPosX() {
 			float maxPosX = triangles[0].vertices[0].pos.x;
 			for (const Triangle& tri : triangles) for (const Vertex& vert : tri.vertices)
-				if (maxPosX > vert.pos.x) maxPosX = vert.pos.x;
+				if (maxPosX < vert.pos.x) maxPosX = vert.pos.x;
 
 			return maxPosX;
 		}
@@ -66,9 +66,17 @@ namespace Strike {
 		float maxPosY() {
 			float maxPosY = triangles[0].vertices[0].pos.y;
 			for (const Triangle& tri : triangles) for (const Vertex& vert : tri.vertices)
-				if (maxPosY > vert.pos.y) maxPosY = vert.pos.y;
+				if (maxPosY < vert.pos.y) maxPosY = vert.pos.y;
 
 			return maxPosY;
+		}
+
+		float width() {
+			return maxPosX() - minPosX();
+		}
+
+		float height() {
+			return maxPosY() - minPosY();
 		}
 	};
 

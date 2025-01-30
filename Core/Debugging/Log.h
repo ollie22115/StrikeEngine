@@ -16,6 +16,8 @@ namespace Strike {
 		static void logVector3(glm::vec3 vector);
 		static void logVector2(glm::vec2 vector);
 
+		static void logMatrix4(glm::mat4 matrix);
+
 		static std::string logKey(const uint16_t& keyCode);
 
 	private:

@@ -224,4 +224,10 @@ namespace Strike {
 		return "";
 	}
 
+	void Log::logMatrix4(glm::mat4 matrix) {
+		for (int i = 0; i < 4; i++) 
+			std::cout << "[ " << matrix[i][0] << ", " << matrix[i][1] << ", " << matrix[i][2] << ", " << matrix[i][3] << " ]\n";
+		
+		std::cout << "\n";
+	}
 }

@@ -25,7 +25,7 @@ namespace Strike {
 
 		inline GLP::Program& getProgram() { return program; }
 
-		~GLRenderer() = default;
+		~GLRenderer();
 
 	private:
 		struct GLObject {

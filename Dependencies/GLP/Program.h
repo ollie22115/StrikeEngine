@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <vector>
 #include <unordered_map>
+#include <glm/glm.hpp>
 
 #ifdef GLP_DEBUG
 #include <iostream>
@@ -43,6 +44,7 @@ namespace GLP {
 		void useProgram();
 
 		bool setUniform4f(const char* uniformName, float f1, float f2, float f3, float f4);
+		bool setUniformMat4f(const char* uniformName, const glm::mat4& matrix, GLenum transpose);
 
 		~Program();
 

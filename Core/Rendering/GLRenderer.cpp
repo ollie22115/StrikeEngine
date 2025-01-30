@@ -113,12 +113,20 @@ namespace Strike {
 		ib.bind();
 
 		for (GLObject& object : rendererObjects) if (object.object->visibility) {
+			program.setUniformMat4f("u_transform", object.object->transform, GL_FALSE);
+			program.setUniform4f("colour", object.object->colour[0], object.object->colour[1], object.object->colour[2], object.object->colour[3]);
 			textureMap[object.textureID]->bind();
 
 			glDrawElements(GL_TRIANGLES, object.vertexCount, GL_UNSIGNED_INT, (const void*) object.offset);
 		}
 
 		glfwSwapBuffers(window);
+	}
+
+	GLRenderer::~GLRenderer() {
+		for (auto kv : textureMap) {
+			delete kv.second;
+		}
 	}
 
 }

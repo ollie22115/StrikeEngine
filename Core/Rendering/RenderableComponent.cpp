@@ -30,25 +30,27 @@ namespace Strike {
 			}
 		}
 
+		//TODO!!! Sort out transforms (part below)
+
 		glm::mat4 transform(1.0f);
 
-		//translating object so it's min x and y position is at the origin 0
-		transform = glm::translate(transform, glm::vec3(obj.minPosX(), obj.minPosY(), 0.0f));
-
 		//scaling object so it fits the designated size on the screen
-		float scaleX = (maxX - minX) / (obj.minPosX() - obj.maxPosX());
-		float scaleY = (maxY - minY) / (obj.minPosY() - obj.maxPosY());
+		float scaleX = (maxX - minX) / (obj.width());
+		float scaleY = (maxY - minY) / (obj.height());
 		transform = glm::scale(transform, glm::vec3(scaleX, scaleY, 1.0f));
 
+		//translating object so it's min x and y position is at the origin 0
+		transform = glm::translate(glm::mat4(1.0f), glm::vec3(-obj.minPosX() * scaleX, -obj.minPosY() * scaleY, 0.0f)) * transform;
+
 		//translating to position on the screen
-		transform = glm::translate(transform, glm::vec3(minX, minY, 0.0f));
+		transform = glm::translate(glm::mat4(1.0f), glm::vec3(minX, minY, 0.0f)) * transform;
 
 		//transform to ndc coordinates
-		transform = glm::translate(transform, glm::vec3(-resX / 2, -resY / 2, 0.0f));
-		transform = glm::scale(transform, glm::vec3(1 / (resX / 2), 1 / (resY / 2), 0.0f));
+		transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f / (resX / 2.0f), 1.0f / (resY / 2.0f), 1.0f)) * transform;
+		transform = glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -1.0f, 0.0f)) * transform;
 
 		//applying transform to object
-		obj.transform = transform;
+		obj.transform = glm::transpose(transform);
 
 		objects.push_back(obj);
 	}
@@ -63,7 +65,6 @@ namespace Strike {
 	bool Vertex::operator==(const Vertex& other) {
 		if (this->pos != other.pos) return false;
 		else if (this->texCoords != other.texCoords) return false;
-		else if (this->colour != other.colour) return false;
 		else return true;
 	}
 

@@ -90,6 +90,19 @@ bool GLP::Program::setUniform4f(const char* uniformName, float f1, float f2, flo
 	return true;
 }
 
+bool GLP::Program::setUniformMat4f(const char* uniformName, const glm::mat4& matrix, GLenum transpose) {
+
+	if (uniforms.find(uniformName) == uniforms.end()) {
+		int uniformLocation = glGetUniformLocation(id, uniformName);
+		if (uniformLocation < 0) return false;
+
+		uniforms[uniformName] = uniformLocation;
+	}
+
+	glUniformMatrix4fv(uniforms[uniformName], 1, transpose, &matrix[0][0]); //!!!CHECK THE TRANSPOSE
+	return true;
+}
+
 GLP::Program::~Program() {
 	glDeleteProgram(id);
 }
