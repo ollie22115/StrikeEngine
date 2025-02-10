@@ -1,6 +1,7 @@
 #include "Log.h"
 
 #include "Logger.h"
+#include <GLDebug.h>
 
 namespace Strike {
 
@@ -229,5 +230,51 @@ namespace Strike {
 			std::cout << "[ " << matrix[i][0] << ", " << matrix[i][1] << ", " << matrix[i][2] << ", " << matrix[i][3] << " ]\n";
 		
 		std::cout << "\n";
+	}
+
+	void Log::logObjectTransformedPos(RenderableObject& object) {
+		std::cout << "Object: " << object.id << "\n";
+		
+		for (Triangle& triangle : object.triangles) {
+			std::cout << "  Triangle:\n";
+			
+			for (Vertex& vertex : triangle.vertices) {
+				std::cout << "    ";
+				logVector4(object.transform * vertex.pos);
+			}
+
+			std::cout << "\n";
+		}
+	}
+
+	void Log::logVertexBuffer(const uint32_t& offset, const uint32_t& size, glm::mat4& transform) {
+		//TODO!!! IMPROVE!
+		float data[1024];
+
+		glGetBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+		for (uint32_t i = 0; i < size / 4; i++)
+			std::cout << data[i] << "\n";
+
+		std::cout << "\n";
+
+		glm::vec4 test = glm::vec4(data[0], data[1], data[2], data[3]);
+		glm::vec4 result = test * transform;
+		logVector4(result);
+
+		test = glm::vec4(data[6], data[7], data[8], data[9]);
+		result = test * transform;
+		logVector4(result);
+
+		test = glm::vec4(data[12], data[13], data[14], data[15]);
+		result = test * transform;
+		logVector4(result);
+	}
+
+	void Log::logIndexBuffer(const uint32_t offset, const uint32_t size) {
+		uint32_t data[1024];
+
+		glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+		for (uint32_t i = 0; i < size / 4; i++)
+			std::cout << data[i] << "\n";
 	}
 }

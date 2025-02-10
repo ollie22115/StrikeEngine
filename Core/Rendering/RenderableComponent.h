@@ -92,7 +92,7 @@ namespace Strike {
 		GLP::VertexLayout vertexLayout;
 
 		void addObject(RenderableObject& obj, float minX, float minY, float maxX, float maxY,
-			float resX, float resY,
+			float resX, float resY, float rotation = 0.0f,
 			bool doCenter = true, bool defaultVisibility = true);
 
 		void configureBuffers(GLP::VertexBuffer& vb, GLP::IndexBuffer& ib);

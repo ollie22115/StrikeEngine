@@ -13,7 +13,7 @@ project "StrikeEngine"
         "Dependencies/Vendor/glm"
     }
 
-    files {"**.cpp", "**.h"}
+    files {"**.cpp", "**.h", "**.c"}
 
     filter { "configurations:Debug" }
         defines { "STRIKE_DEBUG" }

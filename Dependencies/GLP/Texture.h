@@ -9,10 +9,10 @@ namespace GLP {
 	class Texture {
 	public:
 		Texture() = default;	//TODO!!! look over this class and give it a better constructor
-		Texture(const char* src, bool mipmap = true, int32_t bitsPerPixel = 4,
+		Texture(const char* src, int32_t bitsPerPixel = 4,
 			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
-			GLenum magFilterParam = GL_LINEAR_MIPMAP_LINEAR,
-			GLenum minFilterParam = GL_LINEAR);
+			GLenum minFilterParam = GL_LINEAR,
+			GLenum magFilterParam = GL_LINEAR);
 
 		inline GLuint getId() { return id; }
 		inline GLuint getId() const { return id; }
@@ -30,9 +30,17 @@ namespace GLP {
 
 		~Texture();
 
-	private:
+	protected:
 		GLuint id;
 		int32_t width, height, bitsPerPixel;
 	};
 
+	class Mipmap : public Texture {
+	public:
+		Mipmap() = default;	//TODO!!! look over this class and give it a better constructor
+		Mipmap(const char* src, int32_t bitsPerPixel = 4,
+			GLenum minFilterParam = GL_LINEAR_MIPMAP_LINEAR,
+			GLenum magFilterParam = GL_LINEAR,
+			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT);
+	};
 }

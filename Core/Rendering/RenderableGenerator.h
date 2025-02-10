@@ -9,7 +9,7 @@ namespace Strike {
 	RenderableObject genRec(const std::string& id, StrikeTexture& texture,
 		float width, float height, float layer = 0.0f, 
 		glm::vec4 colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-		glm::vec4 texCoords = glm::vec4(-1.0f, -1.0f, 1.0f, 1.0f));
+		glm::vec4 texCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
 	RenderableObject genTriangle(const std::string& id, StrikeTexture& texture, 
 		glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec4 colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),

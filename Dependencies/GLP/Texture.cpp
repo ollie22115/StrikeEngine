@@ -1,7 +1,7 @@
 #include "Texture.h"
 #include <stb.h>
 
-GLP::Texture::Texture(const char* src, bool mipmap, int32_t bitsPerPixel, 
+GLP::Texture::Texture(const char* src, int32_t bitsPerPixel, 
 							GLenum sParam, GLenum tParam, 
 							GLenum magFilterParam, GLenum minFilterParam) : id(0), width(0), height(0), bitsPerPixel(bitsPerPixel) {
 
@@ -16,11 +16,10 @@ GLP::Texture::Texture(const char* src, bool mipmap, int32_t bitsPerPixel,
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sParam);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tParam);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, magFilterParam);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minFilterParam);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterParam);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterParam);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	if (mipmap) glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);
 }
@@ -33,4 +32,10 @@ void GLP::Texture::bind(unsigned int slot){
 
 GLP::Texture::~Texture(){
 	glDeleteTextures(1, &id);
+}
+
+GLP::Mipmap::Mipmap(const char* src, int32_t bitsPerPixel, GLenum minFilterParam, GLenum magFilterParam, GLenum sParam, GLenum tParam) : 
+	Texture(src, bitsPerPixel, sParam, tParam, magFilterParam, minFilterParam) {
+
+	glGenerateMipmap(GL_TEXTURE_2D);
 }

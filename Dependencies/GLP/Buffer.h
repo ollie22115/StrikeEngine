@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <vector>
 #include "VertexLayout.h"
+#include <array>
 
 namespace GLP {
 
@@ -21,6 +22,8 @@ namespace GLP {
 		void setData(T* data, unsigned int count, GLenum usage);
 
 		void bind();
+
+		void* getBufferData(uint32_t offset, uint32_t size);
 
 		~Buffer();
 

@@ -8,6 +8,12 @@ void GLP::Buffer::bind(){
 	glBindBuffer(target, id);
 }
 
+void* GLP::Buffer::getBufferData(uint32_t offset, uint32_t size) {
+	void* dataPtr = nullptr;
+	glGetBufferSubData(target, offset, size, dataPtr);
+	return dataPtr;
+}
+
 GLP::Buffer::~Buffer(){
 	glDeleteBuffers(1, &id);
 }

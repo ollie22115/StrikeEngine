@@ -4,8 +4,11 @@
 
 namespace Strike {
 
-	void RenderableComponent::addObject(RenderableObject& obj, float minX, float minY, float maxX, float maxY, float resX, float resY, bool doCenter, bool defaultVisibility) {
+	void RenderableComponent::addObject(RenderableObject& obj, float minX, float minY, float maxX, float maxY, 
+		float resX, float resY, float rotation, bool doCenter, bool defaultVisibility) {
 		//TODO!!! TEST IT'S PROBABLY BUGGY
+
+		obj.visibility = defaultVisibility;
 
 #ifdef STRIKE_DEBUG
 		for (RenderableObject& object : objects) if (object.id == obj.id)
@@ -30,14 +33,16 @@ namespace Strike {
 			}
 		}
 
-		//TODO!!! Sort out transforms (part below)
-
+		//Generating Transform
 		glm::mat4 transform(1.0f);
 
 		//scaling object so it fits the designated size on the screen
 		float scaleX = (maxX - minX) / (obj.width());
 		float scaleY = (maxY - minY) / (obj.height());
 		transform = glm::scale(transform, glm::vec3(scaleX, scaleY, 1.0f));
+
+		//applying rotation to object
+		transform = glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f }) * transform;
 
 		//translating object so it's min x and y position is at the origin 0
 		transform = glm::translate(glm::mat4(1.0f), glm::vec3(-obj.minPosX() * scaleX, -obj.minPosY() * scaleY, 0.0f)) * transform;

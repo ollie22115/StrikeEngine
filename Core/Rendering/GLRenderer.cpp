@@ -1,4 +1,5 @@
 #include "GLRenderer.h"
+#include "../Debugging/StrikeDebug.h"
 
 #ifdef STRIKE_DEBUG
 #include "../Debugging/Log.h"
@@ -9,9 +10,7 @@ namespace Strike {
 	GLRenderer::GLRenderer(GLFWwindow** window) {
 		int glfwInitResult = glfwInit();
 
-#ifdef STRIKE_DEBUG
-		if (!glfwInitResult) Log::logError("glfw Failed to initialise!");
-#endif
+		STRIKE_ASSERT(glfwInitResult, "glfw Failed to initialise!");
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -31,9 +30,7 @@ namespace Strike {
 		glfwMakeContextCurrent(*window);
 
 		int gladLoadResult = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-#ifdef STRIKE_DEBUG
-		if (!gladLoadResult) Log::logError("Failed to initialize GLAD!");
-#endif
+		STRIKE_ASSERT(gladLoadResult, "Failed to initialize GLAD!");
 
 		glViewport(0, 0, 1280, 800);
 
@@ -71,7 +68,7 @@ namespace Strike {
 
 			//textures
 			if (texturePathMap.find(object.texture->filePath) == texturePathMap.end()) {
-				GLP::Texture* texture = new GLP::Texture(object.texture->filePath.c_str(), object.texture->mipmap);
+				GLP::Texture* texture = new GLP::Texture(object.texture->filePath.c_str());
 				textureMap[texture->getId()] = texture;
 
 				texturePathMap[object.texture->filePath] = texture->getId();
@@ -98,6 +95,8 @@ namespace Strike {
 			rendererObjects.emplace_back(&object, vertexCountForGLObject, offsetInBufferForGLObject, textureIdForGLObject);
 		}
 
+		vb.bind();
+		ib.bind();
 		if(!vertices.empty()) vb.setData<float>((float*) &vertices[0], Vertex::count() * vertices.size(), GL_STATIC_DRAW);
 		if(!indices.empty()) ib.setData<uint32_t>(&indices[0], indices.size(), GL_STATIC_DRAW);
 
@@ -106,13 +105,14 @@ namespace Strike {
 
 	void GLRenderer::drawScene(GLFWwindow* window) {
 		//TODO!!! Test
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		vb.bind();
 		ib.bind();
 
 		for (GLObject& object : rendererObjects) if (object.object->visibility) {
+
 			program.setUniformMat4f("u_transform", object.object->transform, GL_FALSE);
 			program.setUniform4f("colour", object.object->colour[0], object.object->colour[1], object.object->colour[2], object.object->colour[3]);
 			textureMap[object.textureID]->bind();
@@ -124,9 +124,8 @@ namespace Strike {
 	}
 
 	GLRenderer::~GLRenderer() {
-		for (auto kv : textureMap) {
+		for (auto& kv : textureMap) 
 			delete kv.second;
-		}
 	}
 
 }
