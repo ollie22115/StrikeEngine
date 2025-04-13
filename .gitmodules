@@ -1,3 +1,6 @@
 [submodule "Dependencies/Vendor/glm"]
 	path = Dependencies/Vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "Dependencies/Vendor/GLFW/glfw"]
+	path = Dependencies/Vendor/GLFW/glfw
+	url = https://github.com/glfw/glfw.git

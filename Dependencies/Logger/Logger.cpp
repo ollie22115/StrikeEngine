@@ -1,5 +1,4 @@
-#include "Logger.h"
-#include "Logger.h"
+#include "StrikePCH.h"
 #include "Logger.h"
 
 void Console::logText(const char* text, const COLOUR& colour, const bool& newLine) {

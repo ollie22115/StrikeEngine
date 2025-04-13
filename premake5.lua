@@ -1,3 +1,5 @@
+OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
+
 project "StrikeEngine"
     kind "StaticLib"
     language "C++"
@@ -5,15 +7,21 @@ project "StrikeEngine"
     targetdir("bin/" .. OutputDir)
     objdir("bin-int/" .. OutputDir)
 
-    includedirs {
-        "Dependencies/Vendor/glfw/include",         
-        "Dependencies/Vendor/glad/include",
-        "Dependencies/GLP",
-        "Dependencies/Vendor/stbImage",
-        "Dependencies/Vendor/glm"
+    files {"**.cpp", "**.h", "**.c"}
+
+    removefiles{
+        "Dependencies/Vendor/GLFW/**.c",
+        "Dependencies/Vendor/glad/**.c"
     }
 
-    files {"**.cpp", "**.h", "**.c"}
+    includedirs {
+        "Dependencies/Vendor/GLFW/glfw/include",       
+        "Dependencies/Vendor/glad/include",
+        "Dependencies/Vendor/stbImage",
+        "Dependencies/Vendor/glm",
+        "src/Core",
+        "src/Platforms"
+    }
 
     filter { "configurations:Debug" }
         defines { "STRIKE_DEBUG" }
@@ -22,3 +30,9 @@ project "StrikeEngine"
     filter { "configurations:Release" }
         defines { "STRIKE_RELEASE" }
         optimize "On"
+
+    links{"GLFW", "Glad", "opengl32.lib"}
+
+include "Dependencies/Vendor/GLFW/glfw/premake5.lua"
+
+include "Dependencies/Vendor/glad/premake5.lua"
