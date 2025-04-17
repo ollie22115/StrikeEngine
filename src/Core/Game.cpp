@@ -23,7 +23,6 @@ namespace Strike {
 
 		loadedScene = scene;
 		
-		//TODO!!! include line below when renderer is fixed
 		renderer->loadScene(loadedScene);
 
 		loadedScene->onStart();
@@ -54,7 +53,7 @@ namespace Strike {
 		Log::logMouseButtonState(window->getEventState());
 #endif
 		loadedScene->onUpdate(window->getEventState(), deltaTime);
-		 
+		
 		renderer->draw(window);
 	}
 

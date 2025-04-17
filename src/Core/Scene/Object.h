@@ -33,6 +33,6 @@ namespace Strike {
 
 
 	//TODO!!! THROWAWAY CODE
-	void fixSpriteOnScreen(Object& object, const uint32_t& x0, const uint32_t& y0, const uint32_t& x1, const uint32_t& y1, 
+	void fixSpriteOnScreen(Object& object, const uint32_t& x0, const uint32_t& y0, const uint32_t& x1, const uint32_t& y1, const float& rotation = 0.0f,
 		const uint32_t& screenWidth = 1280.0f, const uint32_t& screenHeight = 800.0f);
 }

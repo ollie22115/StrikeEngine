@@ -4,6 +4,7 @@
 #include "Component/SpriteRenderer.h"
 
 #include "Debugging/StrikeDebug.h"
+#include "Utils/Math.h"
 
 namespace Strike {
 
@@ -35,7 +36,7 @@ namespace Strike {
 	Object::~Object() {}
 
 	//TODO!!! TEMPORARY CODE
-	void fixSpriteOnScreen(Object& object, const uint32_t& x0, const uint32_t& y0, const uint32_t& x1, const uint32_t& y1, 
+	void fixSpriteOnScreen(Object& object, const uint32_t& x0, const uint32_t& y0, const uint32_t& x1, const uint32_t& y1, const float& rotation,
 		const uint32_t& screenWidth, const uint32_t& screenHeight) {
 
 		uint32_t width = x1 - x0;
@@ -52,6 +53,9 @@ namespace Strike {
 		float scaleX = (float)width / (float)spriteRenderer->getWidth();
 		float scaleY = (float)height / (float)spriteRenderer->getHeight();
 		Transform::scale(object.transform, scaleX, scaleY);
+
+		//Rotate
+		Transform::rotate(object.transform, Math::degreesToRadians(rotation), glm::vec3(0, 0, 1));
 
 		//Translate to coordinates (0, 0) on screen and by x0 and y0
 		Transform::translate(object.transform, ((float)spriteRenderer->getWidth() * scaleX) / 2.0f, ((float)spriteRenderer->getHeight() * scaleY) / 2.0f);

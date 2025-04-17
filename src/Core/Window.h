@@ -45,7 +45,7 @@ namespace Strike {
 
 		uint32_t width, height;
 
-		static EventState eventState;		//Static Might cause issues
+		static EventState eventState;		//TODO!!! Rethink this - Static Might cause issues
 	};
 
 }

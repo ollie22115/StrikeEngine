@@ -80,44 +80,31 @@ namespace Strike {
 		uint32_t key_strike = keyCodeGLFWToStrike(key_glfw);
 		if (key_strike == STRIKE_KEY_NONE) {
 #ifdef STRIKE_DEBUG
-			STRIKE_WARNING(false, LOG_PLATFORM_GLFW, "keycode not supported ");	//Change to Log::logWarning();
+			STRIKE_WARNING(false, LOG_PLATFORM_GLFW, "keycode not supported ");
 			std::cout << key_glfw << "\n";
 #endif
 			return;
 		}
 
-		if (action == GLFW_PRESS) {
-			eventState.keysPressed.set(key_strike);
-			eventState.keysHeld.set(key_strike);
-			eventState.keysReleased.reset(key_strike);
-
-		}
-		else if (action == GLFW_RELEASE) {
-			eventState.keysPressed.reset(key_strike);
-			eventState.keysHeld.reset(key_strike);
-			eventState.keysReleased.set(key_strike);
-
-		}
+		if (action == GLFW_PRESS) 
+			eventState.registerKeyPress(key_strike);
+		else if (action == GLFW_RELEASE) 
+			eventState.registerKeyReleased(key_strike);
+		
 	}
 
 	void GLFWWindow::handleMouseButtonInput(GLFWwindow*, int mouseButton_glfw, int action, int mods) {
 		uint32_t mouseButton_strike = mouseButtonCodeGLFWToStrike(mouseButton_glfw);
 
-		if (action == GLFW_PRESS) {
-			eventState.mouseState.buttonsPressed.set(mouseButton_strike);
-			eventState.mouseState.buttonsHeld.set(mouseButton_strike);
-			eventState.mouseState.buttonsReleased.reset(mouseButton_strike);
+		if (action == GLFW_PRESS)
+			eventState.registerMouseButtonPressed(mouseButton_strike);
+		else if (action == GLFW_RELEASE)
+			eventState.registerMouseButtonReleased(mouseButton_strike);
 		
-		} else if(action == GLFW_RELEASE) {
-			eventState.mouseState.buttonsPressed.reset(mouseButton_strike);
-			eventState.mouseState.buttonsHeld.reset(mouseButton_strike);
-			eventState.mouseState.buttonsReleased.set(mouseButton_strike);
-		}
 	}
 
 	void GLFWWindow::handleMousePos(GLFWwindow* window, double xPos, double yPos) {
-		eventState.mouseState.xPos = xPos;
-		eventState.mouseState.yPos = yPos;
+		eventState.setMousePosition(xPos, yPos);
 	}
 
 	uint32_t GLFWWindow::keyCodeGLFWToStrike(const uint32_t& key_strike) {

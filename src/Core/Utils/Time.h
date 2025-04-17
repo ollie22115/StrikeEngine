@@ -10,12 +10,12 @@ namespace Strike {
 		int32_t elapsedTime;
 
 	public:
-		inline TimeWindow(int32_t& elapsedTime) : elapsedTime(elapsedTime) {}
+		TimeWindow(const int32_t& elapsedTime) : elapsedTime(elapsedTime) {}
 
 		inline void onUpdate(const int32_t& timeStep) { elapsedTime -= timeStep; }
 
 		inline bool isActive() { return elapsedTime > 0; }
-		inline bool isFinished() { !isActive(); }
+		inline bool isFinished() { return !isActive(); }
 
 		inline int32_t getElapsedTime() { return elapsedTime; }
 	};

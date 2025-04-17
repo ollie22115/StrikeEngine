@@ -5,7 +5,8 @@
 namespace Strike {
 
 	class Math {
-		float degreesToRadians(float degrees);
+	public:
+		static float degreesToRadians(const float& degrees);
 	};
 
 }
