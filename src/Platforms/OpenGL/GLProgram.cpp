@@ -67,7 +67,7 @@ namespace Strike {
 		glUseProgram(id);
 	}
 
-	void GLProgram::setUniform4f(std::string& uniformName, float f1, float f2, float f3, float f4) {
+	void GLProgram::setUniform4f(const std::string& uniformName, float f1, float f2, float f3, float f4) {
 		
 		if (uniforms.find(uniformName) == uniforms.end()) {
 			int uniformLocation = glGetUniformLocation(id, uniformName.c_str());
@@ -83,14 +83,11 @@ namespace Strike {
 		glUniform4f(uniforms[uniformName], f1, f2, f3, f4);
 	}
 
-	void GLProgram::setUniformMat4f(std::string& uniformName, const glm::mat4& matrix, GLenum transpose) {
+	void GLProgram::setUniformMat4f(const std::string& uniformName, const glm::mat4& matrix, GLenum transpose) {
 		if (uniforms.find(uniformName) == uniforms.end()) {
 			int uniformLocation = glGetUniformLocation(id, uniformName.c_str());
 			
-#ifdef STRIKE_DEBUG
-			if (uniformLocation < 0)
-				Log::logError(LOG_PLATFORM_CORE, "Failed to initialised uniform!");
-#endif
+			STRIKE_ASSERT(uniformLocation >= 0, LOG_PLATFORM_OPENGL, "Failed to initialised uniform!");
 
 			uniforms[uniformName] = uniformLocation;
 		}

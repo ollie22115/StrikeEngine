@@ -13,7 +13,9 @@ namespace Strike {
 		inline std::shared_ptr<GLProgram>& getShader() { return shader; }
 		inline std::shared_ptr<GLTexture2D>& getTexture() { return texture; }
 
-		void bind();
+		void bind(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+
+		void uploadMat4(const std::string& uniformName, const glm::mat4& matrix);
 
 		bool operator ==(const GLMaterial& other) const;
 

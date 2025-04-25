@@ -30,7 +30,7 @@ namespace Strike {
 
 		void update() override;
 
-		void draw(std::shared_ptr<Window>& window) override;
+		void draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) override;
 
 
 		//OpenGL specific functions

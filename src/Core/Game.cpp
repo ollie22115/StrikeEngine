@@ -2,6 +2,7 @@
 #include "Game.h"
 
 #include "Debugging/Log.h"
+#include "Debugging/ProfileTimer.h"
 #include "EventsAndInput/WindowEventCode.h"
 #include "Utils/Time.h"
 
@@ -45,16 +46,20 @@ namespace Strike {
 	void Game::update() {
 		uint64_t deltaTime = currentTimeMS() - prevRecordedTime;
 		prevRecordedTime = currentTimeMS();
-		elapsedTime += deltaTime;
 
 		window->onUpdate();
+
 #ifdef STRIKE_DEBUG
+		elapsedTime += deltaTime;
+		elapsedFrames++;
 		Log::logKeyState(window->getEventState());
 		Log::logMouseButtonState(window->getEventState());
 #endif
+
 		loadedScene->onUpdate(window->getEventState(), deltaTime);
-		
-		renderer->draw(window);
+
+		TopDownCamera& camera = loadedScene->getCamera();
+		renderer->draw(window, camera.getViewMatrix(), camera.getProjectionMatrix());
 	}
 
 	Game::~Game() {

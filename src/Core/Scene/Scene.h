@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "EventsAndInput/EventState.h"
 #include "Object.h"
+#include "Camera.h"
 
 namespace Strike {
 
@@ -14,6 +15,7 @@ namespace Strike {
 		inline Scene() = default;
 
 		inline std::vector<Object>& getObjects() { return objects; }
+		inline TopDownCamera& getCamera() { return camera; }
 
 		virtual void onStart() = 0;	//method that is called when a scene is being loaded
 		virtual void onUpdate(const EventState& eventState, const uint64_t& deltaTime) = 0;		//method that is called every frame upon every update call
@@ -23,6 +25,7 @@ namespace Strike {
 
 	protected:
 		std::vector<Object> objects;
+		TopDownCamera camera;
 	};
 
 }

@@ -3,8 +3,8 @@
 
 #include "Component/SpriteRenderer.h"
 
-#include "Debugging/StrikeDebug.h"
 #include "Utils/Math.h"
+#include "Debugging/StrikeDebug.h"
 
 namespace Strike {
 

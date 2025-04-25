@@ -19,8 +19,8 @@ namespace Strike {
 
 		void bind();
 
-		void setUniform4f(std::string& uniformName, float f1, float f2, float f3, float f4);
-		void setUniformMat4f(std::string& uniformName, const glm::mat4& matrix, GLenum transpose);
+		void setUniform4f(const std::string& uniformName, float f1, float f2, float f3, float f4);
+		void setUniformMat4f(const std::string& uniformName, const glm::mat4& matrix, GLenum transpose);
 
 		~GLProgram();
 

@@ -41,11 +41,9 @@ namespace Strike {
 		
 		virtual void swapBuffers(const std::shared_ptr<Window>& window) = 0;
 
-		///virtual void setVertexLayout(const VertexLayout& layout) = 0;	//for now vertex layout will be set for all vertex buffers
-
 		virtual void loadScene(std::shared_ptr<Scene>& scene) = 0;
 
-		virtual void draw(std::shared_ptr<Window>& window) = 0;
+		virtual void draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) = 0;
 
 		virtual void update() = 0;
 

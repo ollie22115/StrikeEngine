@@ -103,7 +103,7 @@ namespace Strike {
 
 	}
 
-	void GLRenderer::draw(std::shared_ptr<Window>& window) {
+	void GLRenderer::draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -113,7 +113,7 @@ namespace Strike {
 		for (GLMesh& mesh : rendererObjectsStatic) {
 			if (!mesh.object->isVisible) continue;
 
-			mesh.material.bind();
+			mesh.material.bind(viewMatrix, projectionMatrix);
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*) (mesh.offset * sizeof(float)));
 		}
 		
