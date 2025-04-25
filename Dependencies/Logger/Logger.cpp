@@ -1,49 +1,26 @@
 #include "StrikePCH.h"
 #include "Logger.h"
+#include "Logger.h"
+#include "Logger.h"
+#include "Logger.h"
 
-void Console::logText(const char* text, const COLOUR& colour, const bool& newLine) {
-	changeConsoleColour(colour);
-	std::cout << text;
-	if (newLine) std::cout << "\n";
-}
+namespace Strike {
+	std::ostream& operator<<(std::ostream& os, const glm::vec4& vector) {
+		os << "vec4(" << vector.x << ", " << vector.y << ", " << vector.z << ", " << vector.a << ")";
 
-void Console::logText(const std::string& text, const COLOUR& colour) {
-	changeConsoleColour(colour);
-	std::cout << text;
-}
-
-void Console::changeConsoleColour(const COLOUR& colour) {
-	switch (colour) {
-	case COLOUR::WHITE:
-		std::cout << "\033[37m";
-		break;
-
-	case COLOUR::GRAY:
-		std::cout << "\033[90m";
-		break;
-
-	case COLOUR::RED:
-		std::cout << "\033[31m";
-		break;
-
-	case COLOUR::GREEN:
-		std::cout << "\033[32m";
-		break;
-
-	case COLOUR::BLUE:
-		std::cout << "\033[34m";
-		break;
-
-	case COLOUR::YELLOW:
-		std::cout << "\033[33m";
-		break;
+		return os;
 	}
-}
 
-void Console::resetColour() {
-	changeConsoleColour(COLOUR::WHITE);
-}
+	std::ostream& operator<<(std::ostream& os, const glm::mat4& matrix) {
+		os << "mat4(";
 
-void Console::clearConsole() {
-	system("cls");
+		os << matrix[0][0] << ", " << matrix[0][1] << ", " << matrix[0][2] << ", " << matrix[0][3] << "\n";
+
+		for (int i = 1; i < 3; i++)
+			os << "     " << matrix[i][0] << ", " << matrix[i][1] << ", " << matrix[i][2] << ", " << matrix[i][3] << "\n";
+
+		os << "     " << matrix[3][0] << ", " << matrix[3][1] << ", " << matrix[3][2] << ", " << matrix[3][3] << ")";
+
+		return os;
+	}
 }

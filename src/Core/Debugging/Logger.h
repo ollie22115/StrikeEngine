@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <glm/glm.hpp>
 
 namespace Strike {
 
@@ -40,4 +41,8 @@ namespace Strike {
 
 		static std::string getColourCode(uint32_t colourCode);
 	};
+
+	std::ostream& operator<<(std::ostream& os, const glm::vec4& vector);
+
+	std::ostream& operator<<(std::ostream& os, const glm::mat4& matrix);
 }

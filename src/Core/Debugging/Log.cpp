@@ -1,7 +1,6 @@
 #include "StrikePCH.h"
 #include "Log.h"
 
-#include "Logger.h"
 #include "EventsAndInput/KeyButtonCode.h"
 #include "EventsAndInput/MouseButtonCode.h"
 #include <sstream>
