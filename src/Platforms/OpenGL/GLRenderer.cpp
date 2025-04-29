@@ -58,7 +58,6 @@ namespace Strike {
 
 		for (Object& object : scene->getObjects()) {
 			std::vector<std::shared_ptr<RenderableComponent>> renderables = object.getRenderableComponents();
-			if (renderables.empty()) continue;
 
 			for (std::shared_ptr<RenderableComponent>& renderable : renderables) {
 				std::vector<Vertex> objectVertices =  renderable->getVertices(object.transform);

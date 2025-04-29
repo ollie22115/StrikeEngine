@@ -8,13 +8,6 @@
 
 namespace Strike {
 
-	bool Object::containsComponentType(Component::Type componentType) {
-		for (auto component : components)
-			if (component->getType() == componentType) return true;
-		
-		return false;
-	}
-
 	std::vector<std::shared_ptr<RenderableComponent>> Object::getRenderableComponents() {
 		std::vector<std::shared_ptr<RenderableComponent>> renderableComponents;
 		
@@ -24,7 +17,7 @@ namespace Strike {
 		return renderableComponents;
 	}
 
-	std::shared_ptr<Component> Object::getComponent(const Component::Type& componentType) {
+	std::shared_ptr<Component> Object::getComponentByEnum(const Component::Type& componentType) {
 
 		for (auto component : components)
 			if (component->getType() == componentType) 
@@ -43,7 +36,7 @@ namespace Strike {
 		uint32_t height = y1 - y0;
 
 		std::shared_ptr<SpriteRenderer> spriteRenderer = 
-			std::static_pointer_cast<SpriteRenderer>(object.getComponent(Component::Type::SpriteRenderer));
+			std::static_pointer_cast<SpriteRenderer>(object.getComponentByEnum(Component::Type::SpriteRenderer));
 
 		STRIKE_ASSERT(spriteRenderer != nullptr, LOG_PLATFORM_CORE, "Object does not contain Sprite Renderer Component");
 
@@ -60,10 +53,6 @@ namespace Strike {
 		//Translate to coordinates (0, 0) on screen and by x0 and y0
 		Transform::translate(object.transform, ((float)spriteRenderer->getWidth() * scaleX) / 2.0f, ((float)spriteRenderer->getHeight() * scaleY) / 2.0f);
 		Transform::translate(object.transform, x0, y0);
-
-		//Translate to ND coordinates
-		Transform::scale(object.transform, 2.0f/(float)screenWidth, 2.0f/(float)screenHeight);
-		Transform::translate(object.transform, -1.0f, -1.0f);
 	}
 	//TEMPORARY CODE END!!!
 }

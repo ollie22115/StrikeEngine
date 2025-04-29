@@ -4,6 +4,10 @@
 
 namespace Strike {
 
+    void TopDownCamera::moveCamera(float x, float y, float z) {
+        Transform::translate(transform, -x, -y, -z);
+    }
+
     glm::mat4 TopDownCamera::getViewMatrix() {
         return transform;
     }

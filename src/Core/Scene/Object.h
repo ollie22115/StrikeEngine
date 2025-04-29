@@ -7,6 +7,8 @@
 
 #include "Utils/Transform.h"
 
+#include "Component/SpriteRenderer.h"
+
 namespace Strike {
 
 	struct Object {
@@ -24,13 +26,34 @@ namespace Strike {
 
 		std::vector<std::shared_ptr<RenderableComponent>> getRenderableComponents();
 
-		std::shared_ptr<Component> getComponent(const Component::Type& componentType);
+		std::shared_ptr<Component> getComponentByEnum(const Component::Type& componentType);
 
-		bool containsComponentType(Component::Type componentType);
+		template <typename T>
+		bool hasComponent();
+
+		template<typename T>
+		std::shared_ptr<T> getComponent();
+
+		template <>
+		std::shared_ptr<SpriteRenderer> getComponent<SpriteRenderer>();
 
 		~Object();
 	};
 
+	template <typename T>
+	bool Object::hasComponent() {
+		return getComponent<T>() != nullptr;
+	}
+
+	template<typename T>
+	std::shared_ptr<T> Object::getComponent() {
+		return nullptr;
+	}
+
+	template<>
+	std::shared_ptr<SpriteRenderer> Object::getComponent<SpriteRenderer>() {
+		return std::static_pointer_cast<SpriteRenderer>(getComponentByEnum(Component::Type::SpriteRenderer));
+	}
 
 	//TODO!!! THROWAWAY CODE
 	void fixSpriteOnScreen(Object& object, const uint32_t& x0, const uint32_t& y0, const uint32_t& x1, const uint32_t& y1, const float& rotation = 0.0f,
