@@ -18,7 +18,7 @@ namespace Strike {
 		bool isVisible;
 		const bool isStatic;
 
-		Object(const std::string& id, const glm::mat4& transform = Transform::genIdentityMatrix(), const bool& isVisible = true, const bool& isStatic = false) :
+		Object(const std::string& id, const bool& isStatic = false, const bool& isVisible = true, const glm::mat4& transform = Transform::genIdentityMatrix()) :
 			id(id), transform(transform), isVisible(isVisible), isStatic(isStatic) {
 		}
 

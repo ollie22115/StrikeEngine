@@ -11,10 +11,13 @@ namespace Strike {
 	public:
 		GLVertexBuffer();
 
-		void bind();
-		void unBind();
+		inline GLuint getID() const { return id; }
+		inline size_t getSize() const { return size; }
 
-		virtual void setData(const uint32_t& size, void* data, uint32_t usage);
+		void bind() const;
+		void unBind() const;
+
+		void setData(const size_t& size, void* data, uint32_t usage);
 
 		void setVertexLayout(const VertexLayout& vertexLayout);
 
@@ -24,21 +27,26 @@ namespace Strike {
 		static GLenum coreTypeToGLType(const VertexAttribute::Type& type);
 
 		GLuint id;
+		size_t size;
 	};
 
 	class GLIndexBuffer {
 	public:
 		GLIndexBuffer();
 
-		void bind();
-		void unBind();
+		inline GLuint getID() const { return id; }
+		inline size_t getSize() const { return size; }
 
-		void setData(const uint32_t& size, const void* data, uint32_t usage);
+		void bind() const;
+		void unBind() const;
+
+		void setData(const size_t& size, const void* data, uint32_t usage);
 
 		~GLIndexBuffer();
 
 	private:
 		GLuint id;
+		size_t size;
 	};
 
 }

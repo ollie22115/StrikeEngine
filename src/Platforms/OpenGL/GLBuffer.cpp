@@ -3,22 +3,24 @@
 
 namespace Strike {
 	
-	GLVertexBuffer::GLVertexBuffer() : id(0) {
+	GLVertexBuffer::GLVertexBuffer() : id(0), size(0) {
 		glGenBuffers(1, &id);
 	}
 
-	void GLVertexBuffer::bind() {
+	void GLVertexBuffer::bind() const {
 		glBindBuffer(GL_ARRAY_BUFFER, id);
 	}
 
-	void GLVertexBuffer::unBind() {
+	void GLVertexBuffer::unBind() const {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void GLVertexBuffer::setData(const uint32_t& size, void* data, uint32_t usage) {
+	void GLVertexBuffer::setData(const size_t& size, void* data, uint32_t usage) {
 		bind();
 
 		glBufferData(GL_ARRAY_BUFFER, (int)size, data, usage);
+
+		this->size = size;
 	}
 
 	void GLVertexBuffer::setVertexLayout(const VertexLayout& vertexLayout) {
@@ -68,22 +70,24 @@ namespace Strike {
 
 
 
-	GLIndexBuffer::GLIndexBuffer() {
+	GLIndexBuffer::GLIndexBuffer() : id(0), size(0) {
 		glGenBuffers(1, &id);
 	}
 
-	void GLIndexBuffer::bind() {
+	void GLIndexBuffer::bind() const {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	}
 
-	void GLIndexBuffer::unBind() {
+	void GLIndexBuffer::unBind() const {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void GLIndexBuffer::setData(const uint32_t& size, const void* data, uint32_t usage) {
+	void GLIndexBuffer::setData(const size_t& size, const void* data, uint32_t usage) {
 		bind();
 		
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
+
+		this->size = size;
 	}
 
 	GLIndexBuffer::~GLIndexBuffer() {

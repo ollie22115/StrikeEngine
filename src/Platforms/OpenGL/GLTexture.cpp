@@ -14,6 +14,7 @@ namespace Strike {
 		unsigned char* data = stbi_load(filePath, &width, &height, &bitsPerPixel, bitsPerPixel);
 		this->width = width;
 		this->height = height;
+		this->bitsPerPixel = bitsPerPixel;
 
 #ifdef STRIKE_DEBUG
 		if (!data) Log::logError(LOG_PLATFORM_OPENGL, "stbi Failed to load image");

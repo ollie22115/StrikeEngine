@@ -3537,7 +3537,7 @@ GLAPI PFNGLGETTEXTUREPARAMETERIVPROC glad_glGetTextureParameteriv;
 typedef void (APIENTRYP PFNGLCREATEVERTEXARRAYSPROC)(GLsizei n, GLuint *arrays);
 GLAPI PFNGLCREATEVERTEXARRAYSPROC glad_glCreateVertexArrays;
 #define glCreateVertexArrays glad_glCreateVertexArrays
-typedef void (APIENTRYP PFNGLDISABLEVERTEXARRAYATTRIBPROC)(GLuint vaobj, GLuint index);
+typedef void (APIENTRYP PFNGLDISABLEVERTEXARRAYATTRIBPROC)(GLuint bj, GLuint index);
 GLAPI PFNGLDISABLEVERTEXARRAYATTRIBPROC glad_glDisableVertexArrayAttrib;
 #define glDisableVertexArrayAttrib glad_glDisableVertexArrayAttrib
 typedef void (APIENTRYP PFNGLENABLEVERTEXARRAYATTRIBPROC)(GLuint vaobj, GLuint index);

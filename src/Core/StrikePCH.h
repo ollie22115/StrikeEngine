@@ -15,3 +15,7 @@
 #ifdef STRIKE_WINDOWS
 #include <Windows.h>
 #endif
+
+#ifdef STRIKE_DEBUG
+#include <iostream>
+#endif

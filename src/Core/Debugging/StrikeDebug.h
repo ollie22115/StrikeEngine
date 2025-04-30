@@ -5,7 +5,7 @@
 #ifdef STRIKE_DEBUG
 #define STRIKE_ASSERT(x, platform, msg) if(!(x)) Log::logError(platform, msg)	//TODO change so it causes a breakpoint instead
 #define STRIKE_ERROR(x, platform, msg) if(!(x)) Log::logError(platform, msg)
-#define STRIKE_WARNING(x, platform, msg) if(!(x)) Log::logWarning(platform, msg);
+#define STRIKE_WARNING(x, platform, msg) if(!(x)) Log::logWarning(platform, msg)
 #else
 #define STRIKE_ASSERT(x, platform, msg)
 #define STRIKE_ERROR(x, platform, msg)

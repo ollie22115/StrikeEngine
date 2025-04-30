@@ -41,7 +41,7 @@ namespace Strike {
 
 	private:
 		struct GLMesh {
-			Object* object;
+			Object* object;	//TODO change to shared pointer at some point
 			GLMaterial material;
 			int32_t vertexCount;
 			int32_t offset;
@@ -65,6 +65,10 @@ namespace Strike {
 
 		std::shared_ptr<GLTexture2D> loadTexture2D(const std::string& filePath);
 		std::shared_ptr<GLProgram> loadShader(const std::string& filePath);
+
+		//TODO!!! fix temporary code
+		GLuint staticVertexArrayID;
+		GLuint dynamicVertexArrayID;
 	};
 
 }

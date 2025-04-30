@@ -57,6 +57,7 @@ namespace Strike {
 #endif
 
 		loadedScene->onUpdate(window->getEventState(), deltaTime);
+		renderer->update();
 
 		TopDownCamera& camera = loadedScene->getCamera();
 		renderer->draw(window, camera.getViewMatrix(), camera.getProjectionMatrix());
