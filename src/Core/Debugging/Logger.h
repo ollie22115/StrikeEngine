@@ -43,6 +43,7 @@ namespace Strike {
 	};
 
 	std::ostream& operator<<(std::ostream& os, const glm::vec4& vector);
+	std::ostream& operator<<(std::ostream& os, const glm::vec3& vector);
 
 	std::ostream& operator<<(std::ostream& os, const glm::mat4& matrix);
 }

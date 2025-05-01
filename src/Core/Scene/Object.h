@@ -8,6 +8,7 @@
 #include "Utils/Transform.h"
 
 #include "Component/SpriteRenderer.h"
+#include "Component/Camera.h"
 
 namespace Strike {
 
@@ -37,6 +38,9 @@ namespace Strike {
 		template <>
 		std::shared_ptr<SpriteRenderer> getComponent<SpriteRenderer>();
 
+		template <>
+		std::shared_ptr<Camera> getComponent<Camera>();
+
 		~Object();
 	};
 
@@ -53,6 +57,11 @@ namespace Strike {
 	template<>
 	std::shared_ptr<SpriteRenderer> Object::getComponent<SpriteRenderer>() {
 		return std::static_pointer_cast<SpriteRenderer>(getComponentByEnum(Component::Type::SpriteRenderer));
+	}
+
+	template<>
+	std::shared_ptr<Camera> Object::getComponent<Camera>() {
+		return std::static_pointer_cast<Camera>(getComponentByEnum(Component::Type::Camera));
 	}
 
 	//TODO!!! THROWAWAY CODE

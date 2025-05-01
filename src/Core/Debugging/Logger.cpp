@@ -36,6 +36,12 @@ namespace Strike {
 		return os;
 	}
 
+	std::ostream& operator<<(std::ostream& os, const glm::vec3& vector) {
+		os << "vec3(" << vector.x << ", " << vector.y << ", " << vector.z << ")";
+		
+		return os;
+	}
+
 	std::ostream& operator<<(std::ostream& os, const glm::mat4& matrix) {
 		os << "mat4(";
 

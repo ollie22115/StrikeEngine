@@ -14,6 +14,9 @@ namespace Strike {
 		static void scale(glm::mat4& matrix, const float& x = 1.0f, const float& y = 1.0f, const float& z = 1.0f);
 		static void translate(glm::mat4& matrix, const float& x = 0.0f, const float& y = 0.0f, const float& z = 0.0f);
 		static void rotate(glm::mat4& matrix, const float& angle, const glm::vec3& axis);		//angle is in radians
+
+		static glm::vec3 getTranslations(const glm::mat4& matrix);
+		static glm::vec3 getScales(const glm::mat4& matrix);
 	};
 
 }

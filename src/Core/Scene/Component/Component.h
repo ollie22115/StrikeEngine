@@ -5,7 +5,7 @@ namespace Strike {
 	class Component {
 	public:
 		enum class Type {
-			None = 0, RenderableMesh, SpriteRenderer
+			None = 0, RenderableMesh, SpriteRenderer, Camera
 		};
 
 		inline Component(const Type& type) : type(type) {};

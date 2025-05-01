@@ -33,4 +33,12 @@ namespace Strike {
         matrix = genRotationMatrix(angle, axis) * matrix;
     }
 
+    glm::vec3 Transform::getTranslations(const glm::mat4& matrix) {
+        return glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]);
+    }
+
+    glm::vec3 Transform::getScales(const glm::mat4& matrix) {
+        return glm::vec3(matrix[0][0], matrix[1][1], matrix[2][2]);
+    }
+
 }
