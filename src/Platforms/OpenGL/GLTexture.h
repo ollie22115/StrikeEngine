@@ -10,7 +10,10 @@ namespace Strike {
 	class GLTexture2D{
 	public:
 
-		GLTexture2D() = default;
+		GLTexture2D(int32_t bitsPerPixel = 4, 
+			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
+			GLenum minFilterParam = GL_LINEAR, GLenum magFilterParam = GL_LINEAR);
+
 		GLTexture2D(const char* filePath, int32_t bitsPerPixel = 4,
 			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
 			GLenum minFilterParam = GL_LINEAR,

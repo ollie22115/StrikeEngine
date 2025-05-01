@@ -13,7 +13,7 @@ namespace Strike {
 
 	class SpriteRenderer : public Component, public RenderableComponent {
 	public:
-		SpriteRenderer(const std::string& shaderPath, const std::string& texturePath = "default", 
+		SpriteRenderer(const std::string& shaderPath, const std::string& texturePath = "Default", 
 			const uint32_t& x0 = 0, const uint32_t& y0 = 0, const uint32_t& x1 = 1, const uint32_t& y1 = 1,
 			const glm::vec4& colour0 = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), const glm::vec4& colour1 = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 
 			const glm::vec4& colour2 = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), const glm::vec4& colour3 = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));

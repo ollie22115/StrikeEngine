@@ -39,6 +39,8 @@ namespace Strike {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		textureLibrary["Default"] = std::make_shared<GLTexture2D>();
+
 		//TODO!!! Figure out what to do with vertex arrays
 		glGenVertexArrays(1, &staticVertexArrayID);
 		glGenVertexArrays(1, &dynamicVertexArrayID);
@@ -124,7 +126,7 @@ namespace Strike {
 			}
 		}
 
-		//TODO!!! FIX TEMPORARY CODE
+		//TODO!!! FIX the following When you figure out what to do with vertex arrays
 		glBindVertexArray(staticVertexArrayID);
 		vertexBufferStatic->bind();
 		indexBufferStatic->bind();
@@ -135,7 +137,6 @@ namespace Strike {
 		if (!staticIndices.empty())
 			indexBufferStatic->setData((uint32_t)staticIndices.size() * 4, &staticIndices[0], GL_STATIC_DRAW);
 
-		//TODO!!! Fix Temporary Code
 		glBindVertexArray(dynamicVertexArrayID);
 		vertexBufferDynamic->bind();
 		indexBufferDynamic->bind();

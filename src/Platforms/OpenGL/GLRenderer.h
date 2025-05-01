@@ -66,7 +66,7 @@ namespace Strike {
 		std::shared_ptr<GLTexture2D> loadTexture2D(const std::string& filePath);
 		std::shared_ptr<GLProgram> loadShader(const std::string& filePath);
 
-		//TODO!!! fix temporary code
+		//TODO!!! figure out what to do with vertex arrays
 		GLuint staticVertexArrayID;
 		GLuint dynamicVertexArrayID;
 	};
