@@ -61,15 +61,15 @@ namespace Strike {
 		std::vector<Vertex> dynamicVertices;
 		std::vector<uint32_t> dynamicIndices;
 
-		for (Object& object : scene->getObjects()) {
-			std::vector<std::shared_ptr<RenderableComponent>> renderables = object.getRenderableComponents();
+		for (std::shared_ptr<Object>& object : scene->getObjects()) {
+			std::vector<std::shared_ptr<RenderableComponent>> renderables = object->getRenderableComponents();
 			if (renderables.empty()) continue;
 
-			if (object.isStatic) {
+			if (object->isStatic) {
 				for (std::shared_ptr<RenderableComponent>& renderable : renderables) {
-					std::vector<Vertex> objectVertices = renderable->getVertices(object.transform);
+					std::vector<Vertex> objectVertices = renderable->getVertices(object->transform);
 
-					Object* meshBaseObjectPtr = &object;
+					Object* meshBaseObjectPtr = object.get();
 					size_t meshVertexCount = objectVertices.size();
 					size_t meshOffset = staticIndices.size();
 
@@ -96,9 +96,9 @@ namespace Strike {
 				}
 			} else {
 				for (std::shared_ptr<RenderableComponent>& renderable : renderables) {
-					std::vector<Vertex> objectVertices = renderable->getVertices(object.transform);
+					std::vector<Vertex> objectVertices = renderable->getVertices(object->transform);
 
-					Object* meshBaseObjectPtr = &object;
+					Object* meshBaseObjectPtr = object.get();
 					size_t meshVertexCount = objectVertices.size();
 					size_t meshOffset = dynamicIndices.size();
 
