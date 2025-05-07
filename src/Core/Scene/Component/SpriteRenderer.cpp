@@ -7,7 +7,7 @@ namespace Strike {
 		const glm::vec4& colour0, const glm::vec4& colour1, const glm::vec4& colour2, const glm::vec4& colour3) : Component(Component::Type::SpriteRenderer) {
 
 		uint32_t width, height;
-		if (texturePath == "default") {
+		if (texturePath == "Default") {
 			width = 1;
 			height = 1;
 		} else 

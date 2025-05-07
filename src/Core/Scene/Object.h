@@ -9,6 +9,7 @@
 
 #include "Component/SpriteRenderer.h"
 #include "Component/Camera.h"
+#include "Component/Bounds.h"
 
 namespace Strike {
 
@@ -41,6 +42,9 @@ namespace Strike {
 		template <>
 		std::shared_ptr<Camera> getComponent<Camera>();
 
+		template <>
+		std::shared_ptr<Bounds> getComponent<Bounds>();
+
 		~Object();
 	};
 
@@ -62,6 +66,11 @@ namespace Strike {
 	template<>
 	std::shared_ptr<Camera> Object::getComponent<Camera>() {
 		return std::static_pointer_cast<Camera>(getComponentByEnum(Component::Type::Camera));
+	}
+
+	template<>
+	std::shared_ptr<Bounds> Object::getComponent<Bounds>() {
+		return std::static_pointer_cast<Bounds>(getComponentByEnum(Component::Type::Bounds));
 	}
 
 	//TODO!!! THROWAWAY CODE

@@ -31,6 +31,11 @@ namespace Strike {
 
 	void Game::run(std::shared_ptr<Scene> firstScene) {
 
+#ifdef STRIKE_DEBUG
+		elapsedFrames = 0;
+		elapsedTime = 0;
+#endif
+
 		if (firstScene)
 			loadScene(firstScene);
 
