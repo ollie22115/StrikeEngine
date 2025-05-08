@@ -49,27 +49,27 @@ namespace Strike {
 	};
 
 	template <typename T>
-	bool Object::hasComponent() {
+	inline bool Object::hasComponent() {
 		return getComponent<T>() != nullptr;
 	}
 
 	template<typename T>
-	std::shared_ptr<T> Object::getComponent() {
+	inline std::shared_ptr<T> Object::getComponent() {
 		return nullptr;
 	}
 
 	template<>
-	std::shared_ptr<SpriteRenderer> Object::getComponent<SpriteRenderer>() {
+	inline std::shared_ptr<SpriteRenderer> Object::getComponent<SpriteRenderer>() {
 		return std::static_pointer_cast<SpriteRenderer>(getComponentByEnum(Component::Type::SpriteRenderer));
 	}
 
 	template<>
-	std::shared_ptr<Camera> Object::getComponent<Camera>() {
+	inline std::shared_ptr<Camera> Object::getComponent<Camera>() {
 		return std::static_pointer_cast<Camera>(getComponentByEnum(Component::Type::Camera));
 	}
 
 	template<>
-	std::shared_ptr<Bounds> Object::getComponent<Bounds>() {
+	inline std::shared_ptr<Bounds> Object::getComponent<Bounds>() {
 		return std::static_pointer_cast<Bounds>(getComponentByEnum(Component::Type::Bounds));
 	}
 

@@ -3,10 +3,6 @@
 
 namespace Strike {
 
-	bool Vertex::operator==(const Vertex& other) {
-		return pos == other.pos && texCoords == other.texCoords && colour == other.colour;
-	}
-
 	void RenderableMesh::addTriangle(const Triangle& triangle) {
 		triangles.push_back(triangle);
 	}

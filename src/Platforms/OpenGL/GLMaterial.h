@@ -8,7 +8,7 @@ namespace Strike {
 
 	class GLMaterial {
 	public:
-		GLMaterial(std::shared_ptr<GLProgram>& shader, std::shared_ptr<GLTexture2D>& texture) : shader(shader), texture(texture) {}
+		GLMaterial(const std::shared_ptr<GLProgram>& shader, const std::shared_ptr<GLTexture2D>& texture) : shader(shader), texture(texture) {}
 
 		inline std::shared_ptr<GLProgram>& getShader() { return shader; }
 		inline std::shared_ptr<GLTexture2D>& getTexture() { return texture; }

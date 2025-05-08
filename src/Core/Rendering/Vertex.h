@@ -47,7 +47,7 @@ namespace Strike {
 				});
 		}
 
-		bool operator ==(const Vertex& other);
+		bool operator ==(const Vertex& other) const;
 	};
 
 }

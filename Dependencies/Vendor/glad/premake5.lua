@@ -1,6 +1,7 @@
 project "Glad"
     kind "StaticLib"
     language "C"
+    cppdialect "C++20"
     staticruntime "off"
     
     targetdir ("bin/{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}")

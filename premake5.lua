@@ -3,6 +3,7 @@ OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
 project "StrikeEngine"
     kind "StaticLib"
     language "C++"
+    cppdialect "C++20"
 
     targetdir("bin/" .. OutputDir)
     objdir("bin-int/" .. OutputDir)
@@ -19,6 +20,7 @@ project "StrikeEngine"
         "Dependencies/Vendor/glad/include",
         "Dependencies/Vendor/stbImage",
         "Dependencies/Vendor/glm",
+        "Dependencies/Vendor/entt/include",
         "src/Core",
         "src/Platforms"
     }

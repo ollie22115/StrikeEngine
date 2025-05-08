@@ -57,4 +57,8 @@ namespace Strike {
 
 		return size;
 	}
+
+	bool Vertex::operator==(const Vertex& other) const {
+		return pos == other.pos && texCoords == other.texCoords && colour == other.colour;
+	}
 }
