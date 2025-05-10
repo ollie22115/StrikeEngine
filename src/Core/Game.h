@@ -30,7 +30,7 @@ namespace Strike {
 
 		uint64_t prevRecordedTime = 0;
 
-		std::shared_ptr<Scene> loadedScene;
+		std::shared_ptr<Scene> loadedScene = std::make_shared<Scene>();
 		std::unique_ptr<Renderer> renderer;
 
 		void update();
@@ -40,12 +40,5 @@ namespace Strike {
 		uint64_t elapsedTime = 0;
 		uint64_t elapsedFrames = 0;
 #endif
-	};
-
-	class DefaultScene : public Scene {
-	public:
-		void onStart() override;
-		void onUpdate(const EventState& eventState, const uint64_t& deltaTime) override;
-		void onFinish() override;
 	};
 }

@@ -4,7 +4,7 @@
 
 namespace Strike {
 
-	class Transform {
+	class TransformMaths {
 	public:
 		static glm::mat4 genIdentityMatrix();
 		static glm::mat4 genScaleMatrix(const float& x = 1.0f, const float& y = 1.0f, const float& z = 1.0f);

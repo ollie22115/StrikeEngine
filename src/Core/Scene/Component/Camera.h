@@ -1,8 +1,20 @@
 #pragma once
 #include "Component.h"
+#include "Transform.h"
 #include <glm/glm.hpp>
 
 namespace Strike {
+
+	struct EnttCamera{
+		EnttCamera() = default;
+		EnttCamera(const EnttCamera& other) = default;
+		EnttCamera(const float& viewWidth, const float& viewHeight) : viewWidth(viewWidth), viewHeight(viewHeight) {};
+
+		float viewWidth = 1280.0f, viewHeight = 800.0f;
+
+		static glm::mat4 getViewMatrix(Transform& transform);
+		static glm::mat4 getProjectionMatrix(const EnttCamera& camera);
+	};
 
 	class Camera : public Component {
 	public:

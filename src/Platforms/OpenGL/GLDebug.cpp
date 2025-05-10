@@ -1,3 +1,4 @@
+#include "StrikePCH.h"
 #include "GLDebug.h"
 
 namespace Strike {

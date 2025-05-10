@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <array>
 #include <vector>
 #include <queue>

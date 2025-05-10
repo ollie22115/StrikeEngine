@@ -2,16 +2,60 @@
 
 #include "Component/Component.h"
 #include "Component/RenderableComponent.h"
+#include "Component/Transform.h"
 #include <string>
 #include <memory>
+#include <entt.hpp>
 
-#include "Utils/Transform.h"
+#include "Utils/TransformMaths.h"
 
 #include "Component/SpriteRenderer.h"
 #include "Component/Camera.h"
 #include "Component/Bounds.h"
 
+#define ALL_COMPONENTS Transform,
+
 namespace Strike {
+
+	struct EnttObject {
+		Transform transform = TransformMaths::genIdentityMatrix();
+		bool isVisible = true;
+		const bool isStatic = false;
+
+		EnttObject(/*const Scene* scene, */entt::registry& registry);
+
+		EnttObject(/*const Scene* scene, */entt::registry& registry, const bool& isVisible, const bool& isStatic);
+
+		template <typename T>
+		inline T& getComponent(){
+			return registry->get<T>(objectHandle);
+		}
+
+		template<>
+		inline Transform& getComponent<Transform>() {
+			return transform;
+		}
+
+		template<typename T, typename... Args>
+		inline T& addComponent(Args&&... args) {
+			return registry->emplace<T>(objectHandle, std::forward<Args>(args)...);
+		}
+
+		template <typename T>
+		bool hasComponent() {
+			return registry->all_of<T>(objectHandle);
+		}
+
+		~EnttObject() {
+			registry->destroy(objectHandle);
+		}
+
+	private:
+		//Scene* scene;
+		entt::entity objectHandle;
+		entt::registry* registry;
+	};
+
 
 	struct Object {
 		std::string id;
@@ -20,7 +64,7 @@ namespace Strike {
 		bool isVisible;
 		const bool isStatic;
 
-		Object(const std::string& id, const bool& isStatic = false, const bool& isVisible = true, const glm::mat4& transform = Transform::genIdentityMatrix()) :
+		Object(const std::string& id, const bool& isStatic = false, const bool& isVisible = true, const glm::mat4& transform = TransformMaths::genIdentityMatrix()) :
 			id(id), transform(transform), isVisible(isVisible), isStatic(isStatic) {
 		}
 

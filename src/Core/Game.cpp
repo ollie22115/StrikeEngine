@@ -14,12 +14,14 @@ namespace Strike {
 		renderer = Renderer::createRenderer();
 		renderer->init(window);
 
-		std::shared_ptr<Scene> scenePtr = std::make_shared<DefaultScene>();
-		loadScene(scenePtr);
+		std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+		loadScene(scene);
 	}
 
 	void Game::loadScene(std::shared_ptr<Scene>& scene) {
-		if(loadedScene) 
+		STRIKE_ASSERT(scene, LOG_PLATFORM_CORE, "Scene to load is nullptr!");
+		
+		if(loadedScene)
 			loadedScene->onFinish();
 
 		loadedScene = scene;
@@ -69,17 +71,6 @@ namespace Strike {
 
 	Game::~Game() {
 
-	}
-
-	void DefaultScene::onStart() {
-		Log::log(LOG_PLATFORM_CORE, "Scene Started!");
-	}
-
-	void DefaultScene::onUpdate(const EventState& eventState, const uint64_t& deltaTime) {
-	}
-
-	void DefaultScene::onFinish() {
-		Log::log(LOG_PLATFORM_CORE, "Scene Finished!");
 	}
 
 }

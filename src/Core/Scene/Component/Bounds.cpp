@@ -1,6 +1,6 @@
 #include "StrikePCH.h"
 #include "Bounds.h"
-#include "Utils/Transform.h"
+#include "Utils/TransformMaths.h"
 
 namespace Strike {
 
@@ -28,7 +28,7 @@ namespace Strike {
 		//TODO!!! Test
 
 		glm::vec4 origin = transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-		glm::vec3 scales = Transform::getScales(transform);
+		glm::vec3 scales = TransformMaths::getScales(transform);
 		float radius = std::max(scales.x, std::min(scales.y, scales.z));
 
 		float closestX = std::max(x0, std::min(origin.x, x1));

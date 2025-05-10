@@ -1,6 +1,6 @@
 #include "StrikePCH.h"
 #include "Camera.h"
-#include "Utils/Transform.h"
+#include "Utils/TransformMaths.h"
 
 namespace Strike {
 
@@ -10,21 +10,38 @@ namespace Strike {
     }
 
     glm::mat4 Camera::getViewMatrix(const glm::mat4& transform) {
-        glm::mat4 viewMatrix = Transform::genIdentityMatrix();
-        glm::vec3 translations = Transform::getTranslations(transform);
-        Transform::translate(viewMatrix, -translations.x, -translations.y, -translations.z);
+        glm::mat4 viewMatrix = TransformMaths::genIdentityMatrix();
+        glm::vec3 translations = TransformMaths::getTranslations(transform);
+        TransformMaths::translate(viewMatrix, -translations.x, -translations.y, -translations.z);
         return viewMatrix;
     }
 
     glm::mat4 Camera::getProjectionMatrix() {
         glm::mat4 projMatrix = glm::mat4(1.0f);
-        Transform::scale(projMatrix, 2.0f / viewWidth, 2.0f / viewHeight);
+        TransformMaths::scale(projMatrix, 2.0f / viewWidth, 2.0f / viewHeight);
 
         return projMatrix;
     }
 
     bool Camera::isRenderable() {
         return false;
+    }
+
+    glm::mat4 EnttCamera::getViewMatrix(Transform& transform) {
+        //TODO!!! For now only works for translations, extend to work for zoom (scale) and rotations
+
+        glm::mat4 viewMatrix = TransformMaths::genIdentityMatrix();
+        glm::vec3 translations = TransformMaths::getTranslations(transform);
+        TransformMaths::translate(viewMatrix, -translations.x, -translations.y, -translations.z);
+
+        return viewMatrix;
+    }
+
+    glm::mat4 EnttCamera::getProjectionMatrix(const EnttCamera& camera) {
+        glm::mat4 projMatrix = glm::mat4(1.0f);
+        TransformMaths::scale(projMatrix, 2.0f / camera.viewWidth, 2.0f / camera.viewHeight);
+
+        return projMatrix;
     }
 
 }

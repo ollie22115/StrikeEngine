@@ -10,6 +10,9 @@ project "StrikeEngine"
 
     files {"**.cpp", "**.h", "**.c"}
 
+    pchheader "StrikePCH.h"
+    pchsource "src/Core/StrikePCH.cpp"
+
     removefiles{
         "Dependencies/Vendor/GLFW/**.c",
         "Dependencies/Vendor/glad/**.c"

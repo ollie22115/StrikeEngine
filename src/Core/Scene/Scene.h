@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "EventsAndInput/EventState.h"
@@ -7,17 +9,35 @@
 
 namespace Strike {
 
+	using OnStartCallback = std::function<void()>;
+	using OnUpdateCallback = std::function<void(const EventState&, const uint64_t&)>;
+	using OnFinishCallback = std::function<void()>;
+
 	//describes a scene to be rendered
 	class Scene {
 		//TODO!!!
 	public:
-		inline Scene() = default;
+		Scene() = default;
+		Scene(const OnStartCallback& onStartCallback, const OnUpdateCallback& onUpdateCallback, const OnFinishCallback& onFinishCallback);
 
 		inline std::vector<std::shared_ptr<Object>>& getObjects() { return objects; }
+		inline std::shared_ptr<EnttObject>& getCamera() { return cameraObj; }//Temporary until I figure out what to do with camera
 
-		virtual void onStart() = 0;	//method that is called when scene is first loaded
-		virtual void onUpdate(const EventState& eventState, const uint64_t& deltaTime) = 0;		//method that is called every frame upon every update call
-		virtual void onFinish() = 0;	//method that is called just before scene is unloaded
+		inline void setOnStartCallback(const OnStartCallback& onStartCallback) {
+			this->onStartCallback = onStartCallback;
+		}
+
+		inline void setOnUpdateCallback(const OnUpdateCallback& onUpdateCallback) {
+			this->onUpdateCallback = onUpdateCallback;
+		}
+
+		inline void setOnFinishCallback(const OnFinishCallback& onFinishCallback) {
+			this->onFinishCallback = onFinishCallback;
+		}
+
+		void onStart(); //method that is called when scene is first loaded
+		void onUpdate(const EventState& eventState, const uint64_t& deltaTime); //called every frame
+		void onFinish(); //method that is called just before scene is unloaded
 
 		glm::mat4 getViewMatrix();
 		glm::mat4 getProjectionMatrix();
@@ -30,8 +50,17 @@ namespace Strike {
 		~Scene() = default;
 
 	protected:
+		static void defaultOnStartCallback();
+		static void defaultOnUpdateCallback(const EventState& eventState, const uint64_t& deltaTime);
+		static void defaultOnFinishCallback();
+
+		OnStartCallback onStartCallback = defaultOnStartCallback;
+		OnUpdateCallback onUpdateCallback = defaultOnUpdateCallback;
+		OnFinishCallback onFinishCallback = defaultOnFinishCallback;
 		std::vector<std::shared_ptr<Object>> objects;
-		std::shared_ptr<Object> cameraObj;
+		
+		entt::registry registry;
+		std::shared_ptr<EnttObject> cameraObj = std::make_shared<EnttObject>(registry, true, false);
 	};
 
 }

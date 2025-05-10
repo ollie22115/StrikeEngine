@@ -40,19 +40,27 @@ namespace Strike {
 
 		STRIKE_ASSERT(spriteRenderer != nullptr, LOG_PLATFORM_CORE, "Object does not contain Sprite Renderer Component");
 
-		object.transform = Transform::genIdentityMatrix();
+		object.transform = TransformMaths::genIdentityMatrix();
 
 		//Scale
 		float scaleX = (float)width / (float)spriteRenderer->getWidth();
 		float scaleY = (float)height / (float)spriteRenderer->getHeight();
-		Transform::scale(object.transform, scaleX, scaleY);
+		TransformMaths::scale(object.transform, scaleX, scaleY);
 
 		//Rotate
-		Transform::rotate(object.transform, Math::degreesToRadians(rotation), glm::vec3(0, 0, 1));
+		TransformMaths::rotate(object.transform, Math::degreesToRadians(rotation), glm::vec3(0, 0, 1));
 
 		//Translate to coordinates (0, 0) on screen and by x0 and y0
-		Transform::translate(object.transform, ((float)spriteRenderer->getWidth() * scaleX) / 2.0f, ((float)spriteRenderer->getHeight() * scaleY) / 2.0f);
-		Transform::translate(object.transform, x0, y0);
+		TransformMaths::translate(object.transform, ((float)spriteRenderer->getWidth() * scaleX) / 2.0f, ((float)spriteRenderer->getHeight() * scaleY) / 2.0f);
+		TransformMaths::translate(object.transform, x0, y0);
 	}
 	//TEMPORARY CODE END!!!
+
+	EnttObject::EnttObject(/*const Scene* scene, */entt::registry& registry) : 
+		registry(&registry), objectHandle(registry.create()), transform(TransformMaths::genIdentityMatrix()), isVisible(true), isStatic(false) {
+	}
+
+	EnttObject::EnttObject(entt::registry& registry, const bool& isVisible, const bool& isStatic) : 
+		registry(&registry), objectHandle(registry.create()), transform(TransformMaths::genIdentityMatrix()), isVisible(isVisible), isStatic(isStatic) {}
+	
 }
