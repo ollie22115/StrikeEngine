@@ -4,30 +4,7 @@
 
 namespace Strike {
 
-    Camera::Camera(const float& viewWidth, const float& viewHeight) :
-        Component(Component::Type::Camera), viewWidth(viewWidth), viewHeight(viewHeight) {
-
-    }
-
-    glm::mat4 Camera::getViewMatrix(const glm::mat4& transform) {
-        glm::mat4 viewMatrix = TransformMaths::genIdentityMatrix();
-        glm::vec3 translations = TransformMaths::getTranslations(transform);
-        TransformMaths::translate(viewMatrix, -translations.x, -translations.y, -translations.z);
-        return viewMatrix;
-    }
-
-    glm::mat4 Camera::getProjectionMatrix() {
-        glm::mat4 projMatrix = glm::mat4(1.0f);
-        TransformMaths::scale(projMatrix, 2.0f / viewWidth, 2.0f / viewHeight);
-
-        return projMatrix;
-    }
-
-    bool Camera::isRenderable() {
-        return false;
-    }
-
-    glm::mat4 EnttCamera::getViewMatrix(Transform& transform) {
+    glm::mat4 Camera::getViewMatrix(Transform& transform) {
         //TODO!!! For now only works for translations, extend to work for zoom (scale) and rotations
 
         glm::mat4 viewMatrix = TransformMaths::genIdentityMatrix();
@@ -37,7 +14,7 @@ namespace Strike {
         return viewMatrix;
     }
 
-    glm::mat4 EnttCamera::getProjectionMatrix(const EnttCamera& camera) {
+    glm::mat4 Camera::getProjectionMatrix(const Camera& camera) {
         glm::mat4 projMatrix = glm::mat4(1.0f);
         TransformMaths::scale(projMatrix, 2.0f / camera.viewWidth, 2.0f / camera.viewHeight);
 

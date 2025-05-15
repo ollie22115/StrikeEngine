@@ -3,11 +3,18 @@
 
 #include "Scene.h"
 #include "Debugging/StrikeDebug.h"
+#include "Component/Bounds.h"
+#include "Component/Camera.h"
 
 namespace Strike {
     
     Scene::Scene(const OnStartCallback& onStartCallback, const OnUpdateCallback& onUpdateCallback, const OnFinishCallback& onFinishCallback) :
         onStartCallback(onStartCallback), onUpdateCallback(onUpdateCallback), onFinishCallback(onFinishCallback) {}
+
+    std::shared_ptr<Object> Scene::createObject() {
+        objects.push_back(std::make_shared<Object>(registry));
+        return objects[objects.size() - 1];
+    }
 
     void Scene::onStart() {
         onStartCallback();
@@ -23,11 +30,11 @@ namespace Strike {
 
     glm::mat4 Scene::getViewMatrix() {
         if(cameraObj != nullptr){
-            STRIKE_ASSERT(cameraObj->hasComponent<EnttCamera>(), LOG_PLATFORM_CORE, 
+            STRIKE_ASSERT(cameraObj->hasComponent<Camera>(), LOG_PLATFORM_CORE, 
                 "No camera Component Attached to designated camera object in scene!");
 
-            EnttCamera& camera = cameraObj->getComponent<EnttCamera>();
-            return EnttCamera::getViewMatrix(cameraObj->getComponent<Transform>());
+            Camera& camera = cameraObj->getComponent<Camera>();
+            return Camera::getViewMatrix(cameraObj->getComponent<Transform>());
 
         } else
             STRIKE_ASSERT(false, LOG_PLATFORM_CORE, "No designated camera object in Scene!");
@@ -35,25 +42,30 @@ namespace Strike {
 
     glm::mat4 Scene::getProjectionMatrix() {
         if(cameraObj != nullptr){
-            STRIKE_ASSERT(cameraObj->hasComponent<EnttCamera>(), LOG_PLATFORM_CORE, 
+            STRIKE_ASSERT(cameraObj->hasComponent<Camera>(), LOG_PLATFORM_CORE, 
                 "No camera Component Attached to designated camera object in scene!");
 
-            EnttCamera& camera = cameraObj->getComponent<EnttCamera>();
+            Camera& camera = cameraObj->getComponent<Camera>();
 
-            return EnttCamera::getProjectionMatrix(camera);
+            return Camera::getProjectionMatrix(camera);
 
         } else
             STRIKE_ASSERT(false, LOG_PLATFORM_CORE, "No designated camera object in scene!");
     }
 
     bool Scene::boxCast(const float& x0, const float& y0, const float& x1, const float& y1) {
+        
         bool result = false;
 
-        for (std::shared_ptr<Object>& object : objects) {
-            std::shared_ptr<Bounds> bounds = object->getComponent<Bounds>();
-            if (bounds != nullptr) 
-                result = result || bounds->boxCast(object->transform, x0, y0, x1, y1);
-        }
+        auto view = registry.view<Transform, BoxBounds>();
+        view.each([&](auto entity, Transform& transform, BoxBounds& bounds) {
+            result = result || BoxBounds::boxCast(bounds, transform, x0, y0, x1, y1);
+        });
+
+        auto view2 = registry.view<Transform, RadiusBounds>();
+        view2.each([&](auto entity, Transform& transform, RadiusBounds& bounds) {
+            result = result || RadiusBounds::boxCast(bounds, transform, x0, y0, x1, y1);
+        });
 
         return result;
     }
@@ -79,6 +91,5 @@ namespace Strike {
     void Scene::defaultOnFinishCallback() {
         std::cout << "Scene Finished!\n";
     }
-
 
 }

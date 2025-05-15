@@ -21,7 +21,7 @@ namespace Strike {
 		Scene(const OnStartCallback& onStartCallback, const OnUpdateCallback& onUpdateCallback, const OnFinishCallback& onFinishCallback);
 
 		inline std::vector<std::shared_ptr<Object>>& getObjects() { return objects; }
-		inline std::shared_ptr<EnttObject>& getCamera() { return cameraObj; }//Temporary until I figure out what to do with camera
+		inline std::shared_ptr<Object>& getCamera() { return cameraObj; }//Temporary until I figure out what to do with cameraz
 
 		inline void setOnStartCallback(const OnStartCallback& onStartCallback) {
 			this->onStartCallback = onStartCallback;
@@ -34,6 +34,8 @@ namespace Strike {
 		inline void setOnFinishCallback(const OnFinishCallback& onFinishCallback) {
 			this->onFinishCallback = onFinishCallback;
 		}
+
+		std::shared_ptr<Object> createObject();
 
 		void onStart(); //method that is called when scene is first loaded
 		void onUpdate(const EventState& eventState, const uint64_t& deltaTime); //called every frame
@@ -57,10 +59,11 @@ namespace Strike {
 		OnStartCallback onStartCallback = defaultOnStartCallback;
 		OnUpdateCallback onUpdateCallback = defaultOnUpdateCallback;
 		OnFinishCallback onFinishCallback = defaultOnFinishCallback;
+		
 		std::vector<std::shared_ptr<Object>> objects;
 		
 		entt::registry registry;
-		std::shared_ptr<EnttObject> cameraObj = std::make_shared<EnttObject>(registry, true, false);
+		std::shared_ptr<Object> cameraObj = std::make_shared<Object>(registry, true, false);
 	};
 
 }

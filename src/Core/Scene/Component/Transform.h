@@ -12,6 +12,7 @@ namespace Strike {
 
 		operator glm::mat4& () { return transformMatrix; }
 		operator const glm::mat4& () const { return transformMatrix; }
+		inline glm::vec4 operator*(const glm::vec4& other) const  { return transformMatrix * other; }
 	};
 
 }

@@ -40,6 +40,7 @@ namespace Strike {
 		//~GLRenderer() override;
 
 	private:
+
 		struct GLMesh {
 			Object* object;	//TODO change to shared pointer at some point
 			GLMaterial material;

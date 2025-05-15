@@ -62,67 +62,66 @@ namespace Strike {
 		std::vector<uint32_t> dynamicIndices;
 
 		for (std::shared_ptr<Object>& object : scene->getObjects()) {
-			std::vector<std::shared_ptr<RenderableComponent>> renderables = object->getRenderableComponents();
-			if (renderables.empty()) continue;
 
-			if (object->isStatic) {
-				for (std::shared_ptr<RenderableComponent>& renderable : renderables) {
-					std::vector<Vertex> objectVertices = renderable->getVertices(object->transform);
+			Renderable renderable = object->getRenderable();
+			if(!renderable.isRenderable())
+				continue;
 
-					Object* meshBaseObjectPtr = object.get();
-					size_t meshVertexCount = objectVertices.size();
-					size_t meshOffset = staticIndices.size();
+			if (object->isStatic()) {
+				std::vector<Vertex>& objectVertices = renderable.getVertices();
 
-					for (Vertex& objectVertex : objectVertices) {
-						int32_t index = -1;
+				Object* meshBaseObjectPtr = object.get();
+				size_t meshVertexCount = objectVertices.size();
+				size_t meshOffset = staticIndices.size();
 
-						for (int i = 0; i < staticVertices.size(); i++) if (staticVertices[i] == objectVertex) {
-							index = i;
-							break;
-						}
+				for (Vertex& objectVertex : objectVertices) {
+					int32_t index = -1;
 
-						if (index < 0) {
-							staticVertices.push_back(objectVertex);
-							index = (int32_t)staticVertices.size() - 1;
-						}
-
-						staticIndices.push_back(index);
+					for (int i = 0; i < staticVertices.size(); i++) if (staticVertices[i] == objectVertex) {
+						index = i;
+						break;
 					}
 
-					const Material& coreMaterial = renderable->getMaterial();
-					GLMaterial meshMaterial(loadShader(coreMaterial.shaderPath), loadTexture2D(coreMaterial.texturePath));
+					if (index < 0) {
+						staticVertices.push_back(objectVertex);
+						index = (int32_t)staticVertices.size() - 1;
+					}
 
-					rendererObjectsStatic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
+					staticIndices.push_back(index);
 				}
+
+				const Material& coreMaterial = renderable.getMaterial();
+				GLMaterial meshMaterial(loadShader(coreMaterial.shaderPath), loadTexture2D(coreMaterial.texturePath));
+
+				rendererObjectsStatic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
+
 			} else {
-				for (std::shared_ptr<RenderableComponent>& renderable : renderables) {
-					std::vector<Vertex> objectVertices = renderable->getVertices(object->transform);
+				std::vector<Vertex>& objectVertices = renderable.getVertices();
 
-					Object* meshBaseObjectPtr = object.get();
-					size_t meshVertexCount = objectVertices.size();
-					size_t meshOffset = dynamicIndices.size();
+				Object* meshBaseObjectPtr = object.get();
+				size_t meshVertexCount = objectVertices.size();
+				size_t meshOffset = dynamicIndices.size();
 
-					for (Vertex& objectVertex : objectVertices) {
-						int32_t index = -1;
+				for (Vertex& objectVertex : objectVertices) {
+					int32_t index = -1;
 
-						for (int i = 0; i < dynamicVertices.size(); i++) if (dynamicVertices[i] == objectVertex) {
-							index = i;
-							break;
-						}
-
-						if (index < 0) {
-							dynamicVertices.push_back(objectVertex);
-							index = (int32_t)dynamicVertices.size() - 1;
-						}
-
-						dynamicIndices.push_back(index);
+					for (int i = 0; i < dynamicVertices.size(); i++) if (dynamicVertices[i] == objectVertex) {
+						index = i;
+						break;
 					}
 
-					const Material& coreMaterial = renderable->getMaterial();
-					GLMaterial meshMaterial(loadShader(coreMaterial.shaderPath), loadTexture2D(coreMaterial.texturePath));
+					if (index < 0) {
+						dynamicVertices.push_back(objectVertex);
+						index = (int32_t)dynamicVertices.size() - 1;
+					}
 
-					rendererObjectsDynamic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
+					dynamicIndices.push_back(index);
 				}
+
+				const Material& coreMaterial = renderable.getMaterial();
+				GLMaterial meshMaterial(loadShader(coreMaterial.shaderPath), loadTexture2D(coreMaterial.texturePath));
+
+				rendererObjectsDynamic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
 			}
 		}
 
@@ -160,28 +159,26 @@ namespace Strike {
 		for (GLMesh& mesh : rendererObjectsDynamic) {
 			Object& coreObject = *mesh.object;
 			
-			std::vector<std::shared_ptr<RenderableComponent>> renderables = coreObject.getRenderableComponents();
-			if (renderables.empty()) continue;
+			Renderable renderable = coreObject.getRenderable();
+			if (!renderable.isRenderable())
+				continue;
 
-			for (std::shared_ptr<RenderableComponent>& renderable : renderables) {
-				std::vector<Vertex> objectVertices = renderable->getVertices(coreObject.transform);
+			std::vector<Vertex> objectVertices = renderable.getVertices();
 
-				for (Vertex& objectVertex : objectVertices) {
-					int32_t index = -1;
+			for (Vertex& objectVertex : objectVertices) {
+				int32_t index = -1;
 
-					for (int i = 0; i < dynamicVertices.size(); i++) if (dynamicVertices[i] == objectVertex) {
-						index = i;
-						break;
-					}
-
-					if (index < 0) {
-						dynamicVertices.push_back(objectVertex);
-						index = (int32_t)dynamicVertices.size() - 1;
-					}
-
-					dynamicIndices.push_back(index);
+				for (int i = 0; i < dynamicVertices.size(); i++) if (dynamicVertices[i] == objectVertex) {
+					index = i;
+					break;
 				}
 
+				if (index < 0) {
+					dynamicVertices.push_back(objectVertex);
+					index = (int32_t)dynamicVertices.size() - 1;
+				}
+
+				dynamicIndices.push_back(index);
 			}
 		}
 
@@ -192,27 +189,25 @@ namespace Strike {
 	}
 
 	void GLRenderer::draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
-		//ZZZ TODO!!!: figure out why static objects aren't drawing
-
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//TODO!!! Fix Temporary Code
+		//TODO!!! Fix Temporary line of Code
 		glBindVertexArray(staticVertexArrayID);
 		
 		for (GLMesh& mesh : rendererObjectsStatic) {
-			if (!mesh.object->isVisible) 
+			if (!mesh.object->isVisible()) 
 				continue;
 
 			mesh.material.bind(viewMatrix, projectionMatrix);
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*) (mesh.offset * sizeof(uint32_t)));
 		}
 
-		//TODO!!! Fix Temporary Code
+		//TODO!!! Fix Temporary line of Code
 		glBindVertexArray(dynamicVertexArrayID);
 
 		for (GLMesh& mesh : rendererObjectsDynamic) {
-			if (!mesh.object->isVisible)
+			if (!mesh.object->isVisible())
 				continue;
 
 			mesh.material.bind(viewMatrix, projectionMatrix);

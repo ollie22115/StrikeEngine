@@ -5,6 +5,7 @@
 #include "Scene/Scene.h"
 #include "Shader.h"
 #include "Window.h"
+#include "Scene/Component/RenderableComponent.h"
 
 //TODO!!! BAD CODE REPLACE LATER
 #define STRIKE_OPENGL
