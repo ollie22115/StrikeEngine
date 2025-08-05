@@ -5,15 +5,23 @@
 #include "Debugging/StrikeDebug.h"
 #include "Component/Bounds.h"
 #include "Component/Camera.h"
+#include "Rendering/Renderer.h"
 
 namespace Strike {
     
     Scene::Scene(const OnStartCallback& onStartCallback, const OnUpdateCallback& onUpdateCallback, const OnFinishCallback& onFinishCallback) :
         onStartCallback(onStartCallback), onUpdateCallback(onUpdateCallback), onFinishCallback(onFinishCallback) {}
 
-    std::shared_ptr<Object> Scene::createObject() {
-        objects.push_back(std::make_shared<Object>(registry));
+    std::shared_ptr<Object> Scene::createObject(const bool& isStatic) {
+        objects.push_back(std::make_shared<Object>(registry, true, isStatic));
         return objects[objects.size() - 1];
+    }
+
+    void Scene::load(std::unique_ptr<Renderer>& renderer) {
+        onStart();
+
+        for (std::shared_ptr<Object>& object : objects)
+            renderer->loadObject(object);
     }
 
     void Scene::onStart() {

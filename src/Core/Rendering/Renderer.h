@@ -42,7 +42,7 @@ namespace Strike {
 		
 		virtual void swapBuffers(const std::shared_ptr<Window>& window) = 0;
 
-		virtual void loadScene(std::shared_ptr<Scene>& scene) = 0;
+		virtual void loadObject(std::shared_ptr<Object>& object) = 0;
 
 		virtual void draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) = 0;
 

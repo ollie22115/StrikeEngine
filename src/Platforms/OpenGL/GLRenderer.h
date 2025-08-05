@@ -26,7 +26,7 @@ namespace Strike {
 
 		void swapBuffers(const std::shared_ptr<Window>& window) override;
 
-		void loadScene(std::shared_ptr<Scene>& scene);
+		void loadObject(std::shared_ptr<Object>& object) override;
 
 		void update() override;
 
@@ -57,6 +57,11 @@ namespace Strike {
 		std::unique_ptr<GLVertexBuffer> vertexBufferDynamic;
 		std::unique_ptr<GLIndexBuffer> indexBufferStatic;
 		std::unique_ptr<GLIndexBuffer> indexBufferDynamic;
+
+		std::vector<Vertex> staticVertices;	//TODO!!!
+		std::vector<uint32_t> staticIndices;	//TODO!!!
+		std::vector<Vertex> dynamicVertices;	//TODO!!!
+		std::vector<uint32_t> dynamicIndices;	//TODO!!!
 
 		std::unordered_map<std::string, std::shared_ptr<GLProgram>> shaderLibrary;
 		std::unordered_map<std::string, std::shared_ptr<GLTexture2D>> textureLibrary;

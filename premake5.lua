@@ -13,7 +13,7 @@ project "StrikeEngine"
     pchheader "StrikePCH.h"
     pchsource "src/Core/StrikePCH.cpp"
 
-    removefiles{
+    removefiles {
         "Dependencies/Vendor/GLFW/**.c",
         "Dependencies/Vendor/glad/**.c"
     }

@@ -26,9 +26,9 @@ namespace Strike {
 
 		loadedScene = scene;
 		
-		renderer->loadScene(loadedScene);
-
-		loadedScene->onStart();
+		scene->load(renderer); //TODO!!! Replace with bottom two lines once Renderer is modularised
+		//renderer->loadScene(loadedScene);
+		//loadedScene->onStart();
 	}
 
 	void Game::run(std::shared_ptr<Scene> firstScene) {

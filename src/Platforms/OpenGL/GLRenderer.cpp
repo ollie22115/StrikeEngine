@@ -54,97 +54,56 @@ namespace Strike {
 #endif
 	}
 
-	void GLRenderer::loadScene(std::shared_ptr<Scene>& scene) {
-		std::vector<Vertex> staticVertices;
-		std::vector<uint32_t> staticIndices;
+	void GLRenderer::loadObject(std::shared_ptr<Object>& object) {
+		//TODO!!! TEST
+		STRIKE_ASSERT(object->isRenderable(), LOG_PLATFORM_OPENGL, 
+			"object must have a renderable component to be loaded into the Renderer!");
 
-		std::vector<Vertex> dynamicVertices;
-		std::vector<uint32_t> dynamicIndices;
+		std::vector<Vertex>& vertices = (object->isStatic()) ? staticVertices : dynamicVertices;
+		std::vector<uint32_t>& indices = (object->isStatic()) ? staticIndices : dynamicIndices;
 
-		for (std::shared_ptr<Object>& object : scene->getObjects()) {
+		Renderable renderable = object->getRenderable();
 
-			Renderable renderable = object->getRenderable();
-			if(!renderable.isRenderable())
-				continue;
+		std::vector<Vertex>& objectVertices = renderable.getVertices();
 
-			if (object->isStatic()) {
-				std::vector<Vertex>& objectVertices = renderable.getVertices();
+		Object* meshBaseObjectPtr = object.get();
+		size_t meshVertexCount = objectVertices.size();
+		size_t meshOffset = indices.size();
 
-				Object* meshBaseObjectPtr = object.get();
-				size_t meshVertexCount = objectVertices.size();
-				size_t meshOffset = staticIndices.size();
+		for (Vertex& objectVertex : objectVertices) {
+			int32_t index = -1;
 
-				for (Vertex& objectVertex : objectVertices) {
-					int32_t index = -1;
-
-					for (int i = 0; i < staticVertices.size(); i++) if (staticVertices[i] == objectVertex) {
-						index = i;
-						break;
-					}
-
-					if (index < 0) {
-						staticVertices.push_back(objectVertex);
-						index = (int32_t)staticVertices.size() - 1;
-					}
-
-					staticIndices.push_back(index);
-				}
-
-				const Material& coreMaterial = renderable.getMaterial();
-				GLMaterial meshMaterial(loadShader(coreMaterial.shaderPath), loadTexture2D(coreMaterial.texturePath));
-
-				rendererObjectsStatic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
-
-			} else {
-				std::vector<Vertex>& objectVertices = renderable.getVertices();
-
-				Object* meshBaseObjectPtr = object.get();
-				size_t meshVertexCount = objectVertices.size();
-				size_t meshOffset = dynamicIndices.size();
-
-				for (Vertex& objectVertex : objectVertices) {
-					int32_t index = -1;
-
-					for (int i = 0; i < dynamicVertices.size(); i++) if (dynamicVertices[i] == objectVertex) {
-						index = i;
-						break;
-					}
-
-					if (index < 0) {
-						dynamicVertices.push_back(objectVertex);
-						index = (int32_t)dynamicVertices.size() - 1;
-					}
-
-					dynamicIndices.push_back(index);
-				}
-
-				const Material& coreMaterial = renderable.getMaterial();
-				GLMaterial meshMaterial(loadShader(coreMaterial.shaderPath), loadTexture2D(coreMaterial.texturePath));
-
-				rendererObjectsDynamic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
+			for (int i = 0; i < vertices.size(); i++) 
+				if (vertices[i] == objectVertex) {
+					index = i;
+					break;
 			}
+
+			if (index < 0) {
+				vertices.push_back(objectVertex);
+				index = (int32_t)vertices.size() - 1;
+			}
+
+			indices.push_back(index);
 		}
 
-		//TODO!!! FIX the following When you figure out what to do with vertex arrays
-		glBindVertexArray(staticVertexArrayID);
-		vertexBufferStatic->bind();
-		indexBufferStatic->bind();
-		vertexBufferStatic->setVertexLayout(Vertex::getLayout());
+		const Material& coreMaterial = renderable.getMaterial();
+		GLMaterial meshMaterial(loadShader(coreMaterial.shaderPath), loadTexture2D(coreMaterial.texturePath));
 
-		if (!staticVertices.empty())
-			vertexBufferStatic->setData((uint32_t)staticVertices.size() * Vertex::getLayout().size(), &staticVertices[0], GL_STATIC_DRAW);
-		if (!staticIndices.empty())
-			indexBufferStatic->setData((uint32_t)staticIndices.size() * 4, &staticIndices[0], GL_STATIC_DRAW);
+		if(object->isStatic())
+			rendererObjectsStatic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
+		else
+			rendererObjectsDynamic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
 
-		glBindVertexArray(dynamicVertexArrayID);
-		vertexBufferDynamic->bind();
-		indexBufferDynamic->bind();
-		vertexBufferDynamic->setVertexLayout(Vertex::getLayout());
+		if (!object->isStatic() && !dynamicIndices.empty()) {
+			glBindVertexArray(dynamicVertexArrayID);
+			vertexBufferDynamic->bind();
+			indexBufferDynamic->bind();
+			vertexBufferDynamic->setVertexLayout(Vertex::getLayout());
 
-		if (!dynamicVertices.empty())
 			vertexBufferDynamic->setData((uint32_t)dynamicVertices.size() * Vertex::getLayout().size(), &dynamicVertices[0], GL_DYNAMIC_DRAW);
-		if (!dynamicIndices.empty())
 			indexBufferDynamic->setData((uint32_t)dynamicIndices.size() * 4, &dynamicIndices[0], GL_DYNAMIC_DRAW);
+		}
 	}
 
 	void GLRenderer::update() {
@@ -189,10 +148,23 @@ namespace Strike {
 	}
 
 	void GLRenderer::draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
+		if (!staticIndices.empty()) {
+			glBindVertexArray(staticVertexArrayID);
+			vertexBufferStatic->bind();
+			indexBufferStatic->bind();
+			vertexBufferStatic->setVertexLayout(Vertex::getLayout());
+
+			vertexBufferStatic->setData((uint32_t)staticVertices.size() * Vertex::getLayout().size(), &staticVertices[0], GL_STATIC_DRAW);
+			indexBufferStatic->setData((uint32_t)staticIndices.size() * 4, &staticIndices[0], GL_STATIC_DRAW);
+
+			staticVertices.clear();
+			staticIndices.clear();
+		}
+
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//TODO!!! Fix Temporary line of Code
+		//TODO!!! Fix When you figure out what to do with VAO's
 		glBindVertexArray(staticVertexArrayID);
 		
 		for (GLMesh& mesh : rendererObjectsStatic) {
@@ -203,7 +175,7 @@ namespace Strike {
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*) (mesh.offset * sizeof(uint32_t)));
 		}
 
-		//TODO!!! Fix Temporary line of Code
+		//TODO!!! Fix When you figure out what to do with VAO's
 		glBindVertexArray(dynamicVertexArrayID);
 
 		for (GLMesh& mesh : rendererObjectsDynamic) {

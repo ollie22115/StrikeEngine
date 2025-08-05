@@ -58,7 +58,7 @@ namespace Strike {
 
 	private:
 		//Scene* scene;
-		entt::entity objectHandle;
 		entt::registry* registry;
+		entt::entity objectHandle;
 	};
 }

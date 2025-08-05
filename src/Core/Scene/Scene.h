@@ -6,8 +6,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "EventsAndInput/EventState.h"
 #include "Object.h"
+//TODO!!! Include when you figure out what to do about the header conflict (Renderer.h includes this file)
+//#include "Rendering/Renderer.h"
 
 namespace Strike {
+
+	class Renderer;
 
 	using OnStartCallback = std::function<void()>;
 	using OnUpdateCallback = std::function<void(const EventState&, const uint64_t&)>;
@@ -35,7 +39,9 @@ namespace Strike {
 			this->onFinishCallback = onFinishCallback;
 		}
 
-		std::shared_ptr<Object> createObject();
+		std::shared_ptr<Object> createObject(const bool& isStatic = false);
+
+		void load(std::unique_ptr<Renderer>& renderer);
 
 		void onStart(); //method that is called when scene is first loaded
 		void onUpdate(const EventState& eventState, const uint64_t& deltaTime); //called every frame
