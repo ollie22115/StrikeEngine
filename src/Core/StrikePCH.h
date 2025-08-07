@@ -19,5 +19,6 @@
 #endif
 
 #ifdef STRIKE_DEBUG
+#include "Debugging/StrikeDebug.h"
 #include <iostream>
 #endif
