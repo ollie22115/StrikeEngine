@@ -2,6 +2,8 @@
 #include "GLTexture.h"
 
 #include "Debugging/Log.h"
+#include "Utils/FileLoader.h"
+
 
 namespace Strike {
 
@@ -28,15 +30,12 @@ namespace Strike {
 		GLenum minFilterParam, GLenum magFilterParam) {
 
 		int32_t width, height;
-		stbi_set_flip_vertically_on_load(true);
-		unsigned char* data = stbi_load(filePath, &width, &height, &bitsPerPixel, bitsPerPixel);
-		this->width = width;
-		this->height = height;
-		this->bitsPerPixel = bitsPerPixel;
+	
+		auto textureData = FileLoader::genTextureFromImage(filePath, bitsPerPixel);
 
-#ifdef STRIKE_DEBUG
-		if (!data) Log::logError(LOG_PLATFORM_OPENGL, "stbi Failed to load image");
-#endif
+		this->width = textureData.width;
+		this->height = textureData.height;
+		this->bitsPerPixel = textureData.bitsPerPixel;
 
 		glGenTextures(1, &id);
 		glBindTexture(GL_TEXTURE_2D, id);
@@ -46,9 +45,8 @@ namespace Strike {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterParam);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterParam);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-		stbi_image_free(data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, 
+			GL_RGBA, GL_UNSIGNED_BYTE, textureData.data);
 
 	}
 
