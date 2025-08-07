@@ -19,15 +19,23 @@ namespace Strike {
 		return stringStream.str();
 	}
 
-	void FileLoader::getTextureDimensions(const std::string& filePath, uint32_t& width, uint32_t& height) {
-		std::ifstream fileStream(filePath);
+    TextureData FileLoader::genTextureFromImage(const std::string &filePath, const int& desiredBPP,
+		 const bool& flipVerticle) {
+		
+		int32_t width, height, bitsPerPixel;
 
-		int32_t w, h, bPP;
+		stbi_set_flip_vertically_on_load(true);
+		unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &bitsPerPixel, desiredBPP);
 
-		stbi_load(filePath.c_str(), &w, &h, &bPP, 0);
+#ifdef STRIKE_DEBUG
+		if (!data) Log::logError(LOG_PLATFORM_OPENGL, "stbi Failed to load image");
+#endif
 
-		width = w;
-		height = h;
-	}
+        return TextureData(data, width, height, bitsPerPixel);
+    }
+
+    TextureData::~TextureData() {
+		stbi_image_free(data);
+    }
 
 }
