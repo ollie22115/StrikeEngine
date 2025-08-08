@@ -7,9 +7,6 @@
 #include "Window.h"
 #include "Scene/Component/RenderableComponent.h"
 
-//TODO!!! BAD CODE REPLACE LATER
-#define STRIKE_OPENGL
-
 namespace Strike {
 
 	//TODO!!! Unused, use to implement batch rendering

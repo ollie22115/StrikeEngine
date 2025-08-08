@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/release)
 
+set(STRIKE_RENDERING_API "OpenGL" CACHE STRING "Choose rendering API")
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
   message(STATUS "Release Build")
@@ -58,6 +60,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(StrikeEngine PRIVATE STRIKE_DEBUG)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     target_compile_definitions(StrikeEngine PRIVATE STRIKE_RELEASE)
+endif()
+
+if(STRIKE_RENDERING_API STREQUAL "OpenGL")
+    target_compile_definitions(StrikeEngine PRIVATE STRIKE_OPENGL)
 endif()
 
 #TODO!!! Seperate into respective OS Windowing definitions if/when support for those platforms exist (include the commented code below)
