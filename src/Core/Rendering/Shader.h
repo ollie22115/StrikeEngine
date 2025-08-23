@@ -3,25 +3,27 @@
 #define STRIKE_SHADER_VERTEX		1
 #define STRIKE_SHADER_PIXEL			2
 
+#ifdef STRIKE_OPENGL
+#include "OpenGL/GLProgram.h"
+#endif
+
 namespace Strike {
 
-	class VertexShader{
+#ifdef STRIKE_OPENGL
+	using Shader = GLProgram;
+#endif
+
+	//TODO!!! POSSIBLY USELESS CODE
+	class ShaderCore {
 	public:
-		VertexShader() = default;
+		ShaderCore(const std::string& filePath) : filePath(filePath) {};
+		inline const std::string& getFilePath() const { return filePath; }
 
-		virtual void bind() = 0;
-		virtual void unBind() = 0;
+		bool operator ==(const ShaderCore& other) const;
 
-		virtual ~VertexShader() = 0;
+	private:
+		std::string filePath;
 	};
+	//USELESS CODE END!!!
 
-	class PixelShader{
-	public:
-		PixelShader() = default;
-
-		virtual void bind() = 0;
-		virtual void unBind() = 0;
-
-		virtual ~PixelShader() = 0;
-	};
 }
