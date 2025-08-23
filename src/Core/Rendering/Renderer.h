@@ -3,9 +3,11 @@
 #include "Debugging/StrikeDebug.h"
 
 #include "Scene/Scene.h"
+#include "Texture.h"
 #include "Shader.h"
 #include "Window.h"
 #include "Scene/Component/RenderableComponent.h"
+#include "Resource/ResourceManager.h"
 
 namespace Strike {
 
@@ -47,7 +49,19 @@ namespace Strike {
 
 		//virtual void clearData() = 0;
 
-		//virtual ~Renderer() = 0;
+		virtual ~Renderer();
+
+		template <typename T>
+		static ResourceHandle loadResource(const std::string& filePath);
+
+		template <typename T>
+		static T* getResource(const ResourceHandle& handle);
+
+	protected:
+		static ResourceManager<Texture2D> textureManager;
+		//static ResourceManager<TextureAtlas> textureAtlasManager;
+		static ResourceManager<Shader> shaderManager;
+		//static ResourceManager<Material> materialManager;
 
 	private:
 #if defined(STRIKE_OPENGL)
@@ -58,5 +72,17 @@ namespace Strike {
 		const static RendererPlatform platform = RendererPlatform::None;
 #endif
 	};
+
+	template<>
+	ResourceHandle Renderer::loadResource<Texture2D>(const std::string& filePath);
+
+	template<>
+	ResourceHandle Renderer::loadResource<Shader>(const std::string& filePath);
+
+	template<>
+	Texture2D* Renderer::getResource<Texture2D>(const ResourceHandle& handle);
+
+	template<>
+	Shader* Renderer::getResource<Shader>(const ResourceHandle& filePath);
 
 }
