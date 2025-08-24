@@ -13,7 +13,12 @@ namespace Strike {
 		id = glCreateProgram();
 	}
 
-	void GLProgram::compile(const std::string& src) {
+    GLProgram::GLProgram(const ShaderData &shaderData) {
+		id = glCreateProgram();
+		compile(shaderData.vertexSrc, shaderData.fragSrc);
+    }
+
+    void GLProgram::compile(const std::string& src) {
 		std::stringstream srcStream;
 		srcStream << src;
 		std::stringstream vertexShaderSrc;
@@ -63,7 +68,17 @@ namespace Strike {
 #endif
 	}
 
-	void GLProgram::bind() {
+    void GLProgram::compile(const std::string &vertexSrc, const std::string &fragmentSrc) {
+		GLVertexShader vertexShader(vertexSrc.c_str());
+		GLPixelShader pixelShader(fragmentSrc.c_str());
+
+		glAttachShader(id, vertexShader.getId());
+		glAttachShader(id, pixelShader.getId());
+
+		glLinkProgram(id);
+    }
+
+    void GLProgram::bind() const {
 		glUseProgram(id);
 	}
 

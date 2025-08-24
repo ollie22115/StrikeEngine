@@ -3,7 +3,7 @@
 #include <string>
 
 #include <glad/glad.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 #include <unordered_map>
 
 #include "Rendering/Renderer.h"
@@ -44,12 +44,15 @@ namespace Strike {
 		struct GLMesh {
 			Object* object;	//TODO change to shared pointer at some point
 			GLMaterial material;
+			//ResourceHandle materialHandle;
 			int32_t vertexCount;
 			int32_t offset;
 
 			GLMesh() = default;
 			inline GLMesh(Object* object, const GLMaterial& material, int32_t vertexCount, int32_t offset) : 
 				object(object), material(material), vertexCount(vertexCount), offset(offset) {}
+			
+			
 		};
 
 		Scene* scene;
@@ -58,19 +61,13 @@ namespace Strike {
 		std::unique_ptr<GLIndexBuffer> indexBufferStatic;
 		std::unique_ptr<GLIndexBuffer> indexBufferDynamic;
 
-		std::vector<Vertex> staticVertices;	//TODO!!!
-		std::vector<uint32_t> staticIndices;	//TODO!!!
-		std::vector<Vertex> dynamicVertices;	//TODO!!!
-		std::vector<uint32_t> dynamicIndices;	//TODO!!!
-
-		std::unordered_map<std::string, std::shared_ptr<GLProgram>> shaderLibrary;
-		std::unordered_map<std::string, std::shared_ptr<GLTexture2D>> textureLibrary;
+		std::vector<Vertex> staticVertices;
+		std::vector<uint32_t> staticIndices;
+		std::vector<Vertex> dynamicVertices;
+		std::vector<uint32_t> dynamicIndices;
 
 		std::vector<GLMesh> rendererObjectsStatic;
 		std::vector<GLMesh> rendererObjectsDynamic;
-
-		std::shared_ptr<GLTexture2D> loadTexture2D(const std::string& filePath);
-		std::shared_ptr<GLProgram> loadShader(const std::string& filePath);
 
 		//TODO!!! figure out what to do with vertex arrays
 		GLuint staticVertexArrayID;

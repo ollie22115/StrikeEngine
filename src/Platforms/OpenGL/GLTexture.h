@@ -1,8 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
-
-#include "Rendering/Texture.h"
+#include "Resource/ResourceData.h"
 
 namespace Strike {
 
@@ -13,10 +12,18 @@ namespace Strike {
 			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
 			GLenum minFilterParam = GL_LINEAR, GLenum magFilterParam = GL_LINEAR);
 
+		GLTexture2D(unsigned char* data, int32_t width, int32_t height, int32_t bitsPerPixel = 4, GLenum sParam = GL_REPEAT, 
+			GLenum tParam = GL_REPEAT, GLenum minFilterParam = GL_LINEAR, GLenum magFilterParam = GL_LINEAR);
+
 		GLTexture2D(const char* filePath, int32_t bitsPerPixel = 4,
 			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
 			GLenum minFilterParam = GL_LINEAR,
 			GLenum magFilterParam = GL_LINEAR);
+
+		GLTexture2D(const TextureData2D& textureData);
+
+		GLTexture2D(const GLTexture2D& other);
+
 
 		inline GLuint getId() { return id; }
 		inline GLuint getId() const { return id; }

@@ -13,9 +13,9 @@ namespace Strike{
         if(filePath == "Default")
             resourceMap[handle] = Texture2D();
         else{
-            //TextureData2D textureData = ResourceLoader::loadTexture2D(filePath);
+            TextureData2D textureData = ResourceLoader::loadTexture2D(filePath);
 
-            //resourceMap.emplace(handle, textureData);
+            resourceMap.emplace(handle, textureData);
         }
 
         std::cout << "Working!\n";

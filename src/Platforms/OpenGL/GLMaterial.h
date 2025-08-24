@@ -1,28 +1,27 @@
 #pragma once
-#include "Rendering/Material.h"
+
 #include "GLShader.h"
 #include "GLTexture.h"
 #include "GLProgram.h"
+#include "Resource/ResourceHandle.h"
 
 namespace Strike {
 
-	class GLMaterial {
+	class GLMaterial{
 	public:
-		GLMaterial(const std::shared_ptr<GLProgram>& shader, const std::shared_ptr<GLTexture2D>& texture) : shader(shader), texture(texture) {}
+		GLMaterial(const ResourceHandle& shaderHandle, const ResourceHandle& textureHandle) : 
+			shaderHandle(shaderHandle), textureHandle(textureHandle) {}
 
-		inline std::shared_ptr<GLProgram>& getShader() { return shader; }
-		inline std::shared_ptr<GLTexture2D>& getTexture() { return texture; }
-
-		void bind(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+		inline ResourceHandle getShaderHandle(){ return shaderHandle; }
+		inline ResourceHandle getTextureHandle(){ return textureHandle; }
 
 		void uploadMat4(const std::string& uniformName, const glm::mat4& matrix);
 
-		bool operator ==(const GLMaterial& other) const;
+		void bind(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 
 	private:
-		std::shared_ptr<GLProgram> shader;
-
-		std::shared_ptr<GLTexture2D> texture; //for now only supports one 2D texture
+		ResourceHandle shaderHandle;
+		ResourceHandle textureHandle;
 	};
 
 }

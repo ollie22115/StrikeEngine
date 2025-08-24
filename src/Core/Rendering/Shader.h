@@ -13,17 +13,4 @@ namespace Strike {
 	using Shader = GLProgram;
 #endif
 
-	//TODO!!! POSSIBLY USELESS CODE
-	class ShaderCore {
-	public:
-		ShaderCore(const std::string& filePath) : filePath(filePath) {};
-		inline const std::string& getFilePath() const { return filePath; }
-
-		bool operator ==(const ShaderCore& other) const;
-
-	private:
-		std::string filePath;
-	};
-	//USELESS CODE END!!!
-
 }

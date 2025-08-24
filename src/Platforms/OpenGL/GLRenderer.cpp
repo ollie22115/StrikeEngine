@@ -39,23 +39,16 @@ namespace Strike {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		textureLibrary["Default"] = std::make_shared<GLTexture2D>();
-
 		//TODO!!! Figure out what to do with vertex arrays
 		glGenVertexArrays(1, &staticVertexArrayID);
 		glGenVertexArrays(1, &dynamicVertexArrayID);
 	}
 
 	void GLRenderer::swapBuffers(const std::shared_ptr<Window>& window) {
-#if defined(STRIKE_GLFW)
-		glfwSwapBuffers(((GLFWWindow*)window.get())->getGLFWWindowHandle());
-#else
-		STRIKE_ASSERT(false, LOG_PLATFORM_OPENGL, "Window Platform not supported!");
-#endif
+		window->swapBuffers();
 	}
 
 	void GLRenderer::loadObject(std::shared_ptr<Object>& object) {
-		//TODO!!! TEST
 		STRIKE_ASSERT(object->isRenderable(), LOG_PLATFORM_OPENGL, 
 			"object must have a renderable component to be loaded into the Renderer!");
 
@@ -87,8 +80,7 @@ namespace Strike {
 			indices.push_back(index);
 		}
 
-		const Material& coreMaterial = renderable.getMaterial();
-		GLMaterial meshMaterial(loadShader(coreMaterial.shaderPath), loadTexture2D(coreMaterial.texturePath));
+		GLMaterial meshMaterial(renderable.shaderHandle, renderable.textureHandle);
 
 		if(object->isStatic())
 			rendererObjectsStatic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
@@ -148,6 +140,7 @@ namespace Strike {
 	}
 
 	void GLRenderer::draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
+		
 		if (!staticIndices.empty()) {
 			glBindVertexArray(staticVertexArrayID);
 			vertexBufferStatic->bind();
@@ -172,6 +165,8 @@ namespace Strike {
 				continue;
 
 			mesh.material.bind(viewMatrix, projectionMatrix);
+			//Renderer::getResource(mesh.getMaterialHandle())->bind();
+
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*) (mesh.offset * sizeof(uint32_t)));
 		}
 
@@ -183,37 +178,20 @@ namespace Strike {
 				continue;
 
 			mesh.material.bind(viewMatrix, projectionMatrix);
+			//Renderer::getResource(mesh.materialHandle)->bind();
+
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*)(mesh.offset * sizeof(uint32_t)));
 		}
 
 		swapBuffers(window);
+
 	}
 
+    
 	/*
-	GLRenderer::~GLRenderer() {
-		//TODO!!!
+      GLRenderer::~GLRenderer() {
+          //TODO!!!
 
-	}
-	*/
-
-
-
-	//PRIVATE METHODS
-	std::shared_ptr<GLTexture2D> GLRenderer::loadTexture2D(const std::string& filePath) {
-		if(textureLibrary.find(filePath) == textureLibrary.end())
-			textureLibrary[filePath] = std::make_shared<GLTexture2D>(filePath.c_str());
-
-		return textureLibrary[filePath];
-	}
-
-	std::shared_ptr<GLProgram> GLRenderer::loadShader(const std::string& shaderPath) {
-		if (shaderLibrary.find(shaderPath) == shaderLibrary.end()) {
-			std::string src = FileLoader::loadTextFile(shaderPath);
-
-			shaderLibrary[shaderPath] = std::make_shared<GLProgram>();
-			shaderLibrary[shaderPath]->compile(src);
-		}
-
-		return shaderLibrary[shaderPath];
-	}
+      }
+      */
 }

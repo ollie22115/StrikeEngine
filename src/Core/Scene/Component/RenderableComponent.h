@@ -7,6 +7,7 @@
 #include "Transform.h"
 #include "Rendering/Vertex.h"
 #include "Rendering/Material.h"
+#include "Resource/ResourceHandle.h"
 
 #define ALL_RENDERABLE_COMPONENTS MeshRenderer, SpriteRenderer
 
@@ -14,15 +15,40 @@ namespace Strike {
 
 	struct SpriteRenderer {
 		SpriteRenderer() = default;
-		SpriteRenderer(const Material& material, const glm::vec4& colourBL, const glm::vec4& colourBR,
-			const glm::vec4& colourTL, const glm::vec4& colourTR) : 
-			material(material), colourBL(colourBL), colourBR(colourBR), colourTL(colourTL), colourTR(colourTR) {};
-		SpriteRenderer(const std::string& texturePath, const std::string& shaderPath, const glm::vec4& colourBL, const glm::vec4& colourBR,
-			const glm::vec4& colourTL, const glm::vec4& colourTR) :
-			material(texturePath, shaderPath), colourBL(colourBL), colourBR(colourBR), colourTL(colourTL), colourTR(colourTR) {};
-		SpriteRenderer(SpriteRenderer & other) = default;
+		
+		/*
+		SpriteRenderer(const std::string& materialPath, const glm::vec4& colourBL, const glm::vec4& colourBR,
+			const glm::vec4& colourTL, const glm::vec4& colourTR); //TODO!!!
+		*/
 
-		Material material;
+		/*
+		SpriteRenderer(const ResourceHandle& materialHandle, const glm::vec4& colourBL, const glm::vec4& colourBR,
+			const glm::vec4& colourTL, const glm::vec4& colourTR); //TODO!!!
+		*/
+
+		/*
+		SpriteRenderer(const std::string& shaderPath, const std::string& texturePath, const glm::vec4& colourBL, const glm::vec4& colourBR,
+			const glm::vec4& colourTL, const glm::vec4& colourTR); //TODO!!!
+		*/
+
+		SpriteRenderer(const ResourceHandle& shaderHandle, const ResourceHandle& textureHandle, const glm::vec4& colourBL, const glm::vec4& colourBR,
+			const glm::vec4& colourTL, const glm::vec4& colourTR) :
+				shaderHandle(shaderHandle), textureHandle(textureHandle), 
+				colourBL(colourBL), colourBR(colourBR), colourTL(colourTL), colourTR(colourTR) {}; //TODO!!!
+
+		/*
+		SpriteRenderer(const std::string& shaderPath, const std::string& textureAtlasPath, const uint32_t& subTextureIndex, const glm::vec4& colourBL, const glm::vec4& colourBR,
+			const glm::vec4& colourTL, const glm::vec4& colourTR); //TODO!!!
+		*/
+
+		/*
+		SpriteRenderer(const ResourceHandle& shaderHandle, const ResourceHandle& textureAtlasHandle, const uint32_t& subTextureIndex, const glm::vec4& colourBL, const glm::vec4& colourBR,
+			const glm::vec4& colourTL, const glm::vec4& colourTR); TODO!!!
+		*/
+		
+		//ResourceHandle materialHandle;
+		ResourceHandle shaderHandle;
+		ResourceHandle textureHandle;
 		glm::vec4 colourBL = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		glm::vec4 colourBR = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		glm::vec4 colourTL = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -33,14 +59,13 @@ namespace Strike {
 		Renderable() = default;
 
 		std::vector<Vertex> vertices;
-		Material* material = nullptr;
+		ResourceHandle shaderHandle;
+		ResourceHandle textureHandle;
+		//ResourceHandle shaderHandle;
+		//ResourceHandle textureHandle;
 
 		inline std::vector<Vertex>& getVertices() {
 			return vertices;
-		}
-
-		inline Material& getMaterial() {
-			return *material;
 		}
 
 		inline bool isRenderable() { return vertices.size() != 0; }
