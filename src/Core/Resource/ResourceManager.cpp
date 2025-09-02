@@ -4,30 +4,32 @@ namespace Strike{
 
     template<>
     ResourceHandle ResourceManager<Texture2D>::load(const std::string& filePath){
-        //TODO!!!
-        if(resourceMap.find(filePath) != resourceMap.end())
-            return filePath;
+        for(auto& entry : resourceMap) if(entry.second.getFilePath() == filePath)
+            return constructHandle(entry.first, entry.second.getMagicNumber());
+            //return entry.first;
 
-        ResourceHandle handle = getHandleFromFilePath(filePath);   //change when switching to uint32_t handles
+        ResourceHandle handle = getHandleFromFilePath(filePath);
 
         if(filePath == "Default")
-            resourceMap[handle] = Texture2D();
+            //resourceMap.emplace(std::piecewise_construct, std::forward_as_tuple(handle), std::forward_as_tuple(filePath));
+            resourceMap.emplace(std::piecewise_construct, std::forward_as_tuple(getPosition(handle)), std::forward_as_tuple(filePath, getMagicNumber(handle)));
         else{
             TextureData2D textureData = ResourceLoader::loadTexture2D(filePath);
 
-            resourceMap.emplace(handle, textureData);
+            //resourceMap.emplace(std::piecewise_construct, std::forward_as_tuple(handle), std::forward_as_tuple(filePath, textureData));
+            resourceMap.emplace(std::piecewise_construct, std::forward_as_tuple(getPosition(handle)), std::forward_as_tuple(filePath, getMagicNumber(handle), textureData));
         }
-
-        std::cout << "Working!\n";
+        
         return handle;
     }
 
     template<>
     ResourceHandle ResourceManager<Shader>::load(const std::string& filePath){
-        if(resourceMap.find(filePath) != resourceMap.end())
-            return filePath;
+        for(auto& entry : resourceMap) if(entry.second.getFilePath() == filePath)
+            return constructHandle(entry.first, entry.second.getMagicNumber());
+            //return entry.first;
 
-        ResourceHandle handle = getHandleFromFilePath(filePath);   //change when switching to uint32_t handles
+        ResourceHandle handle = getHandleFromFilePath(filePath);
 
         if(filePath.c_str() == "Default"){
             STRIKE_ASSERT(false, LOG_PLATFORM_OPENGL, "Default shader not implemented yet");
@@ -35,7 +37,8 @@ namespace Strike{
         } else{
             ShaderData shaderData = ResourceLoader::loadShaderData(filePath);
 
-            resourceMap.emplace(handle, shaderData);
+            //resourceMap.emplace(std::piecewise_construct, std::forward_as_tuple(handle), std::forward_as_tuple(filePath, shaderData));
+            resourceMap.emplace(std::piecewise_construct, std::forward_as_tuple(getPosition(handle)), std::forward_as_tuple(filePath, getMagicNumber(handle), shaderData));
         }
 
         return handle;

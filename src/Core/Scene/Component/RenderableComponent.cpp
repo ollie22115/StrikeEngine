@@ -9,6 +9,7 @@ namespace Strike {
         Renderable renderable;
 		renderable.shaderHandle = renderableComponent.shaderHandle;
 		renderable.textureHandle = renderableComponent.textureHandle;
+		renderable.materialHandle = renderableComponent.materialHandle;
 
 		Vertex v0(transform * glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f), renderableComponent.colourBL);
 		Vertex v1(transform * glm::vec4(0.5f, -0.5f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f), renderableComponent.colourBR);
@@ -45,7 +46,7 @@ namespace Strike {
 		colourBL(colourBL), colourBR(colourBR), colourTL(colourTL), colourTR(colourTR) {
 		//TODO!!!
 
-        //ResourceHandle shaderHandle = Renderer::loadResource<Shader>(shaderPath);
+        ResourceHandle shaderHandle = Renderer::loadResource<Shader>(shaderPath);
 		ResourceHandle textureHandle = Renderer::loadResource<Texture2D>(texturePath);
 
 		// ROUGH DRAFT
@@ -62,4 +63,21 @@ namespace Strike {
 		//
     }
 	*/
+    SpriteRenderer::SpriteRenderer(const ResourceHandle& shaderHandle, const ResourceHandle& textureHandle, 
+		const glm::vec4& colourBL, const glm::vec4& colourBR,
+		const glm::vec4& colourTL, const glm::vec4& colourTR) :
+		shaderHandle(shaderHandle), textureHandle(textureHandle), 
+		colourBL(colourBL), colourBR(colourBR), colourTL(colourTL), colourTR(colourTR) {
+		
+		//TODO!!! Change this later it's very hacky
+		for(auto& entry : Renderer::getResourceIterator<Material>()){
+			if(entry.second.getResource().getShaderHandle() == shaderHandle && entry.second.getResource().getTextureHandle() == textureHandle){
+				materialHandle = constructHandle(entry.first, entry.second.getMagicNumber());
+				return;
+			}
+		}
+		
+		materialHandle = Renderer::emplaceResource<Material>("SpriteMaterial", shaderHandle, textureHandle);
+		
+	};
 }
