@@ -9,7 +9,7 @@ namespace Strike {
     }
 
     uint32_t getPosition(const ResourceHandle &handle) {
-        return static_cast<uint32_t>(handle & 0xFFFF);
+        return static_cast<uint32_t>(handle & 0xFFFFFFFF);
     }
 
     uint32_t getMagicNumber(const ResourceHandle& handle) {

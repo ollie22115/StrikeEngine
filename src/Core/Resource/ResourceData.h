@@ -48,9 +48,13 @@ namespace Strike{
         MaterialData() = default;
         MaterialData(const ResourceHandle& shaderHandle, const ResourceHandle& textureHandle, const glm::vec4& textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)) :
             shaderHandle(shaderHandle), textureHandle(textureHandle), textureCoords(textureCoords) {} 
+        /*MaterialData(const ResourcePointer& shaderPtr, const ResourcePointer& texturePtr, const glm::vec4& textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)) :
+            shaderPtr(shaderPtr), texturePtr(texturePtr), textureCoords(textureCoords) {}*/
 
         ResourceHandle shaderHandle;
+        //ResourcePointer shaderPtr;
         ResourceHandle textureHandle;
+        //ResourcePointer texturePtr;
         glm::vec4 textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
     };
 }

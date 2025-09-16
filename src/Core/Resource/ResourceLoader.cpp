@@ -31,7 +31,6 @@ namespace Strike{
 */
 
     ShaderData ResourceLoader::loadShaderData(const std::string& filePath) {
-        //TODO!!!
         std::string src = FileLoader::loadTextFile(filePath);
 
         std::stringstream srcStream;
