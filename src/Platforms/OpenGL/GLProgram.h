@@ -16,7 +16,6 @@ namespace Strike {
 		inline GLuint getID() { return id; }
 		inline GLuint getID() const { return id; }
 
-		void compile(const std::string& src);
 		void compile(const std::string& vertexSrc, const std::string& fragmentSrc);
 
 		void bind() const;

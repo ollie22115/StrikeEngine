@@ -10,13 +10,15 @@
 
 #include "Utils/TransformMaths.h"
 
-#ifdef STRIKE_DEBUG
+#if defined(STRIKE_DEBUG)
 #include "Debugging/StrikeDebug.h"
 #endif
 
 #define ALL_COMPONENTS Transform,
 
 namespace Strike {
+
+	class Renderable;
 
 	struct Object {
 

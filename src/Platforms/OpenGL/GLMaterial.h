@@ -9,19 +9,22 @@ namespace Strike {
 
 	class GLMaterial{
 	public:
-		GLMaterial(const ResourceHandle& shaderHandle, const ResourceHandle& textureHandle) : 
+		GLMaterial(const ResourceHandle&/*ResourcePointer&*/ shaderHandle, const ResourceHandle&/*ResourcePointer&*/ textureHandle) : 
 			shaderHandle(shaderHandle), textureHandle(textureHandle) {}
 
-		inline ResourceHandle getShaderHandle(){ return shaderHandle; }
-		inline ResourceHandle getTextureHandle(){ return textureHandle; }
+		inline ResourceHandle/*ResourcePointer*/ getShaderHandle(){ return shaderHandle; }
+		inline ResourceHandle/*ResourcePointer*/ getShaderHandle() const { return shaderHandle; }
+
+		inline ResourceHandle/*ResourcePointer*/ getTextureHandle(){ return textureHandle; }
+		inline ResourceHandle/*ResourcePointer*/ getTextureHandle() const { return textureHandle; }
 
 		void uploadMat4(const std::string& uniformName, const glm::mat4& matrix);
 
 		void bind(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 
 	private:
-		ResourceHandle shaderHandle;
-		ResourceHandle textureHandle;
+		ResourceHandle/*ResourcePointer*/ shaderHandle;
+		ResourceHandle/*ResourcePointer*/ textureHandle;
 	};
 
 }

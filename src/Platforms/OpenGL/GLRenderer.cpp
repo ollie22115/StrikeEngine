@@ -80,7 +80,7 @@ namespace Strike {
 			indices.push_back(index);
 		}
 
-		GLMaterial meshMaterial(renderable.shaderHandle, renderable.textureHandle);
+		ResourceHandle/*ResourcePointer<Material>*/ meshMaterial = renderable.materialHandle;
 
 		if(object->isStatic())
 			rendererObjectsStatic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
@@ -157,6 +157,7 @@ namespace Strike {
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		
 		//TODO!!! Fix When you figure out what to do with VAO's
 		glBindVertexArray(staticVertexArrayID);
 		
@@ -164,8 +165,7 @@ namespace Strike {
 			if (!mesh.object->isVisible()) 
 				continue;
 
-			mesh.material.bind(viewMatrix, projectionMatrix);
-			//Renderer::getResource(mesh.getMaterialHandle())->bind();
+			Renderer::getResource<Material>(mesh.materialHandle)->bind(viewMatrix, projectionMatrix);
 
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*) (mesh.offset * sizeof(uint32_t)));
 		}
@@ -177,8 +177,7 @@ namespace Strike {
 			if (!mesh.object->isVisible())
 				continue;
 
-			mesh.material.bind(viewMatrix, projectionMatrix);
-			//Renderer::getResource(mesh.materialHandle)->bind();
+			Renderer::getResource<Material>(mesh.materialHandle)->bind(viewMatrix, projectionMatrix);
 
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*)(mesh.offset * sizeof(uint32_t)));
 		}

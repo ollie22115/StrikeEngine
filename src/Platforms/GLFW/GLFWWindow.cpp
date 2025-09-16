@@ -8,13 +8,18 @@
 
 namespace Strike {
 
-	GLFWWindow::GLFWWindow(const uint32_t& width, const uint32_t& height, const char* title) :
-		Window(width, height), windowHandle(nullptr) {
+	GLFWWindow::GLFWWindow(const uint32_t& maxWidth, const uint32_t& height, const char* title) :
+		Window(maxWidth, height), windowHandle(nullptr) {
 
 		int32_t result = glfwInit();
 		STRIKE_ASSERT(result, LOG_PLATFORM_GLFW, "GLFW failed to initalise!");
 
-		windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
+		windowHandle = glfwCreateWindow(maxWidth, height, title, NULL, NULL);
+
+		int actualWidth, actualHeight;
+		glfwGetWindowSize(windowHandle, &actualWidth, &actualHeight);
+		this->width = actualWidth;
+		this->height = actualHeight;
 
 #ifdef STRIKE_DEBUG
 		if (!windowHandle) {
@@ -71,7 +76,11 @@ namespace Strike {
 		else glfwSwapInterval(0);
 	}
 
-	GLFWWindow::~GLFWWindow() {
+    void GLFWWindow::swapBuffers() {
+		glfwSwapBuffers(windowHandle);
+    }
+
+    GLFWWindow::~GLFWWindow() {
 		glfwTerminate();
 	}
 

@@ -9,6 +9,7 @@ namespace Strike {
 	
 	ResourceManager<Texture2D> Renderer::textureManager;
 	ResourceManager<Shader> Renderer::shaderManager;
+	ResourceManager<Material> Renderer::materialManager;
 
 	std::unique_ptr<Renderer> Strike::Renderer::createRenderer() {
 #ifdef STRIKE_DEBUG
@@ -37,29 +38,24 @@ namespace Strike {
 	}
 
 	template<>
-	ResourceHandle Renderer::loadResource<Texture2D>(const std::string& filePath) {
-		return textureManager.load(filePath);
+	ResourceManager<Texture2D>& Renderer::getResourceManager(){
+		return textureManager;
 	}
 
 	template<>
-	Texture2D* Renderer::getResource<Texture2D>(const ResourceHandle& handle) {
-		return textureManager.get(handle);
+	ResourceManager<Shader>& Renderer::getResourceManager(){
+		return shaderManager;
 	}
 
 	template<>
-	ResourceHandle Renderer::loadResource<Shader>(const std::string& filePath){
-		return shaderManager.load(filePath);
-	}
-
-	template<>
-	Shader* Renderer::getResource<Shader>(const ResourceHandle& filePath){
-		return shaderManager.get(filePath);
+	ResourceManager<Material>& Renderer::getResourceManager(){
+		return materialManager;
 	}
 
 	Renderer::~Renderer(){
 		textureManager.clear();
 		shaderManager.clear();
 		//textureAtlasManager.clear();
-		//materialManager.clear();
+		materialManager.clear();
 	}
 }

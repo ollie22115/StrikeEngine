@@ -8,9 +8,6 @@
 #include "Rendering/Renderer.h"
 
 namespace Strike {
-    
-    Scene::Scene(const OnStartCallback& onStartCallback, const OnUpdateCallback& onUpdateCallback, const OnFinishCallback& onFinishCallback) :
-        onStartCallback(onStartCallback), onUpdateCallback(onUpdateCallback), onFinishCallback(onFinishCallback) {}
 
     std::shared_ptr<Object> Scene::createObject(const bool& isStatic) {
         objects.push_back(std::make_shared<Object>(registry, true, isStatic));
@@ -25,15 +22,15 @@ namespace Strike {
     }
 
     void Scene::onStart() {
-        onStartCallback();
+        std::cout << "Scene Started!\n";
     }
 
     void Scene::onUpdate(const EventState& eventState, const uint64_t& deltaTime) {
-        onUpdateCallback(eventState, deltaTime);
+       std::cout << "Scene Updated!\n";
     }
 
     void Scene::onFinish() {
-        onFinishCallback();
+        std::cout << "Scene Started!\n";
     }
 
     glm::mat4 Scene::getViewMatrix() {
@@ -86,18 +83,6 @@ namespace Strike {
     bool Scene::rayCast(const float& oX, const float& oY, const float& dX, const float& dY, const float& maxDistance) {
         //TODO!!!
         return false;
-    }
-
-    void Scene::defaultOnStartCallback() {
-        std::cout << "Scene Started!\n";
-    }
-
-    void Scene::defaultOnUpdateCallback(const EventState& eventState, const uint64_t& deltaTime) {
-        std::cout << "Scene Updated!\n";
-    }
-
-    void Scene::defaultOnFinishCallback() {
-        std::cout << "Scene Finished!\n";
     }
 
 }

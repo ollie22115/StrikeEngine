@@ -53,17 +53,37 @@ namespace Strike {
 
 		template <typename T>
 		static ResourceHandle loadResource(const std::string& filePath);
+		/*template <typename T>
+		static ResourcePointer loadResource(const std::string& filePath);*/
 
+		template <typename T, typename... Args>
+		static ResourceHandle emplaceResource(const std::string& filePath, Args&&... args){
+			return getResourceManager<T>().emplace(filePath, std::forward<Args>(args)...);
+		}
+		/*template <typename T, typename... Args>
+		static ResourcePointer emplaceResource(const std::string& filePath, Args&&... args){
+			return getResourceManager<T>().emplace(filePath, std::forward<Args>(args)...);
+		}
+		*/
+
+		//XXX
 		template <typename T>
 		static T* getResource(const ResourceHandle& handle);
+		//XXX
+
+		template <typename T>
+		static auto getResourceIterator();
 
 	protected:
 		static ResourceManager<Texture2D> textureManager;
 		//static ResourceManager<TextureAtlas> textureAtlasManager;
 		static ResourceManager<Shader> shaderManager;
-		//static ResourceManager<Material> materialManager;
+		static ResourceManager<Material> materialManager;
 
 	private:
+		template<typename T>
+		static ResourceManager<T>& getResourceManager();
+
 #if defined(STRIKE_OPENGL)
 		const static RendererPlatform platform = RendererPlatform::OpenGL;
 #elif defined(STRIKE_DIRECTX)
@@ -74,15 +94,33 @@ namespace Strike {
 	};
 
 	template<>
-	ResourceHandle Renderer::loadResource<Texture2D>(const std::string& filePath);
+	ResourceManager<Texture2D>& Renderer::getResourceManager();
 
 	template<>
-	ResourceHandle Renderer::loadResource<Shader>(const std::string& filePath);
-
+	ResourceManager<Shader>& Renderer::getResourceManager();
+	
 	template<>
-	Texture2D* Renderer::getResource<Texture2D>(const ResourceHandle& handle);
+	ResourceManager<Material>& Renderer::getResourceManager();
 
-	template<>
-	Shader* Renderer::getResource<Shader>(const ResourceHandle& filePath);
+	template<typename T>
+	inline ResourceHandle Renderer::loadResource(const std::string& filePath) {
+		return getResourceManager<T>().load(filePath);
+	}
+	/*template<typename T>
+	inline ResourceHandle Renderer::loadResource(const std::string& filePath){
+		return getResourceManager<T>.load(filePath);
+	}*/
+
+	//XXX
+	template<typename T>
+	inline T* Renderer::getResource(const ResourceHandle& handle) {
+		return getResourceManager<T>().getResourceFromHandle(handle);
+	}
+	//XXX
+
+	template <typename T>
+	inline auto Renderer::getResourceIterator() {
+		return getResourceManager<T>().iterator();
+	}
 
 }

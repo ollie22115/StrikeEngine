@@ -7,6 +7,8 @@
 #include <queue>
 #include <bitset>
 
+#include <optional>
+
 #include <string>
 #include <sstream>
 

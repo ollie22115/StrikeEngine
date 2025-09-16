@@ -4,8 +4,6 @@
 #include "Transform.h"
 #include <glm/glm.hpp>
 
-#define BOUNDS_COMPONENTS BoxBounds, RadiusBounds
-
 namespace Strike {
 
 	struct BoxBounds {

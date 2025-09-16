@@ -63,19 +63,24 @@ namespace Strike {
 		//
     }
 	*/
-    SpriteRenderer::SpriteRenderer(const ResourceHandle& shaderHandle, const ResourceHandle& textureHandle, 
+    SpriteRenderer::SpriteRenderer(const ResourceHandle&/*ResourcePointer&*/ shaderHandle, const ResourceHandle&/*ResourcePointer&*/ textureHandle, 
 		const glm::vec4& colourBL, const glm::vec4& colourBR,
 		const glm::vec4& colourTL, const glm::vec4& colourTR) :
 		shaderHandle(shaderHandle), textureHandle(textureHandle), 
 		colourBL(colourBL), colourBR(colourBR), colourTL(colourTL), colourTR(colourTR) {
 		
 		//TODO!!! Change this later it's very hacky
+		uint32_t materialIndex = 1;
 		for(auto& entry : Renderer::getResourceIterator<Material>()){
-			if(entry.second.getResource().getShaderHandle() == shaderHandle && entry.second.getResource().getTextureHandle() == textureHandle){
-				materialHandle = constructHandle(entry.first, entry.second.getMagicNumber());
+			if(!entry.inUse()) continue;
+			if(entry.getResource().getShaderHandle() == shaderHandle && entry.getResource().getTextureHandle() == textureHandle){
+				materialHandle = constructHandle(materialIndex, entry.getMagicNumber());
 				return;
 			}
+
+			materialIndex++;
 		}
+		//////////////////////////////////////////////////
 		
 		materialHandle = Renderer::emplaceResource<Material>("SpriteMaterial", shaderHandle, textureHandle);
 		

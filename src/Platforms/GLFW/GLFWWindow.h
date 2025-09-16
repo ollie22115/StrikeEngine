@@ -7,13 +7,15 @@ namespace Strike {
 
 	class GLFWWindow : public Window {
 	public:
-		GLFWWindow(const uint32_t& width, const uint32_t& height, const char* title = "GLFWWindow!");
+		GLFWWindow(const uint32_t& maxWidth, const uint32_t& maxHeight, const char* title = "GLFWWindow!");
 
 		inline GLFWwindow* getGLFWWindowHandle() const { return windowHandle; }
 
 		void onUpdate() override;
 
 		void setVSync(bool vSync) override;
+
+		void swapBuffers() override;
 
 		~GLFWWindow() override;
 

@@ -9,6 +9,7 @@
 namespace Strike {
 
 	Game::Game(const std::string& title) : loadedScene(nullptr), running(false) {
+
 		window = std::shared_ptr<Window>(Window::init(1280, 800, title.c_str()));
 
 		renderer = Renderer::createRenderer();
@@ -26,9 +27,8 @@ namespace Strike {
 
 		loadedScene = scene;
 		
-		scene->load(renderer); //TODO!!! Replace with bottom two lines once Renderer is modularised
-		//renderer->loadScene(loadedScene);
-		//loadedScene->onStart();
+		scene->load(renderer);
+		loadedScene->onStart();
 	}
 
 	void Game::run(std::shared_ptr<Scene> firstScene) {

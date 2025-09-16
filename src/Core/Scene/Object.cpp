@@ -42,7 +42,7 @@ namespace Strike {
 	Renderable Object::getRenderable() {
 		//STRIKE_ASSERT(!(hasComponent<MeshRenderer>() && hasComponent<SpriteRenderer>()), LOG_PLATFORM_CORE, "Object cannot have two renderable components!");
 
-		if (hasComponent<SpriteRenderer>())
+		if(hasComponent<SpriteRenderer>())
 			return Renderable::createRenderable(getComponent<SpriteRenderer>(), getComponent<Transform>());
 		/* else if (hasComponent<MeshRenderer>()) {
 

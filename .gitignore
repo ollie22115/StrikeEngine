@@ -6,3 +6,9 @@ StrikeEngine.vcxproj.filters
 StrikeEngine.vcxproj.user
 x64
 Debug
+bin
+bin-int
+assets
+CmakeFiles
+cmake_install.cmake
+*.drawio
