@@ -45,16 +45,14 @@ namespace Strike{
     };
 
     struct MaterialData{
+        //TODO!!!
         MaterialData() = default;
-        MaterialData(const ResourceHandle& shaderHandle, const ResourceHandle& textureHandle, const glm::vec4& textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)) :
-            shaderHandle(shaderHandle), textureHandle(textureHandle), textureCoords(textureCoords) {} 
-        /*MaterialData(const ResourcePointer& shaderPtr, const ResourcePointer& texturePtr, const glm::vec4& textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)) :
-            shaderPtr(shaderPtr), texturePtr(texturePtr), textureCoords(textureCoords) {}*/
+        MaterialData(const ResourceHandle&/*ResourcePointer<Shader>&*/ shaderHandle, const ResourceHandle&/*ResourcePointer<Texture2D>&*/ textureHandle, const glm::vec4& textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)) :
+            shaderHandle(shaderHandle), textureHandle(textureHandle), textureCoords(textureCoords) {}
 
-        ResourceHandle shaderHandle;
-        //ResourcePointer shaderPtr;
-        ResourceHandle textureHandle;
-        //ResourcePointer texturePtr;
+        ResourceHandle/*ResourcePointer<Shader>*/ shaderHandle;
+        ResourceHandle/*ResourcePointer<Texture2D>*/ textureHandle;
+        
         glm::vec4 textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
     };
 }

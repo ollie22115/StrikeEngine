@@ -17,13 +17,9 @@ namespace Strike {
 		void run(std::shared_ptr<Scene> firstScene = nullptr);
 
 		template<typename T>
-		inline ResourceHandle loadRendererResource(const std::string& filePath) {
+		inline ResourcePointer<T> loadRendererResource(const std::string& filePath) {
 			return Renderer::loadResource<T>(filePath);
 		}
-		/*template<typename T>
-		inline ResourcePointer loadRendererResource(const std::string& filePath){
-			return Renderer::loadResource<T>(filePath);
-		}*/
 
 		~Game();
 

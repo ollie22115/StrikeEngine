@@ -3,20 +3,15 @@
 namespace Strike{
 
     template<>
-    ResourceHandle/*ResourcePointer*/ ResourceManager<Texture2D>::load(const std::string& filePath){
+    ResourcePointer<Texture2D> ResourceManager<Texture2D>::load(const std::string& filePath){
 
         for(size_t i = 0; i < resourcePool.size(); i++){
-            Entry& entry = resourcePool[i];
-            if(entry.inUse() && entry.getFilePath() == filePath)
-                return constructHandle(i + 1, entry.getMagicNumber());
-        }
-        /*for(size_t i = 0; i < resourcePool.size(); i++){
             Entry& entry = resourcePool[i];
             if(entry.inUse() && entry.getFilePath() == filePath){
                 entry.refCount++;
                 return ResourcePointer(constructHandle(i + 1, entry.getMagicNumber()), this);
             }
-        }*/
+        }
 
         ResourceHandle handle = getHandleFromFilePath(filePath);
 
@@ -28,26 +23,20 @@ namespace Strike{
             resourcePool[getPosition(handle) - 1].construct(filePath, getMagicNumber(handle), textureData);
         }
         
-        return handle;
-        /*return ResourcePointer(handle, this);*/
+        return ResourcePointer(handle, this);
 
     }
 
     template<>
-    ResourceHandle/*ResourcePointer*/ ResourceManager<Shader>::load(const std::string& filePath){
+    ResourcePointer<Shader> ResourceManager<Shader>::load(const std::string& filePath){
 
         for(size_t i = 0; i < resourcePool.size(); i++){
-            Entry& entry = resourcePool[i];
-            if(entry.inUse() && entry.getFilePath() == filePath)
-                return constructHandle(i + 1, entry.getMagicNumber());
-        }
-        /*for(size_t i = 0; i < resourcePool.size(); i++){
             Entry& entry = resourcePool[i];
             if(entry.inUse() && entry.getFilePath() == filePath){
                 entry.refCount++;
                 return ResourcePointer(constructHandle(i + 1, entry.getMagicNumber()), this);
             }
-        }*/
+        }
 
         ResourceHandle handle = getHandleFromFilePath(filePath);
 
@@ -59,8 +48,7 @@ namespace Strike{
             resourcePool[getPosition(handle) - 1].construct(filePath, getMagicNumber(handle), shaderData);
         }
 
-        return handle;
-        /*return ResourcePointer(handle, this);*/
+        return ResourcePointer(handle, this);
 
     }
 }

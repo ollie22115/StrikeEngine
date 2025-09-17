@@ -49,6 +49,7 @@ namespace Strike {
 	}
 
 	void GLRenderer::loadObject(std::shared_ptr<Object>& object) {
+
 		STRIKE_ASSERT(object->isRenderable(), LOG_PLATFORM_OPENGL, 
 			"object must have a renderable component to be loaded into the Renderer!");
 
@@ -80,7 +81,7 @@ namespace Strike {
 			indices.push_back(index);
 		}
 
-		ResourceHandle/*ResourcePointer<Material>*/ meshMaterial = renderable.materialHandle;
+		ResourcePointer<Material> meshMaterial = renderable.materialPtr;
 
 		if(object->isStatic())
 			rendererObjectsStatic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
@@ -165,7 +166,7 @@ namespace Strike {
 			if (!mesh.object->isVisible()) 
 				continue;
 
-			Renderer::getResource<Material>(mesh.materialHandle)->bind(viewMatrix, projectionMatrix);
+			mesh.materialPtr->bind(viewMatrix, projectionMatrix);
 
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*) (mesh.offset * sizeof(uint32_t)));
 		}
@@ -177,7 +178,8 @@ namespace Strike {
 			if (!mesh.object->isVisible())
 				continue;
 
-			Renderer::getResource<Material>(mesh.materialHandle)->bind(viewMatrix, projectionMatrix);
+			//Renderer::getResource<Material>(mesh.materialPtr)->bind(viewMatrix, projectionMatrix);
+			mesh.materialPtr->bind(viewMatrix, projectionMatrix);
 
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*)(mesh.offset * sizeof(uint32_t)));
 		}

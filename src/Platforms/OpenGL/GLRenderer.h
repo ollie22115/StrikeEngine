@@ -43,13 +43,13 @@ namespace Strike {
 
 		struct GLMesh {
 			Object* object;	//TODO change to shared pointer at some point
-			ResourceHandle/*ResourcePointer<Material>*/ materialHandle;
+			ResourcePointer<Material> materialPtr;
 			int32_t vertexCount;
 			int32_t offset;
 
 			GLMesh() = default;
-			inline GLMesh(Object* object, const ResourceHandle&/*ResourcePointer<Material>&*/ materialHandle, int32_t vertexCount, int32_t offset) : 
-				object(object), materialHandle(materialHandle), vertexCount(vertexCount), offset(offset) {}
+			inline GLMesh(Object* object, const ResourcePointer<Material>& materialPtr, int32_t vertexCount, int32_t offset) : 
+				object(object), materialPtr(materialPtr), vertexCount(vertexCount), offset(offset) {}
 			
 		};
 

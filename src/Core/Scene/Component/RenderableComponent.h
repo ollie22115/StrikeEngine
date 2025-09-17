@@ -15,38 +15,14 @@ namespace Strike {
 
 	struct SpriteRenderer {
 		SpriteRenderer() = default;
-		
-		/*
-		SpriteRenderer(const std::string& materialPath, const glm::vec4& colourBL, const glm::vec4& colourBR,
-			const glm::vec4& colourTL, const glm::vec4& colourTR); //TODO!!!
-		*/
 
-		/*
-		SpriteRenderer(const ResourceHandle& materialHandle, const glm::vec4& colourBL, const glm::vec4& colourBR,
-			const glm::vec4& colourTL, const glm::vec4& colourTR); //TODO!!!
-		*/
-
-		/*
-		SpriteRenderer(const std::string& shaderPath, const std::string& texturePath, const glm::vec4& colourBL, const glm::vec4& colourBR,
-			const glm::vec4& colourTL, const glm::vec4& colourTR); //TODO!!!
-		*/
-
-		SpriteRenderer(const ResourceHandle&/*ResourcePointer&*/ shaderHandle, const ResourceHandle&/*ResourcePointer&*/ textureHandle, const glm::vec4& colourBL, const glm::vec4& colourBR,
+		SpriteRenderer(const ResourcePointer<Shader>& shaderPtr, const ResourcePointer<Texture2D>& texturePtr, const glm::vec4& colourBL, const glm::vec4& colourBR,
 			const glm::vec4& colourTL, const glm::vec4& colourTR);
 
-		/*
-		SpriteRenderer(const std::string& shaderPath, const std::string& textureAtlasPath, const uint32_t& subTextureIndex, const glm::vec4& colourBL, const glm::vec4& colourBR,
-			const glm::vec4& colourTL, const glm::vec4& colourTR); //TODO!!!
-		*/
-
-		/*
-		SpriteRenderer(const ResourceHandle& shaderHandle, const ResourceHandle& textureAtlasHandle, const uint32_t& subTextureIndex, const glm::vec4& colourBL, const glm::vec4& colourBR,
-			const glm::vec4& colourTL, const glm::vec4& colourTR); TODO!!!
-		*/
+		/*SpriteRenderer(const ResourcePointer<Material>& materialPtr, 
+			const glm::vec4& colourBL, const glm::vec4& colourBR, const glm::vec4& colourTL, const glm::vec4& colourTR);*/
 		
-		ResourceHandle/*ResourcePointer*/ materialHandle;
-		ResourceHandle/*ResourcePointer*/ shaderHandle;
-		ResourceHandle/*ResourcePointer*/ textureHandle;
+		ResourcePointer<Material> materialPtr;
 		glm::vec4 colourBL = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		glm::vec4 colourBR = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		glm::vec4 colourTL = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -57,9 +33,7 @@ namespace Strike {
 		Renderable() = default;
 
 		std::vector<Vertex> vertices;
-		ResourceHandle/*ResourcePointer*/ materialHandle;
-		ResourceHandle/*ResourcePointer*/ shaderHandle;
-		ResourceHandle/*ResourcePointer*/ textureHandle;
+		ResourcePointer<Material> materialPtr;
 
 		inline std::vector<Vertex>& getVertices() {
 			return vertices;

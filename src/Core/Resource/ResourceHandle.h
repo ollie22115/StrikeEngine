@@ -14,4 +14,6 @@ namespace Strike {
 
     uint32_t getMagicNumber(const ResourceHandle& handle);
 
+    ResourceHandle genHandle(const uint32_t& position);
+
 }

@@ -16,4 +16,9 @@ namespace Strike {
         return static_cast<uint32_t>(handle >> 32);
     }
 
+    ResourceHandle genHandle(const uint32_t& position){
+        uint32_t magicNumber = random<uint32_t>();
+        return constructHandle(position, magicNumber);
+    }
+    
 }
