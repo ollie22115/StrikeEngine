@@ -21,7 +21,7 @@ namespace Strike {
 			char infoLog[512];
 
 			glGetShaderInfoLog(id, 512, NULL, infoLog);
-			Log::logError(LOG_PLATFORM_OPENGL, { "Shader Failed to Load ", infoLog });
+			Log::logError(LOG_PLATFORM_OPENGL, { "Shader Failed to Load ", infoLog }, __LINE__, __FILE__);
 		}
 #endif
 
@@ -46,7 +46,7 @@ namespace Strike {
 		char infoLog[512];
 		if (!compilationResult) {
 			glGetShaderInfoLog(id, 512, NULL, infoLog);
-			Log::logError(LOG_PLATFORM_OPENGL, { "Shader Failed to Load ", infoLog });
+			Log::logError(LOG_PLATFORM_OPENGL, { "Shader Failed to Load ", infoLog }, __LINE__, __FILE__);
 		}
 #endif
 	}

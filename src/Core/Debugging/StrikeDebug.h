@@ -1,11 +1,12 @@
 #pragma once
 
+#include "BreakPoint.h"
 #include "Log.h"
 
 #ifdef STRIKE_DEBUG
-#define STRIKE_ASSERT(x, platform, msg) if(!(x)) Log::logError(platform, msg)	//TODO change so it causes a breakpoint instead
-#define STRIKE_ERROR(x, platform, msg) if(!(x)) Log::logError(platform, msg)
-#define STRIKE_WARNING(x, platform, msg) if(!(x)) Log::logWarning(platform, msg)
+#define STRIKE_ASSERT(x, platform, msg) if(!(x)){ Log::logError(platform, msg, __LINE__, __FILE__); STRIKE_SET_BREAKPOINT(); }	//TODO change so it causes a breakpoint instead
+#define STRIKE_ERROR(x, platform, msg) if(!(x)) Log::logError(platform, msg, __LINE__, __FILE__)
+#define STRIKE_WARNING(x, platform, msg) if(!(x)) Log::logWarning(platform, msg, __LINE__, __FILE__)
 #else
 #define STRIKE_ASSERT(x, platform, msg)
 #define STRIKE_ERROR(x, platform, msg)

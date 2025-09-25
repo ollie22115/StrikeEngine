@@ -26,11 +26,13 @@ namespace Strike {
 		static void blockLogMessages(const uint32_t& category);
 		static void unBlockLogMessages(const uint32_t& category);
 
-		static void logError(const uint32_t& platform, const std::string& errorMsg);
-		static void logError(const uint32_t& platform, const std::initializer_list<std::string>& errorMsg);
+		static void logError(const uint32_t& platform, const std::string& errorMsg,
+			const uint32_t& line = 0, const std::string& file = "");
+		static void logError(const uint32_t& platform, const std::initializer_list<std::string>& errorMsg, const uint32_t& line, 
+			const std::string& file);
 
-		static void logWarning(const uint32_t& platform, const std::string& warningMsg);
-		static void logWarning(const uint32_t& platform, const std::initializer_list<std::string>& warningMsg);
+		static void logWarning(const uint32_t& platform, const std::string& warningMsg, const uint32_t& line, const std::string& file);
+		static void logWarning(const uint32_t& platform, const std::initializer_list<std::string>& warningMsg, const uint32_t& line, const std::string& file);
 
 		static void log(const uint32_t& platform, const std::string& msg);
 		static void log(const uint32_t& platform, const std::initializer_list<std::string>& msg);

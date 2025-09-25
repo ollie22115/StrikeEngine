@@ -70,42 +70,52 @@ namespace Strike {
 		std::cout << LogColour::white();
 	}
 
-	void Log::logError(const uint32_t& platform, const std::string& errorMsg) {
+	void Log::logError(const uint32_t& platform, const std::string& errorMsg,
+		const uint32_t& line, const std::string& file) {
+
 		std::cout << LogColour::red();
-
 		logPlatform(platform);
-
+		std::cout << file;
+		if(line != 0) std::cout << " Line: " << line << " - ";
 		std::cout << errorMsg << LogColour::white() << "\n";
+
 	}
 
-	void Log::logError(const uint32_t& platform, const std::initializer_list<std::string>& errorMsg) {	
+	void Log::logError(const uint32_t& platform, const std::initializer_list<std::string>& errorMsg, 
+		const uint32_t& line, const std::string& file) {	
+		
 		std::cout << LogColour::red();
-
 		logPlatform(platform);
-
+		std::cout << file;
+		if(line != 0) std::cout << " Line: " << line << " - ";
 		for (auto& msg : errorMsg)
 			std::cout << msg;
-
 		std::cout << LogColour::white() << "\n";
 	}
 
-	void Log::logWarning(const uint32_t& platform, const std::string& warningMsg) {
-		std::cout << LogColour::yellow();
-
+	void Log::logWarning(const uint32_t& platform, const std::string& warningMsg, 
+		const uint32_t& line, const std::string& file) {
+		
+			std::cout << LogColour::yellow();
 		logPlatform(platform);
-
+		std::cout << file;
+		if(line != 0) std::cout << " Line: " << line << " - ";
 		std::cout << warningMsg << LogColour::white() << "\n";
+
 	}
 
-	void Log::logWarning(const uint32_t& platform, const std::initializer_list<std::string>& warningMsg) {
+	void Log::logWarning(const uint32_t& platform, const std::initializer_list<std::string>& warningMsg, 
+		const uint32_t& line, const std::string& file) {
+		
 		std::cout << LogColour::yellow();
-
 		logPlatform(platform);
-
+		std::cout << file;
+		if(line != 0) std::cout << " Line: " << line << " - ";
 		for (auto& msg : warningMsg)
 			std::cout << msg;
 
 		std::cout << LogColour::white() << "\n";
+
 	}
 
 	void Log::log(const uint32_t& platform, const std::string& msg) {
@@ -234,7 +244,7 @@ namespace Strike {
 		case STRIKE_KEY_DQUOTE:
 			return "\"";
 		case STRIKE_KEY_POUND:
-			return "£";
+			return "ï¿½";
 		case STRIKE_KEY_DOLLAR:
 			return "$";
 		case STRIKE_KEY_PERCENTAGE:
