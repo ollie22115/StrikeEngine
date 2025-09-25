@@ -1,5 +1,6 @@
 #pragma once
 
+#include <variant>
 #include "Utils/Vector.h"
 
 #include "ResourceHandle.h"
@@ -10,12 +11,16 @@ namespace Strike{
         unsigned char* data;
             uint32_t width, height, bitsPerPixel;
 
-        TextureData2D() = default;
+        TextureData2D();
+        TextureData2D(TextureData2D&& other);
         TextureData2D(unsigned char* data, const uint32_t& width, const uint32_t& height, 
-            const uint32_t& bitsPerPixel) : 
-            data(data), width(width), height(height), bitsPerPixel(bitsPerPixel) {}
+            const uint32_t& bitsPerPixel, const bool& usingSTBI = true) : 
+            data(data), width(width), height(height), bitsPerPixel(bitsPerPixel), usingSTBI(usingSTBI) {}
         
         ~TextureData2D();
+
+    private:
+        bool usingSTBI = true; //Indicates whether the data was loaded using STBI Library
     };
 
 
@@ -55,4 +60,7 @@ namespace Strike{
         
         glm::vec4 textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
     };
+
+    using ResourceData = std::variant<TextureData2D, ShaderData, MaterialData, TextureAtlasData>;
+
 }

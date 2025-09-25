@@ -18,61 +18,82 @@
 namespace Strike{
 
     template<typename T>
+    struct ResourceEntry {
+    ResourceEntry() = default;
+
+    inline T& getResource() { return resource.value(); }
+    inline const T& getResource() const { return resource.value(); }
+
+    inline const std::string& getFilePath() const { return filePath; }
+
+    inline uint32_t getMagicNumber() const { return magicNumber; }
+
+    inline bool inUse() const { return resource.has_value(); }
+
+    inline void setNextFreePos(const uint32_t& nextFreePos) { this->nextFreePos = nextFreePos;}
+
+    inline uint32_t getRefCount() const { return refCount; }
+
+    inline void incrementRefCount() { refCount++; }
+    inline void decrementRefCount() { refCount--; }
+    
+    template <typename... Args>
+    inline void construct(const std::string& filePath, const uint32_t& magicNumber, Args&&... args) {
+        resource.emplace(std::forward<Args>(args)...);
+        this->filePath = filePath;
+        this->magicNumber = magicNumber;
+        this->nextFreePos = 0;
+    }
+    
+    inline void destruct(){
+        resource.reset();
+        filePath = "";
+        magicNumber = 0;
+    }
+
+    ~ResourceEntry() = default;
+
+    private:
+        std::optional<T> resource;
+
+        uint32_t refCount = 0;
+        
+        std::string filePath = "";
+        uint32_t nextFreePos = 0;
+        uint32_t magicNumber = 0;
+        
+
+        template<typename U, uint32_t poolSize>
+        friend class ResourceManager;
+    };
+
+    template<typename T>
+    void constructEntry(ResourceEntry<T>& entry, const ResourceData& data, 
+        const std::string& filePath, const uint32_t& magicNumber);
+
+    template<>
+    void constructEntry(ResourceEntry<Texture2D>& entry, const ResourceData& data,
+        const std::string& filePath, const uint32_t& magicNumber);
+
+    template<>
+    void constructEntry(ResourceEntry<Shader>& entry, const ResourceData& data, 
+        const std::string& filePath, const uint32_t& magicNumber);
+
+
+
+
+
+    template<typename T, uint32_t poolSize = STRIKE_DEFAULT_POOL_SIZE>
     class ResourceManager {
     public:
         ResourceManager() : firstFreePos(1) {
 
             for(size_t i = 0; i < resourcePool.size() - 1; i++)
-                resourcePool[i].nextFreePos = i + 2;
+                resourcePool[i].setNextFreePos(i + 2);
 
-            resourcePool[resourcePool.size() - 1].nextFreePos = 0;
+            resourcePool[resourcePool.size() - 1].setNextFreePos(0);
 
         }
-
-        struct Entry {
-            Entry() = default;
-
-            inline T& getResource() { return resource.value(); }
-            inline const T& getResource() const { return resource.value(); }
-
-            inline const std::string& getFilePath() const { return filePath; }
-
-            inline uint32_t getMagicNumber() const { return magicNumber; }
-
-            inline bool inUse() const { return resource.has_value(); }
-
-            inline void setNextFreePos(const uint32_t& nextFreePos) { this->nextFreePos = nextFreePos;}
-            
-            template <typename... Args>
-            inline void construct(const std::string& filePath, const uint32_t& magicNumber, Args&&... args) {
-                resource.emplace(std::forward<Args>(args)...);
-                this->filePath = filePath;
-                this->magicNumber = magicNumber;
-                this->nextFreePos = 0;
-            }
-            
-            inline void destruct(){
-                resource.reset();
-                filePath = "";
-                magicNumber = 0;
-            }
-
-            ~Entry() = default;
-
-        private:
-            std::optional<T> resource;
-
-            uint32_t refCount = 0;
-            
-            std::string filePath = "";
-            uint32_t nextFreePos = 0;
-            uint32_t magicNumber = 0;
-            
-
-            friend class ResourceManager;
-        };
-
-
 
         class ResourcePointer{
         public:
@@ -80,13 +101,13 @@ namespace Strike{
 
             ResourcePointer(const ResourceHandle& handle, ResourceManager<T>* managerPtr) :
                 handle(handle), managerPtr(managerPtr) {
-                managerPtr->resourcePool[getPosition(handle) - 1].refCount++;
+                managerPtr->resourcePool[getPosition(handle) - 1].incrementRefCount();
             }
 
             ResourcePointer(const ResourcePointer& other){
                 handle = other.handle;
                 managerPtr = other.managerPtr;
-                managerPtr->resourcePool[getPosition(handle) - 1].refCount++;
+                managerPtr->resourcePool[getPosition(handle) - 1].incrementRefCount();
             }
 
             inline ResourceHandle getHandle() { return handle; }
@@ -104,20 +125,20 @@ namespace Strike{
 
                 if(*this){
                     uint32_t position = getPosition(handle);
-                    Entry& entry = managerPtr->resourcePool[position - 1];
+                    ResourceEntry<T>& entry = managerPtr->resourcePool[position - 1];
                     
-                    entry.refCount--;
+                    entry.decrementRefCount();
 
-                    if(entry.refCount == 0){
+                    if(entry.getRefCount() == 0){
                         entry.destruct();
-                        entry.nextFreePos = managerPtr->firstFreePos;
+                        entry.setNextFreePos(managerPtr->firstFreePos);
                         managerPtr->firstFreePos = position;
                     }
                 }
 
                 handle = other.handle;
                 managerPtr = other.managerPtr;
-                managerPtr->resourcePool[getPosition(handle) - 1].refCount++;
+                managerPtr->resourcePool[getPosition(handle) - 1].incrementRefCount();
             }
 
             inline bool operator==(const ResourcePointer& other) const {
@@ -130,7 +151,7 @@ namespace Strike{
 
             ~ResourcePointer() {
                 uint32_t position = getPosition(handle);
-                Entry& entry = managerPtr->resourcePool[position - 1];
+                ResourceEntry<T>& entry = managerPtr->resourcePool[position - 1];
                 
                 entry.refCount--;
 
@@ -151,7 +172,7 @@ namespace Strike{
 
         class ResourceIterator {
         public:
-            ResourceIterator(const std::array<Entry, STRIKE_DEFAULT_POOL_SIZE>& resourcePool, ResourceManager* managerPtr) {
+            ResourceIterator(const std::array<ResourceEntry<T>, STRIKE_DEFAULT_POOL_SIZE>& resourcePool, ResourceManager* managerPtr) {
                 for(size_t i = 0; i < resourcePool.size(); i++) if(resourcePool[i].inUse())
                     inUseResources.push_back(ResourcePointer(constructHandle(i + 1, resourcePool[i].getMagicNumber()), managerPtr));
             }
@@ -195,12 +216,11 @@ namespace Strike{
         }
 
     private:
-        std::array<Entry, STRIKE_DEFAULT_POOL_SIZE> resourcePool;
+        std::array<ResourceEntry<T>, poolSize> resourcePool;
 
         uint32_t firstFreePos = 1; //0 is reserved for invalid handle
 
         ResourceHandle getHandleFromFilePath(const std::string& filePath);
-
 
         friend class ResourcePointer;
     };
@@ -210,13 +230,13 @@ namespace Strike{
 
 
 
-    template<typename T>
-    inline T* ResourceManager<T>::getResourceFromHandle(const ResourceHandle& handle) {
+    template<typename T, uint32_t poolSize>
+    inline T* ResourceManager<T, poolSize>::getResourceFromHandle(const ResourceHandle& handle) {
 
         uint32_t position = getPosition(handle);
         uint32_t magicNumber = getMagicNumber(handle);
         STRIKE_ASSERT(handle != 0 || position != 0, LOG_PLATFORM_CORE, "Null Resource Handle Cannot be Used to retrieve Resource");
-        Entry& entry = resourcePool[position - 1];
+        ResourceEntry<T>& entry = resourcePool[position - 1];
         STRIKE_ASSERT(entry.getMagicNumber() == magicNumber, LOG_PLATFORM_CORE, "Invalid Resource Handle, Magic Numbers don't align");
         STRIKE_ASSERT(entry.inUse(), LOG_PLATFORM_CORE, "Resource Handle Points to Unused Resource");
 
@@ -224,13 +244,13 @@ namespace Strike{
 
     }
 
-    template<typename T>
-    inline ResourceManager<T>::ResourcePointer ResourceManager<T>::getResourcePtrFromHandle(const ResourceHandle& handle) {
+    template<typename T, uint32_t poolSize>
+    inline ResourceManager<T, poolSize>::ResourcePointer ResourceManager<T, poolSize>::getResourcePtrFromHandle(const ResourceHandle& handle) {
         return ResourcePointer(handle, this);
     }
 
-    template <typename T>
-    inline ResourceHandle ResourceManager<T>::getHandleFromFilePath(const std::string &filePath) {
+    template <typename T, uint32_t poolSize>
+    inline ResourceHandle ResourceManager<T, poolSize>::getHandleFromFilePath(const std::string &filePath) {
 
         ResourceHandle handle = genHandle(firstFreePos);
         STRIKE_ASSERT(firstFreePos > 0, LOG_PLATFORM_CORE, "Resource Pool Full");
@@ -239,10 +259,22 @@ namespace Strike{
 
     }
 
-    template<>
-    ResourcePointer<Texture2D> ResourceManager<Texture2D>::load(const std::string& filePath);
+    template<typename T, uint32_t poolSize>
+    inline ResourceManager<T, poolSize>::ResourcePointer ResourceManager<T, poolSize>::load(const std::string& filePath){
+        
+        for(size_t i = 0; i < resourcePool.size(); i++){
+            ResourceEntry<T>& entry = resourcePool[i];
+            if(entry.inUse() && entry.getFilePath() == filePath)
+                return ResourcePointer(constructHandle(i + 1, entry.getMagicNumber()), this);
+            
+        }
 
-    template<>
-    ResourcePointer<Shader> ResourceManager<Shader>::load(const std::string& filePath);
+        ResourceHandle handle = getHandleFromFilePath(filePath);
 
+        ResourceData data = ResourceLoader::loadResourceData<T>(filePath);
+        constructEntry<T>(resourcePool[getPosition(handle) - 1], data, filePath, getMagicNumber(handle));
+        
+        return ResourcePointer(handle, this);
+
+    }
 }

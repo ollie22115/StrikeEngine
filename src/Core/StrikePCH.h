@@ -6,6 +6,7 @@
 #include <vector>
 #include <queue>
 #include <bitset>
+#include <variant>
 
 #include <optional>
 

@@ -8,6 +8,9 @@ namespace Strike{
 
     TextureData2D ResourceLoader::loadTexture2D(const std::string& filePath) {
 
+		if(filePath == "Default")
+			return TextureData2D();
+
 		int32_t width, height, bitsPerPixel;
         int32_t desiredBitsPerPixel = 4;
 
@@ -18,7 +21,7 @@ namespace Strike{
 		if (!data) Log::logError(LOG_PLATFORM_OPENGL, "stbi Failed to load image");
 #endif
 
-        return TextureData2D(data, width, height, bitsPerPixel);
+        return TextureData2D(data, width, height, bitsPerPixel, true);
         
     }
 
@@ -69,5 +72,17 @@ namespace Strike{
         return MaterialData();
     }
 */
+
+	template<>
+    ResourceData ResourceLoader::loadResourceData<Texture2D>(const std::string& filePath){
+		ResourceData data = loadTexture2D(filePath);
+		return data;
+	}
+
+	template<>
+    ResourceData ResourceLoader::loadResourceData<Shader>(const std::string& filePath){
+		ResourceData data = loadShaderData(filePath);
+		return data;
+	}
 
 }
