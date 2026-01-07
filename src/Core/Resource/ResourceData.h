@@ -5,38 +5,51 @@
 
 #include "ResourceHandle.h"
 
+#include <MaxRectsBinPack.h>
+
 namespace Strike{
 
     struct TextureData2D{
-        unsigned char* data;
-            uint32_t width, height, bitsPerPixel;
-
-        TextureData2D();
-        TextureData2D(TextureData2D&& other);
-        TextureData2D(unsigned char* data, const uint32_t& width, const uint32_t& height, 
-            const uint32_t& bitsPerPixel, const bool& usingSTBI = true) : 
-            data(data), width(width), height(height), bitsPerPixel(bitsPerPixel), usingSTBI(usingSTBI) {}
         
-        ~TextureData2D();
+        std::unique_ptr<unsigned char[]> data;
+        uint32_t width, height, bitsPerPixel;
 
-    private:
-        bool usingSTBI = true; //Indicates whether the data was loaded using STBI Library
+
+        TextureData2D(const uint32_t& desiredBitsPerPixel = 4, const uint32_t& width = 1, const uint32_t& height = 1);
+        TextureData2D(std::unique_ptr<unsigned char[]>& data, const uint32_t& width, const uint32_t& height, 
+            const uint32_t& bitsPerPixel);
+        TextureData2D(const TextureData2D& other);
+        TextureData2D(TextureData2D&& other);
+        
+        
+        ~TextureData2D() = default;
     };
 
 
     struct TextureAtlasData{
         struct SubTexture {
-            glm::vec4 coords;
+            TextureData2D textureData;
+            uint32_t x, y, width, height;
+
+            SubTexture(TextureData2D& textureData, 
+                const uint32_t& x, const uint32_t& y, const uint32_t& width, const uint32_t& height) :
+                textureData(textureData), x(x), y(y), width(width), height(height) {}
+
+            ~SubTexture() = default;
         };
 
         TextureAtlasData() = default;
-        TextureAtlasData(const std::string& texturePath, const std::vector<SubTexture> subTextures) :
-            texturePath(texturePath), subTextures(subTextures) {}
+        TextureAtlasData(const uint32_t& width, const uint32_t& height, const uint32_t& bitsPerPixel);
+        //TextureAtlasData(const std::string& textureAtlasPath);
 
-        std::string texturePath;
+        uint32_t width, height, bitsPerPixel = 4;
         std::vector<SubTexture> subTextures;
 
-        glm::vec4 getUVCoords(const SubTexture& subTexture);
+        bool addSubTexture(std::string& texturePath, const uint32_t& borderSize = 2);
+
+    private:
+        
+        rbp::MaxRectsBinPack binPacker; 
     };
 
 
@@ -50,13 +63,12 @@ namespace Strike{
     };
 
     struct MaterialData{
-        //TODO!!!
         MaterialData() = default;
-        MaterialData(const ResourceHandle&/*ResourcePointer<Shader>&*/ shaderHandle, const ResourceHandle&/*ResourcePointer<Texture2D>&*/ textureHandle, const glm::vec4& textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)) :
-            shaderHandle(shaderHandle), textureHandle(textureHandle), textureCoords(textureCoords) {}
+        MaterialData(const std::string& shaderPath, const std::string& texturePath, const glm::vec4& textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)) :
+            shaderPath(shaderPath), texturePath(texturePath), textureCoords(textureCoords) {}
 
-        ResourceHandle/*ResourcePointer<Shader>*/ shaderHandle;
-        ResourceHandle/*ResourcePointer<Texture2D>*/ textureHandle;
+        std::string shaderPath;
+        std::string texturePath;
         
         glm::vec4 textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
     };

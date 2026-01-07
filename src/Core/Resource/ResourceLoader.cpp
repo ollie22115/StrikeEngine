@@ -3,25 +3,29 @@
 #include "ResourceLoader.h"
 #include <stb_image.h>
 #include "Utils/FileLoader.h"
+#include <cstring>
 
 namespace Strike{
 
-    TextureData2D ResourceLoader::loadTexture2D(const std::string& filePath) {
+    TextureData2D ResourceLoader::loadTexture2D(const std::string& filePath, int32_t desiredBitsPerPixel) {
 
 		if(filePath == "Default")
 			return TextureData2D();
 
 		int32_t width, height, bitsPerPixel;
-        int32_t desiredBitsPerPixel = 4;
 
 		stbi_set_flip_vertically_on_load(true);
-		unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &bitsPerPixel, desiredBitsPerPixel);
+		unsigned char* stbiData = stbi_load(filePath.c_str(), &width, &height, &bitsPerPixel, desiredBitsPerPixel);
 
 #ifdef STRIKE_DEBUG
-		if (!data) Log::logError(LOG_PLATFORM_OPENGL, "stbi Failed to load image");
+		if (!stbiData) Log::logError(LOG_PLATFORM_OPENGL, "stbi Failed to load image");
 #endif
 
-        return TextureData2D(data, width, height, bitsPerPixel, true);
+		std::unique_ptr<unsigned char[]> tempPtr = 
+			std::make_unique<unsigned char[]>(desiredBitsPerPixel * width * height);
+		std::memcpy(tempPtr.get(), stbiData, desiredBitsPerPixel * width * height);
+		stbi_image_free(stbiData);
+		return TextureData2D(tempPtr, width, height, desiredBitsPerPixel);
         
     }
 

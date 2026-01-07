@@ -4,3 +4,6 @@
 [submodule "Dependencies/Vendor/GLFW/glfw"]
 	path = Dependencies/Vendor/GLFW/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "Dependencies/Vendor/RectangleBinPack"]
+	path = Dependencies/Vendor/RectangleBinPack
+	url = https://github.com/juj/RectangleBinPack.git

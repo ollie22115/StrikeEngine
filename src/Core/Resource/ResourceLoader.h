@@ -11,7 +11,7 @@ namespace Strike{
 
     class ResourceLoader {
     public:
-        static TextureData2D loadTexture2D(const std::string& filePath);
+        static TextureData2D loadTexture2D(const std::string& filePath, int32_t desiredBitsPerPixel = 4);
         //static TextureAtlasData loadTextureAtlas(const std::string& filePath);
         static ShaderData loadShaderData(const std::string& filePath);
         //static MaterialData loadMaterialData(const std::string& filePath);
