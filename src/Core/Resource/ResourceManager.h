@@ -19,39 +19,39 @@ namespace Strike{
 
     template<typename T>
     struct ResourceEntry {
-    ResourceEntry() = default;
+        ResourceEntry() = default;
 
-    inline T& getResource() { return resource.value(); }
-    inline const T& getResource() const { return resource.value(); }
+        inline T& getResource() { return resource.value(); }
+        inline const T& getResource() const { return resource.value(); }
 
-    inline const std::string& getFilePath() const { return filePath; }
+        inline const std::string& getFilePath() const { return filePath; }
 
-    inline uint32_t getMagicNumber() const { return magicNumber; }
+        inline uint32_t getMagicNumber() const { return magicNumber; }
 
-    inline bool inUse() const { return resource.has_value(); }
+        inline bool inUse() const { return resource.has_value(); }
 
-    inline void setNextFreePos(const uint32_t& nextFreePos) { this->nextFreePos = nextFreePos;}
+        inline void setNextFreePos(const uint32_t& nextFreePos) { this->nextFreePos = nextFreePos;}
 
-    inline uint32_t getRefCount() const { return refCount; }
+        inline uint32_t getRefCount() const { return refCount; }
 
-    inline void incrementRefCount() { refCount++; }
-    inline void decrementRefCount() { refCount--; }
-    
-    template <typename... Args>
-    inline void construct(const std::string& filePath, const uint32_t& magicNumber, Args&&... args) {
-        resource.emplace(std::forward<Args>(args)...);
-        this->filePath = filePath;
-        this->magicNumber = magicNumber;
-        this->nextFreePos = 0;
-    }
-    
-    inline void destruct(){
-        resource.reset();
-        filePath = "";
-        magicNumber = 0;
-    }
+        inline void incrementRefCount() { refCount++; }
+        inline void decrementRefCount() { refCount--; }
+        
+        template <typename... Args>
+        inline void construct(const std::string& filePath, const uint32_t& magicNumber, Args&&... args) {
+            resource.emplace(std::forward<Args>(args)...);
+            this->filePath = filePath;
+            this->magicNumber = magicNumber;
+            this->nextFreePos = 0;
+        }
+        
+        inline void destruct(){
+            resource.reset();
+            filePath = "";
+            magicNumber = 0;
+        }
 
-    ~ResourceEntry() = default;
+        ~ResourceEntry() = default;
 
     private:
         std::optional<T> resource;
@@ -101,7 +101,12 @@ namespace Strike{
 
             ResourcePointer(const ResourceHandle& handle, ResourceManager<T>* managerPtr) :
                 handle(handle), managerPtr(managerPtr) {
+                
+                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
+                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
+
                 managerPtr->resourcePool[getPosition(handle) - 1].incrementRefCount();
+            
             }
 
             ResourcePointer(const ResourcePointer& other){
@@ -113,11 +118,39 @@ namespace Strike{
             inline ResourceHandle getHandle() { return handle; }
 
             inline T& operator*() {
+
+                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
+                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
+
                 return resourcePool[getPosition(handle) - 1].getResource();
+
+            }
+
+            inline const T& operator*() const {
+                
+                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
+                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
+
+                return resourcePool[getPosition(handle) - 1].getResource();
+
             }
 
             inline T* operator->() {
+                
+                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
+                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
+
                 return managerPtr->getResourceFromHandle(handle);
+
+            }
+
+            inline const T* operator->() const {
+                
+                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
+                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
+                
+                return managerPtr->getResourceFromHandle(handle);
+                
             }
 
             inline void operator=(const ResourcePointer& other){
@@ -150,6 +183,8 @@ namespace Strike{
             }
 
             ~ResourcePointer() {
+                if(!managerPtr) return;
+
                 uint32_t position = getPosition(handle);
                 ResourceEntry<T>& entry = managerPtr->resourcePool[position - 1];
                 
@@ -213,6 +248,12 @@ namespace Strike{
             resourcePool[resourcePool.size() - 1].nextFreePos = 0;
 
             firstFreePos = 1;
+        }
+
+        inline uint32_t getFreeCount() const {
+            uint32_t count = 0;
+            for(ResourceEntry<T> entry : resourcePool)
+                if(!entry.inUse()) count++;
         }
 
     private:
