@@ -8,17 +8,12 @@ namespace Strike {
 	class GLTexture2D{
 	public:
 
-		GLTexture2D(int32_t bitsPerPixel = 4, 
+		GLTexture2D(int32_t bitsPerPixel = 4, int32_t width = 1, int32_t height = 1,
 			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
 			GLenum minFilterParam = GL_LINEAR, GLenum magFilterParam = GL_LINEAR);
 
 		GLTexture2D(unsigned char* data, int32_t width, int32_t height, int32_t bitsPerPixel = 4, GLenum sParam = GL_REPEAT, 
 			GLenum tParam = GL_REPEAT, GLenum minFilterParam = GL_LINEAR, GLenum magFilterParam = GL_LINEAR);
-
-		GLTexture2D(const char* filePath, int32_t bitsPerPixel = 4,
-			GLenum sParam = GL_REPEAT, GLenum tParam = GL_REPEAT,
-			GLenum minFilterParam = GL_LINEAR,
-			GLenum magFilterParam = GL_LINEAR);
 
 		GLTexture2D(const TextureData2D& textureData);
 
@@ -36,6 +31,8 @@ namespace Strike {
 
 		inline int32_t getBitsPerPixel() { return bitsPerPixel; }
 		inline int32_t getBitsPerPixel() const { return bitsPerPixel; }
+
+		inline bool operator==(const GLTexture2D& other) const { return id == other.id; }
 
 		void bind(const uint32_t& slot = 0) const;
 
