@@ -40,12 +40,11 @@ namespace Strike{
 
         TextureAtlasData() = default;
         TextureAtlasData(const uint32_t& width, const uint32_t& height, const uint32_t& bitsPerPixel);
-        //TextureAtlasData(const std::string& textureAtlasPath);
 
         uint32_t width, height, bitsPerPixel = 4;
         std::vector<SubTexture> subTextures;
 
-        bool addSubTexture(std::string& texturePath, const uint32_t& borderSize = 2);
+        bool addSubTexture(TextureData2D& textureData, const uint32_t& borderSize = 2);
 
     private:
         

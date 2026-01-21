@@ -19,19 +19,4 @@ namespace Strike {
 		return stringStream.str();
 	}
 
-    TextureData2D FileLoader::genTextureFromImage(const std::string &filePath, const int& desiredBPP,
-		 const bool& flipVerticle) {
-		
-		int32_t width, height, bitsPerPixel;
-
-		stbi_set_flip_vertically_on_load(true);
-		unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &bitsPerPixel, desiredBPP);
-
-#ifdef STRIKE_DEBUG
-		if (!data) Log::logError(LOG_PLATFORM_OPENGL, "stbi Failed to load image");
-#endif
-
-        return TextureData2D(data, width, height, bitsPerPixel);
-    }
-
 }

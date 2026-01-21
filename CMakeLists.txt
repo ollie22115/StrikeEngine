@@ -39,11 +39,15 @@ add_library(StrikeEngine
 
 add_subdirectory("Dependencies/Vendor/GLFW/glfw")
 add_subdirectory("Dependencies/Vendor/glad")
+add_subdirectory("Dependencies/Vendor/RectangleBinPack")
+add_subdirectory("Dependencies/Vendor/freetype")
 
 find_package(OpenGL REQUIRED)
 target_link_libraries(StrikeEngine PRIVATE OpenGL::GL)
 target_link_libraries(StrikeEngine PRIVATE glfw)
 target_link_libraries(StrikeEngine PRIVATE Glad)
+target_link_libraries(StrikeEngine PRIVATE RectangleBinPack)
+target_link_libraries(StrikeEngine PRIVATE freetype)
 
 target_include_directories(StrikeEngine PRIVATE 
     Dependencies/Vendor/GLFW/glfw/include
@@ -51,6 +55,8 @@ target_include_directories(StrikeEngine PRIVATE
     Dependencies/Vendor/stbImage
     Dependencies/Vendor/glm
     Dependencies/Vendor/entt/include
+    Dependencies/Vendor/RectangleBinPack
+    Dependencies/Vendor/freetype/include
     src/Core
     src/Platforms
 )

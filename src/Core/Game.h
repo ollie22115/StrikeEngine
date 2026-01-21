@@ -21,6 +21,11 @@ namespace Strike {
 			return Renderer::loadResource<T>(filePath);
 		}
 
+		template <typename T, typename... Args>
+		static ResourcePointer<T> emplaceRendererResource(const std::string& filePath, Args&&... args){
+			return Renderer::emplaceResource<T>(filePath, std::forward<Args>(args)...);
+		}
+
 		~Game();
 
 #ifdef STRIKE_DEBUG

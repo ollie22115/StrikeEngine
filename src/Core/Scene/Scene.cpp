@@ -18,7 +18,7 @@ namespace Strike {
         onStart();
 
         for (std::shared_ptr<Object>& object : objects)
-            renderer->loadObject(object);
+            if(object->isRenderable()) renderer->loadObject(object);
     }
 
     void Scene::onStart() {

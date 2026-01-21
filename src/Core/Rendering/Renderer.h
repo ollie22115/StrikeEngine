@@ -4,6 +4,7 @@
 
 #include "Scene/Scene.h"
 #include "Texture.h"
+#include "TextureAtlas.h"
 #include "Shader.h"
 #include "Window.h"
 #include "Scene/Component/RenderableComponent.h"
@@ -69,7 +70,7 @@ namespace Strike {
 
 	protected:
 		static ResourceManager<Texture2D> textureManager;
-		//static ResourceManager<TextureAtlas> textureAtlasManager;
+		static ResourceManager<TextureAtlas> textureAtlasManager;
 		static ResourceManager<Shader> shaderManager;
 		static ResourceManager<Material> materialManager;
 
@@ -94,6 +95,9 @@ namespace Strike {
 	
 	template<>
 	ResourceManager<Material>& Renderer::getResourceManager();
+
+	template<>
+	ResourceManager<TextureAtlas>& Renderer::getResourceManager();
 
 	template<typename T>
 	inline ResourcePointer<T> Renderer::loadResource(const std::string& filePath) {

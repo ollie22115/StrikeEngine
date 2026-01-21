@@ -10,6 +10,7 @@ namespace Strike {
 	ResourceManager<Texture2D> Renderer::textureManager;
 	ResourceManager<Shader> Renderer::shaderManager;
 	ResourceManager<Material> Renderer::materialManager;
+	ResourceManager<TextureAtlas> Renderer::textureAtlasManager;
 
 	std::unique_ptr<Renderer> Strike::Renderer::createRenderer() {
 #ifdef STRIKE_DEBUG
@@ -52,10 +53,15 @@ namespace Strike {
 		return materialManager;
 	}
 
+	template<>
+	ResourceManager<TextureAtlas>& Renderer::getResourceManager(){
+		return textureAtlasManager;
+	}
+
 	Renderer::~Renderer(){
 		textureManager.clear();
 		shaderManager.clear();
-		//textureAtlasManager.clear();
+		textureAtlasManager.clear();
 		materialManager.clear();
 	}
 }
