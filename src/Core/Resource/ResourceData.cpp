@@ -11,6 +11,7 @@ namespace Strike{
         this->width = width;
 		this->height = height;
 		this->bitsPerPixel = desiredBitsPerPixel;
+        this->desiredInternalBitsPerPixel = desiredBitsPerPixel;
 
         data = std::make_unique<unsigned char[]>(bitsPerPixel * width * height);
         for(uint32_t i = 0; i < width * height * bitsPerPixel; i++)
@@ -22,6 +23,7 @@ namespace Strike{
         this->width = other.width;
         this->height = other.height;
         this->bitsPerPixel = other.bitsPerPixel;
+        this->desiredInternalBitsPerPixel = other.desiredInternalBitsPerPixel;
 
         this->data = std::make_unique<unsigned char[]>(other.bitsPerPixel * other.width * other.height);
 
@@ -35,16 +37,18 @@ namespace Strike{
         this->width = other.width;
         this->height = other.height;
         this->bitsPerPixel = other.bitsPerPixel;
+        this->desiredInternalBitsPerPixel = other.desiredInternalBitsPerPixel;
 
         other.data = nullptr;
 
     }
 
-    TextureData2D::TextureData2D(std::unique_ptr<unsigned char[]>& data, const uint32_t &width, const uint32_t &height, const uint32_t &bitsPerPixel) {
+    TextureData2D::TextureData2D(std::unique_ptr<unsigned char[]>& data, const uint32_t &width, const uint32_t &height, const uint32_t &bitsPerPixel, const uint32_t& desiredInternalBitsPerPixel) {
         this->data = std::move(data);
         this->width = width;
         this->height = height;
         this->bitsPerPixel = bitsPerPixel;
+        this->desiredInternalBitsPerPixel = desiredInternalBitsPerPixel;
     }
 
     TextureAtlasData::TextureAtlasData(const uint32_t& width, const uint32_t& height, const uint32_t& bitsPerPixel) :

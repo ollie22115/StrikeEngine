@@ -12,12 +12,12 @@ namespace Strike{
     struct TextureData2D{
         
         std::unique_ptr<unsigned char[]> data;
-        uint32_t width, height, bitsPerPixel;
+        uint32_t width, height, bitsPerPixel, desiredInternalBitsPerPixel;
 
 
         TextureData2D(const uint32_t& desiredBitsPerPixel = 4, const uint32_t& width = 1, const uint32_t& height = 1);
         TextureData2D(std::unique_ptr<unsigned char[]>& data, const uint32_t& width, const uint32_t& height, 
-            const uint32_t& bitsPerPixel);
+            const uint32_t& bitsPerPixel, const uint32_t& desiredInternalBitsPerPixel = 4);
         TextureData2D(const TextureData2D& other);
         TextureData2D(TextureData2D&& other);
         
