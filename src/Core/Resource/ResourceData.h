@@ -2,6 +2,7 @@
 
 #include <variant>
 #include "Utils/Vector.h"
+#include "Rendering/TextureParams.h"
 
 #include "ResourceHandle.h"
 
@@ -9,15 +10,22 @@
 
 namespace Strike{
 
-    struct TextureData2D{
+    struct TextureData2D {
         
         std::unique_ptr<unsigned char[]> data;
         uint32_t width, height, bitsPerPixel, desiredInternalBitsPerPixel;
+        TextureParams::Wrap wrapS, wrapT = TextureParams::Wrap::Repeat;
+        TextureParams::Filter minFilter, magFilter = TextureParams::Filter::Linear;
+        //ZZZ add t, s, minFilter and magFilter params
 
 
-        TextureData2D(const uint32_t& desiredBitsPerPixel = 4, const uint32_t& width = 1, const uint32_t& height = 1);
-        TextureData2D(std::unique_ptr<unsigned char[]>& data, const uint32_t& width, const uint32_t& height, 
-            const uint32_t& bitsPerPixel, const uint32_t& desiredInternalBitsPerPixel = 4);
+        TextureData2D(const uint32_t& desiredBitsPerPixel = 4, const uint32_t& width = 1, const uint32_t& height = 1,
+            const TextureParams::Wrap& wrapS = TextureParams::Wrap::Repeat, const TextureParams::Wrap& wrapT = TextureParams::Wrap::Repeat,
+            const TextureParams::Filter& minFilter = TextureParams::Filter::Linear, const TextureParams::Filter& magFilter = TextureParams::Filter::Linear);
+        TextureData2D(std::unique_ptr<unsigned char[]>& data, const uint32_t& width, const uint32_t& height,
+            const uint32_t& bitsPerPixel, const uint32_t& desiredInternalBitsPerPixel = 4,
+            const TextureParams::Wrap& wrapS = TextureParams::Wrap::Repeat, const TextureParams::Wrap& wrapT = TextureParams::Wrap::Repeat,
+            const TextureParams::Filter& minFilter = TextureParams::Filter::Linear, const TextureParams::Filter& magFilter = TextureParams::Filter::Linear);
         TextureData2D(const TextureData2D& other);
         TextureData2D(TextureData2D&& other);
         

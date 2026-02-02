@@ -53,10 +53,11 @@ namespace Strike {
     }
 
     GLTexture2D::GLTexture2D(const TextureData2D &textureData) {
-		GLenum sParam = GL_REPEAT;
-		GLenum tParam = GL_REPEAT; 
-		GLenum minFilterParam = GL_LINEAR;
-		GLenum magFilterParam = GL_LINEAR;
+		//TODO!!! add t, s, minFilter and magFilter params to TextureData2D struct
+		GLenum sParam = (GLenum)textureData.wrapS;
+		GLenum tParam = (GLenum)textureData.wrapT;
+		GLenum minFilterParam = (GLenum)textureData.minFilter;
+		GLenum magFilterParam = (GLenum)textureData.magFilter;
 
 		this->width = textureData.width;
 		this->height = textureData.height;

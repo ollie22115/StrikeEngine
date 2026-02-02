@@ -1,5 +1,7 @@
 #pragma once
 
+#include "TextureParams.h"
+
 #ifdef STRIKE_OPENGL
 #include "OpenGL/GLTexture.h"
 #endif

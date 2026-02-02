@@ -4,26 +4,22 @@
 #include <cstring>
 #include "ResourceLoader.h"
 
-namespace Strike{
-    
-    TextureData2D::TextureData2D(const uint32_t& desiredBitsPerPixel, const uint32_t& width, const uint32_t& height) {
+namespace Strike {
 
-        this->width = width;
-		this->height = height;
-		this->bitsPerPixel = desiredBitsPerPixel;
-        this->desiredInternalBitsPerPixel = desiredBitsPerPixel;
+    TextureData2D::TextureData2D(const uint32_t& desiredBitsPerPixel, const uint32_t& width, const uint32_t& height,
+        const TextureParams::Wrap& wrapS, const TextureParams::Wrap& wrapT, const TextureParams::Filter& minFilter, const TextureParams::Filter& magFilter) :
+            bitsPerPixel(desiredBitsPerPixel), desiredInternalBitsPerPixel(desiredBitsPerPixel),
+            width(width), height(height),
+            wrapS(wrapS), wrapT(wrapT), minFilter(minFilter), magFilter(magFilter) {
 
         data = std::make_unique<unsigned char[]>(bitsPerPixel * width * height);
         for(uint32_t i = 0; i < width * height * bitsPerPixel; i++)
             data[i] = 255;
     }
 
-    TextureData2D::TextureData2D(const TextureData2D& other) {
-
-        this->width = other.width;
-        this->height = other.height;
-        this->bitsPerPixel = other.bitsPerPixel;
-        this->desiredInternalBitsPerPixel = other.desiredInternalBitsPerPixel;
+    TextureData2D::TextureData2D(const TextureData2D& other) : 
+        bitsPerPixel(other.bitsPerPixel), desiredInternalBitsPerPixel(other.desiredInternalBitsPerPixel), width(other.width), height(other.height),
+        wrapS(other.wrapS), wrapT(other.wrapT), minFilter(other.minFilter), magFilter(other.magFilter) {
 
         this->data = std::make_unique<unsigned char[]>(other.bitsPerPixel * other.width * other.height);
 
@@ -31,24 +27,29 @@ namespace Strike{
 
     }
 
-    TextureData2D::TextureData2D(TextureData2D &&other) {
-        
-        this->data = std::move(other.data);
-        this->width = other.width;
-        this->height = other.height;
-        this->bitsPerPixel = other.bitsPerPixel;
-        this->desiredInternalBitsPerPixel = other.desiredInternalBitsPerPixel;
+    TextureData2D::TextureData2D(TextureData2D &&other) : data(std::move(other.data)), 
+        bitsPerPixel(other.bitsPerPixel), desiredInternalBitsPerPixel(other.desiredInternalBitsPerPixel),
+        width(other.width), height(other.height), wrapS(other.wrapS), wrapT(other.wrapT),
+        minFilter(other.minFilter), magFilter(other.magFilter) {
 
         other.data = nullptr;
 
     }
 
-    TextureData2D::TextureData2D(std::unique_ptr<unsigned char[]>& data, const uint32_t &width, const uint32_t &height, const uint32_t &bitsPerPixel, const uint32_t& desiredInternalBitsPerPixel) {
+    TextureData2D::TextureData2D(std::unique_ptr<unsigned char[]>& data, 
+        const uint32_t &width, const uint32_t &height, 
+        const uint32_t &bitsPerPixel, const uint32_t& desiredInternalBitsPerPixel, 
+        const TextureParams::Wrap& wrapS, const TextureParams::Wrap& wrapT, const TextureParams::Filter& minFilter, const TextureParams::Filter& magFilter) : data(std::move(data)),
+            bitsPerPixel(bitsPerPixel), desiredInternalBitsPerPixel(desiredInternalBitsPerPixel), 
+            width(width), height(height), 
+            wrapS(wrapS), wrapT(wrapT), minFilter(minFilter), magFilter(magFilter) {
+
         this->data = std::move(data);
         this->width = width;
         this->height = height;
         this->bitsPerPixel = bitsPerPixel;
         this->desiredInternalBitsPerPixel = desiredInternalBitsPerPixel;
+    
     }
 
     TextureAtlasData::TextureAtlasData(const uint32_t& width, const uint32_t& height, const uint32_t& bitsPerPixel) :
