@@ -16,9 +16,9 @@ namespace Strike {
 		void loadScene(std::shared_ptr<Scene>& scene);
 		void run(std::shared_ptr<Scene> firstScene = nullptr);
 
-		template<typename T>
-		inline ResourcePointer<T> loadRendererResource(const std::string& filePath) {
-			return Renderer::loadResource<T>(filePath);
+		template<typename T, typename... Args>
+		inline ResourcePointer<T> loadRendererResource(const std::string& filePath, Args&&... args) {
+			return Renderer::loadResource<T>(filePath, std::forward<Args>(args)...);
 		}
 
 		template <typename T, typename... Args>

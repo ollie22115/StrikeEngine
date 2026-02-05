@@ -7,7 +7,7 @@
 
 namespace Strike{
 
-    TextureData2D ResourceLoader::loadTexture2D(const std::string& filePath, int32_t desiredBitsPerPixel) {
+    TextureData2D ResourceLoader::loadTexture2D(const std::string& filePath, const int32_t& desiredBitsPerPixel) {
 
 		if(filePath == "Default")
 			return TextureData2D();
@@ -78,8 +78,14 @@ namespace Strike{
 */
 
 	template<>
-    ResourceData ResourceLoader::loadResourceData<Texture2D>(const std::string& filePath){
+	ResourceData ResourceLoader::loadResourceData<Texture2D>(const std::string& filePath){
 		ResourceData data = loadTexture2D(filePath);
+		return data;
+	}
+
+	template<>
+    ResourceData ResourceLoader::loadResourceData<Texture2D>(const std::string& filePath, const int32_t& desiredBitsPerPixel){
+		ResourceData data = loadTexture2D(filePath, desiredBitsPerPixel);
 		return data;
 	}
 

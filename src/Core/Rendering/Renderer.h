@@ -52,8 +52,8 @@ namespace Strike {
 
 		virtual ~Renderer();
 
-		template <typename T>
-		static ResourcePointer<T> loadResource(const std::string& filePath);
+		template <typename T, typename... Args>
+		static ResourcePointer<T> loadResource(const std::string& filePath, Args&&... args);
 
 		template <typename T, typename... Args>
 		static ResourcePointer<T> emplaceResource(const std::string& filePath, Args&&... args){
@@ -99,9 +99,9 @@ namespace Strike {
 	template<>
 	ResourceManager<TextureAtlas>& Renderer::getResourceManager();
 
-	template<typename T>
-	inline ResourcePointer<T> Renderer::loadResource(const std::string& filePath) {
-		return getResourceManager<T>().load(filePath);
+	template<typename T, typename... Args>
+	inline ResourcePointer<T> Renderer::loadResource(const std::string& filePath, Args&&... args) {
+		return getResourceManager<T>().load(filePath, std::forward<Args>(args)...);
 	}
 
 	template <typename T>

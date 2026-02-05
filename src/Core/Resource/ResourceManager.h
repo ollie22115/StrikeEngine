@@ -223,7 +223,8 @@ namespace Strike{
             
 
 
-        ResourcePointer load(const std::string& filePath);
+        template <typename... Args>
+        ResourcePointer load(const std::string& filePath, Args&&... args);
         ResourcePointer getResourcePtrFromHandle(const ResourceHandle& handle);
         T* getResourceFromHandle(const ResourceHandle& handle);
 
@@ -301,7 +302,8 @@ namespace Strike{
     }
 
     template<typename T, uint32_t poolSize>
-    inline ResourceManager<T, poolSize>::ResourcePointer ResourceManager<T, poolSize>::load(const std::string& filePath){
+    template<typename... Args>
+    inline ResourceManager<T, poolSize>::ResourcePointer ResourceManager<T, poolSize>::load(const std::string& filePath, Args&&... args){
         
         for(size_t i = 0; i < resourcePool.size(); i++){
             ResourceEntry<T>& entry = resourcePool[i];
@@ -312,7 +314,7 @@ namespace Strike{
 
         ResourceHandle handle = getHandleFromFilePath(filePath);
 
-        ResourceData data = ResourceLoader::loadResourceData<T>(filePath);
+        ResourceData data = ResourceLoader::loadResourceData<T>(filePath, std::forward<Args>(args)...);
         constructEntry<T>(resourcePool[getPosition(handle) - 1], data, filePath, getMagicNumber(handle));
         
         return ResourcePointer(handle, this);
