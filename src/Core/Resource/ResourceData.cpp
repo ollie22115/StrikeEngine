@@ -39,18 +39,11 @@ namespace Strike {
     TextureData2D::TextureData2D(std::unique_ptr<unsigned char[]>& data, 
         const uint32_t &width, const uint32_t &height, 
         const uint32_t &bitsPerPixel, const uint32_t& desiredInternalBitsPerPixel, 
-        const TextureParams::Wrap& wrapS, const TextureParams::Wrap& wrapT, const TextureParams::Filter& minFilter, const TextureParams::Filter& magFilter) : data(std::move(data)),
+        const TextureParams::Wrap& wrapS, const TextureParams::Wrap& wrapT, 
+        const TextureParams::Filter& minFilter, const TextureParams::Filter& magFilter) : data(std::move(data)),
             bitsPerPixel(bitsPerPixel), desiredInternalBitsPerPixel(desiredInternalBitsPerPixel), 
             width(width), height(height), 
-            wrapS(wrapS), wrapT(wrapT), minFilter(minFilter), magFilter(magFilter) {
-
-        this->data = std::move(data);
-        this->width = width;
-        this->height = height;
-        this->bitsPerPixel = bitsPerPixel;
-        this->desiredInternalBitsPerPixel = desiredInternalBitsPerPixel;
-    
-    }
+            wrapS(wrapS), wrapT(wrapT), minFilter(minFilter), magFilter(magFilter) { }
 
     TextureAtlasData::TextureAtlasData(const uint32_t& width, const uint32_t& height, const uint32_t& bitsPerPixel) :
             width(width), height(height), bitsPerPixel(bitsPerPixel) {
@@ -95,5 +88,39 @@ namespace Strike {
             (uint32_t) packedRect.width, (uint32_t) packedRect.height);
 
         return true;
+    }
+
+    FontData::GlyphData::GlyphData(GlyphData &&other) : textureData(std::move(other.textureData)), advance(other.advance), 
+        bearingX(other.bearingX),  bearingY(other.bearingY), pitch(other.pitch){}
+
+    FontData::FontData(FontData &&other) : freeTypeHandle(std::move(other.freeTypeHandle)), freeTypeFaceHandle(std::move(other.freeTypeFaceHandle)), fontSize(other.fontSize), 
+        charactersToGenerate(other.charactersToGenerate) {}
+
+    FontData::GlyphData FontData::operator[](const char &c) {
+
+        FT_Set_Pixel_Sizes(*freeTypeFaceHandle, 0, fontSize);
+        STRIKE_ASSERT(!FT_Load_Char(*freeTypeFaceHandle, c, FT_LOAD_RENDER), 
+            LOG_PLATFORM_CORE, "FreeType Error Occured While Loading Glyph");
+        
+        auto& glyph = (*freeTypeFaceHandle)->glyph;
+        std::unique_ptr<unsigned char[]> textureDataBuffer = std::make_unique<unsigned char[]>(glyph->bitmap.pitch * glyph->bitmap.rows);
+        std::memcpy(textureDataBuffer.get(), glyph->bitmap.buffer, glyph->bitmap.pitch * glyph->bitmap.rows);
+        
+        /*
+        TextureData2D glyphTextureData(textureDataBuffer, glyph->bitmap.width, glyph->bitmap.rows, 1, 1, 
+            TextureParams::Wrap::ClampToBorder, TextureParams::Wrap::ClampToBorder);
+        */  
+
+        return GlyphData(textureDataBuffer, glyph->bitmap.width, glyph->bitmap.rows, static_cast<uint32_t>(glyph->advance.x >> 6), 
+            static_cast<uint32_t>(glyph->metrics.horiBearingX >> 6), static_cast<uint32_t>(glyph->metrics.horiBearingY >> 6), 
+            glyph->bitmap.pitch);
+
+    }
+
+    FontData::~FontData() {
+
+        FT_Done_Face(*freeTypeFaceHandle);
+        FT_Done_FreeType(*freeTypeHandle);
+
     }
 }

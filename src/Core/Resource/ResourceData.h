@@ -7,6 +7,7 @@
 #include "ResourceHandle.h"
 
 #include <MaxRectsBinPack.h>
+#include "FreeType.h"
 
 namespace Strike{
 
@@ -16,17 +17,19 @@ namespace Strike{
         uint32_t width, height, bitsPerPixel, desiredInternalBitsPerPixel;
         TextureParams::Wrap wrapS, wrapT = TextureParams::Wrap::Repeat;
         TextureParams::Filter minFilter, magFilter = TextureParams::Filter::Linear;
-        //ZZZ add t, s, minFilter and magFilter params
 
 
         TextureData2D(const uint32_t& desiredBitsPerPixel = 4, const uint32_t& width = 1, const uint32_t& height = 1,
             const TextureParams::Wrap& wrapS = TextureParams::Wrap::Repeat, const TextureParams::Wrap& wrapT = TextureParams::Wrap::Repeat,
             const TextureParams::Filter& minFilter = TextureParams::Filter::Linear, const TextureParams::Filter& magFilter = TextureParams::Filter::Linear);
+
         TextureData2D(std::unique_ptr<unsigned char[]>& data, const uint32_t& width, const uint32_t& height,
             const uint32_t& bitsPerPixel, const uint32_t& desiredInternalBitsPerPixel = 4,
             const TextureParams::Wrap& wrapS = TextureParams::Wrap::Repeat, const TextureParams::Wrap& wrapT = TextureParams::Wrap::Repeat,
             const TextureParams::Filter& minFilter = TextureParams::Filter::Linear, const TextureParams::Filter& magFilter = TextureParams::Filter::Linear);
+
         TextureData2D(const TextureData2D& other);
+
         TextureData2D(TextureData2D&& other);
         
         
@@ -52,6 +55,7 @@ namespace Strike{
         uint32_t width, height, bitsPerPixel = 4;
         std::vector<SubTexture> subTextures;
 
+        //TODO!!! change to unique_ptr of TextureData2D
         bool addSubTexture(TextureData2D& textureData, const uint32_t& borderSize = 2);
 
     private:
@@ -59,6 +63,42 @@ namespace Strike{
         rbp::MaxRectsBinPack binPacker; 
     };
 
+    //FontData uses Freetype, 
+    struct FontData {
+        struct GlyphData{
+            TextureData2D textureData;
+            uint32_t advance, bearingX, bearingY, pitch;
+
+            GlyphData() = default;
+
+            GlyphData(std::unique_ptr<unsigned char[]>& data, const uint32_t& width, const uint32_t& height,
+                const uint32_t& advance, const uint32_t& bearingX, const uint32_t& bearingY, const uint32_t& pitch) :
+                    textureData(data, width, height, 1, 1, TextureParams::Wrap::ClampToBorder, TextureParams::Wrap::ClampToBorder), 
+                    advance(advance), bearingX(bearingX), bearingY(bearingY), pitch(pitch) {}
+
+            GlyphData(GlyphData&& other);
+
+            ~GlyphData() = default;
+        };
+        
+        FontData() = default;
+
+        FontData(FontData&& other);
+
+        FontData(std::unique_ptr<FT_Library>& freeTypeHandle, std::unique_ptr<FT_Face>& freeTypeFace, const uint32_t& fontSize, const std::string& charactersToGenerate = "") :
+            freeTypeHandle(std::move(freeTypeHandle)), freeTypeFaceHandle(std::move(freeTypeFace)), charactersToGenerate(charactersToGenerate) {};
+
+        GlyphData operator[](const char& c);
+
+        ~FontData();
+
+        uint32_t fontSize = 32;
+        std::string charactersToGenerate = "";
+
+    private:
+        std::unique_ptr<FT_Library> freeTypeHandle;
+        std::unique_ptr<FT_Face> freeTypeFaceHandle;
+    };
 
     struct ShaderData{
         ShaderData() = default;
@@ -79,7 +119,5 @@ namespace Strike{
         
         glm::vec4 textureCoords = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
     };
-
-    using ResourceData = std::variant<TextureData2D, ShaderData, MaterialData, TextureAtlasData>;
 
 }

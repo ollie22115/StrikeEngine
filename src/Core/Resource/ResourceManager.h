@@ -6,6 +6,9 @@
 #include <vector>
 #include <string>
 
+#include "IResourceManagerPointer.h"
+#include "ResourceEntry.h"
+#include "ResourcePointer.h"
 #include "ResourceLoader.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
@@ -15,201 +18,27 @@
 
 #define STRIKE_DEFAULT_POOL_SIZE 256
 
-namespace Strike{
 
-    template<typename T>
-    struct ResourceEntry {
-        ResourceEntry() = default;
-
-        inline T& getResource() { return resource.value(); }
-        inline const T& getResource() const { return resource.value(); }
-
-        inline const std::string& getFilePath() const { return filePath; }
-
-        inline uint32_t getMagicNumber() const { return magicNumber; }
-
-        inline bool inUse() const { return resource.has_value(); }
-
-        inline void setNextFreePos(const uint32_t& nextFreePos) { this->nextFreePos = nextFreePos;}
-
-        inline uint32_t getRefCount() const { return refCount; }
-
-        inline void incrementRefCount() { refCount++; }
-        inline void decrementRefCount() { refCount--; }
-        
-        template <typename... Args>
-        inline void construct(const std::string& filePath, const uint32_t& magicNumber, Args&&... args) {
-            resource.emplace(std::forward<Args>(args)...);
-            this->filePath = filePath;
-            this->magicNumber = magicNumber;
-            this->nextFreePos = 0;
-        }
-        
-        inline void destruct(){
-            resource.reset();
-            filePath = "";
-            magicNumber = 0;
-        }
-
-        ~ResourceEntry() = default;
-
-    private:
-        std::optional<T> resource;
-
-        uint32_t refCount = 0;
-        
-        std::string filePath = "";
-        uint32_t nextFreePos = 0;
-        uint32_t magicNumber = 0;
-        
-
-        template<typename U, uint32_t poolSize>
-        friend class ResourceManager;
-    };
-
-    template<typename T>
-    void constructEntry(ResourceEntry<T>& entry, const ResourceData& data, 
-        const std::string& filePath, const uint32_t& magicNumber);
-
-    template<>
-    void constructEntry(ResourceEntry<Texture2D>& entry, const ResourceData& data,
-        const std::string& filePath, const uint32_t& magicNumber);
-
-    template<>
-    void constructEntry(ResourceEntry<Shader>& entry, const ResourceData& data, 
-        const std::string& filePath, const uint32_t& magicNumber);
-
-
-
-
+//TODO!!! Think about behaviour of ResourceManager when full
+namespace Strike {
 
     template<typename T, uint32_t poolSize = STRIKE_DEFAULT_POOL_SIZE>
-    class ResourceManager {
+    class ResourceManager : public IResourceManagerPointer<T> {
     public:
+
         ResourceManager() : firstFreePos(1) {
 
             for(size_t i = 0; i < resourcePool.size() - 1; i++)
                 resourcePool[i].setNextFreePos(i + 2);
-
             resourcePool[resourcePool.size() - 1].setNextFreePos(0);
 
         }
-
-        class ResourcePointer{
-        public:
-            ResourcePointer() : handle(0), managerPtr(nullptr) {}
-
-            ResourcePointer(const ResourceHandle& handle, ResourceManager<T>* managerPtr) :
-                handle(handle), managerPtr(managerPtr) {
-                
-                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
-                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
-
-                managerPtr->resourcePool[getPosition(handle) - 1].incrementRefCount();
-            
-            }
-
-            ResourcePointer(const ResourcePointer& other){
-                handle = other.handle;
-                managerPtr = other.managerPtr;
-                managerPtr->resourcePool[getPosition(handle) - 1].incrementRefCount();
-            }
-
-            inline ResourceHandle getHandle() { return handle; }
-
-            inline T& operator*() {
-
-                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
-                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
-
-                return resourcePool[getPosition(handle) - 1].getResource();
-
-            }
-
-            inline const T& operator*() const {
-                
-                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
-                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
-
-                return resourcePool[getPosition(handle) - 1].getResource();
-
-            }
-
-            inline T* operator->() {
-                
-                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
-                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
-
-                return managerPtr->getResourceFromHandle(handle);
-
-            }
-
-            inline const T* operator->() const {
-                
-                STRIKE_ASSERT(managerPtr->resourcePool[getPosition(handle) - 1].getMagicNumber() == getMagicNumber(handle), 
-                    LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
-                
-                return managerPtr->getResourceFromHandle(handle);
-                
-            }
-
-            inline void operator=(const ResourcePointer& other){
-                if(*this == other) return;
-
-                if(*this){
-                    uint32_t position = getPosition(handle);
-                    ResourceEntry<T>& entry = managerPtr->resourcePool[position - 1];
-                    
-                    entry.decrementRefCount();
-
-                    if(entry.getRefCount() == 0){
-                        entry.destruct();
-                        entry.setNextFreePos(managerPtr->firstFreePos);
-                        managerPtr->firstFreePos = position;
-                    }
-                }
-
-                handle = other.handle;
-                managerPtr = other.managerPtr;
-                managerPtr->resourcePool[getPosition(handle) - 1].incrementRefCount();
-            }
-
-            inline bool operator==(const ResourcePointer& other) const {
-                return handle == other.handle && managerPtr == other.managerPtr;
-            }
-
-            operator bool() const {
-                return handle != 0 || managerPtr != nullptr;
-            }
-
-            ~ResourcePointer() {
-                if(!managerPtr) return;
-
-                uint32_t position = getPosition(handle);
-                ResourceEntry<T>& entry = managerPtr->resourcePool[position - 1];
-                
-                entry.refCount--;
-
-                if(entry.refCount == 0){
-                    entry.destruct();
-                    entry.nextFreePos = managerPtr->firstFreePos;
-                    managerPtr->firstFreePos = position;
-                }
-
-            }
-
-        private:
-            ResourceHandle handle;
-            ResourceManager* managerPtr;
-        };
-
-
 
         class ResourceIterator {
         public:
             ResourceIterator(const std::array<ResourceEntry<T>, STRIKE_DEFAULT_POOL_SIZE>& resourcePool, ResourceManager* managerPtr) {
                 for(size_t i = 0; i < resourcePool.size(); i++) if(resourcePool[i].inUse())
-                    inUseResources.push_back(ResourcePointer(constructHandle(i + 1, resourcePool[i].getMagicNumber()), managerPtr));
+                    inUseResources.push_back(ResourcePointer<T>(constructHandle(i + 1, resourcePool[i].getMagicNumber()), managerPtr));
             }
 
             auto cbegin() const { return inUseResources->cbegin(); }
@@ -218,18 +47,20 @@ namespace Strike{
             auto end() { return inUseResources.end(); }
 
         private:
-            std::vector<ResourcePointer> inUseResources;
+            std::vector<ResourcePointer<T>> inUseResources;
         };
             
-
+        inline uint32_t getFreeCount() const {
+            uint32_t count = 0;
+            for(ResourceEntry<T> entry : resourcePool)
+                if(!entry.inUse()) count++;
+        }
 
         template <typename... Args>
-        ResourcePointer load(const std::string& filePath, Args&&... args);
-        ResourcePointer getResourcePtrFromHandle(const ResourceHandle& handle);
-        T* getResourceFromHandle(const ResourceHandle& handle);
+        ResourcePointer<T> load(const std::string& filePath, Args&&... args);
 
         template<typename... Args>
-        inline ResourcePointer emplace(const std::string& name, Args&&... args){
+        inline ResourcePointer<T> emplace(const std::string& name, Args&&... args){
             ResourceHandle handle = getHandleFromFilePath(name);
             resourcePool[getPosition(handle) - 1].construct(name, getMagicNumber(handle), std::forward<Args>(args)...);
 
@@ -240,9 +71,10 @@ namespace Strike{
         inline ResourceIterator iterator() { return ResourceIterator(resourcePool, this); }
 
         inline void clear(){ 
-            for(size_t i = 0; i < resourcePool.size(); i++)
+            for(size_t i = 0; i < resourcePool.size(); i++){
                 resourcePool[i].destruct();
-            
+            }
+                
             for(size_t i = 0; i < resourcePool.size() - 1; i++)
                 resourcePool[i].nextFreePos = i + 2;
 
@@ -251,11 +83,44 @@ namespace Strike{
             firstFreePos = 1;
         }
 
-        inline uint32_t getFreeCount() const {
-            uint32_t count = 0;
-            for(ResourceEntry<T> entry : resourcePool)
-                if(!entry.inUse()) count++;
+
+    protected:
+        inline void incrementRefCount(const ResourceHandle& handle) override {
+            uint32_t position = getPosition(handle);
+            
+            STRIKE_ASSERT(isValid(handle), LOG_PLATFORM_CORE, "Invalid Pointer, Magic Numbers don't align");
+
+            resourcePool[position - 1].incrementRefCount();
         }
+
+        inline void decrementRefCount(const ResourceHandle& handle) override {
+            uint32_t position = getPosition(handle);
+
+            STRIKE_ASSERT(isValid(handle), LOG_PLATFORM_CORE, "Invalid Pointer, Magic Numbers don't align");
+            
+            resourcePool[position - 1].decrementRefCount();
+            if(resourcePool[position - 1].getRefCount() <= 0){
+                resourcePool[position - 1].destruct();
+                resourcePool[position - 1].setNextFreePos(firstFreePos);
+                this->firstFreePos = position;
+            }
+        }
+
+        inline T* get(const ResourceHandle& handle) override {
+            uint32_t position = getPosition(handle);
+            
+            STRIKE_ASSERT(isValid(handle), LOG_PLATFORM_CORE, "Invalid Pointer Creation, Magic Numbers don't align");
+            
+            return &resourcePool[position - 1].getResource();
+        }
+
+        inline bool isValid(const ResourceHandle& handle) const override {
+            uint32_t position = getPosition(handle);
+            uint32_t magicNumber = getMagicNumber(handle);
+
+            return resourcePool[position - 1].getMagicNumber() == magicNumber;
+        }
+
 
     private:
         std::array<ResourceEntry<T>, poolSize> resourcePool;
@@ -263,33 +128,9 @@ namespace Strike{
         uint32_t firstFreePos = 1; //0 is reserved for invalid handle
 
         ResourceHandle getHandleFromFilePath(const std::string& filePath);
-
-        friend class ResourcePointer;
     };
 
-    template<typename T>
-    using ResourcePointer = ResourceManager<T>::ResourcePointer;
 
-
-
-    template<typename T, uint32_t poolSize>
-    inline T* ResourceManager<T, poolSize>::getResourceFromHandle(const ResourceHandle& handle) {
-
-        uint32_t position = getPosition(handle);
-        uint32_t magicNumber = getMagicNumber(handle);
-        STRIKE_ASSERT(handle != 0 || position != 0, LOG_PLATFORM_CORE, "Null Resource Handle Cannot be Used to retrieve Resource");
-        ResourceEntry<T>& entry = resourcePool[position - 1];
-        STRIKE_ASSERT(entry.getMagicNumber() == magicNumber, LOG_PLATFORM_CORE, "Invalid Resource Handle, Magic Numbers don't align");
-        STRIKE_ASSERT(entry.inUse(), LOG_PLATFORM_CORE, "Resource Handle Points to Unused Resource");
-
-        return &entry.getResource();
-
-    }
-
-    template<typename T, uint32_t poolSize>
-    inline ResourceManager<T, poolSize>::ResourcePointer ResourceManager<T, poolSize>::getResourcePtrFromHandle(const ResourceHandle& handle) {
-        return ResourcePointer(handle, this);
-    }
 
     template <typename T, uint32_t poolSize>
     inline ResourceHandle ResourceManager<T, poolSize>::getHandleFromFilePath(const std::string &filePath) {
@@ -301,9 +142,10 @@ namespace Strike{
 
     }
 
+
     template<typename T, uint32_t poolSize>
     template<typename... Args>
-    inline ResourceManager<T, poolSize>::ResourcePointer ResourceManager<T, poolSize>::load(const std::string& filePath, Args&&... args){
+    inline ResourcePointer<T> ResourceManager<T, poolSize>::load(const std::string& filePath, Args&&... args){
         
         for(size_t i = 0; i < resourcePool.size(); i++){
             ResourceEntry<T>& entry = resourcePool[i];
@@ -314,9 +156,9 @@ namespace Strike{
 
         ResourceHandle handle = getHandleFromFilePath(filePath);
 
-        ResourceData data = ResourceLoader::loadResourceData<T>(filePath, std::forward<Args>(args)...);
+        ResourceBuffer data = ResourceLoader::loadResourceData<T>(filePath, std::forward<Args>(args)...);
         constructEntry<T>(resourcePool[getPosition(handle) - 1], data, filePath, getMagicNumber(handle));
-        
+
         return ResourcePointer(handle, this);
 
     }

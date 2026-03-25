@@ -25,6 +25,7 @@ namespace Strike{
 			std::make_unique<unsigned char[]>(desiredBitsPerPixel * width * height);
 		std::memcpy(tempPtr.get(), stbiData, desiredBitsPerPixel * width * height);
 		stbi_image_free(stbiData);
+
 		return TextureData2D(tempPtr, width, height, desiredBitsPerPixel);
         
     }
@@ -69,6 +70,21 @@ namespace Strike{
         return ShaderData(vertexShaderSrc.str(), pixelShaderSrc.str());
     }
 
+    FontData ResourceLoader::loadFontData(const std::string &filePath, 
+		const uint32_t &fontSize, const std::string &charactersToGenerate) {
+		
+		std::unique_ptr<FT_Library> freeTypeHandle = std::make_unique<FT_Library>();
+		std::unique_ptr<FT_Face> freeTypeFaceHandle = std::make_unique<FT_Face>();
+
+		STRIKE_ASSERT(!FT_Init_FreeType(freeTypeHandle.get()), LOG_PLATFORM_CORE, 
+			"error inititalising freeType Library");
+		STRIKE_ASSERT(!FT_New_Face(*freeTypeHandle, filePath.c_str(), 0, freeTypeFaceHandle.get()),
+			LOG_PLATFORM_CORE, "FreeType failed to Iniitalise face!");
+
+        return FontData(freeTypeHandle, freeTypeFaceHandle, fontSize, charactersToGenerate);
+
+    }
+
 /*
     MaterialData ResourceLoader::loadMaterialData(const std::string& filePath) {
         //TODO!!!
@@ -77,22 +93,50 @@ namespace Strike{
     }
 */
 
+
+
+
 	template<>
-	ResourceData ResourceLoader::loadResourceData<Texture2D>(const std::string& filePath){
-		ResourceData data = loadTexture2D(filePath);
+	ResourceBuffer ResourceLoader::loadResourceData<Texture2D>(const std::string& filePath){
+		ResourceBuffer data = loadTexture2D(filePath);
 		return data;
 	}
 
 	template<>
-    ResourceData ResourceLoader::loadResourceData<Texture2D>(const std::string& filePath, const int32_t& desiredBitsPerPixel){
-		ResourceData data = loadTexture2D(filePath, desiredBitsPerPixel);
+    ResourceBuffer ResourceLoader::loadResourceData<Texture2D>(const std::string& filePath, const int32_t& desiredBitsPerPixel){
+		ResourceBuffer data = loadTexture2D(filePath, desiredBitsPerPixel);
 		return data;
 	}
 
 	template<>
-    ResourceData ResourceLoader::loadResourceData<Shader>(const std::string& filePath){
-		ResourceData data = loadShaderData(filePath);
+    ResourceBuffer ResourceLoader::loadResourceData<Shader>(const std::string& filePath){
+		ResourceBuffer data = loadShaderData(filePath);
 		return data;
 	}
 
+	template<>
+    ResourceBuffer ResourceLoader::loadResourceData<Font>(const std::string& filePath, 
+        const uint32_t& fontSize, const std::string& charactersToGenerate){
+
+		ResourceBuffer data = loadFontData(filePath, fontSize, charactersToGenerate);
+		return data;
+
+	}
+
+
+
+	template<>
+    void constructEntry(ResourceEntry<Texture2D>& entry, const ResourceBuffer& data,
+        const std::string& filePath, const uint32_t& magicNumber){
+
+        entry.construct(filePath, magicNumber, std::get<TextureData2D>(data));
+    
+    }
+
+    template<>
+    void constructEntry(ResourceEntry<Shader>& entry, const ResourceBuffer& data, 
+        const std::string& filePath, const uint32_t& magicNumber){
+
+        entry.construct(filePath, magicNumber, std::get<ShaderData>(data));
+    }
 }
