@@ -1,10 +1,10 @@
 #pragma once
 
-#include "GLShader.h"
-#include "GLTexture.h"
+#include "Rendering/Shader.h"
+#include "Rendering/Texture.h"
 #include "GLProgram.h"
 #include "Resource/ResourceHandle.h"
-#include "Resource/ResourceManager.h"
+#include "Resource/ResourcePointer.h"
 
 namespace Strike {
 

@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include "GLTexture.h"
 #include "Resource/ResourceData.h"
-#include "Resource/ResourceManager.h"
+#include "Resource/ResourcePointer.h"
 
 namespace Strike{
 
