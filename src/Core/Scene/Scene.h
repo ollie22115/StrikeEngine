@@ -18,7 +18,7 @@ namespace Strike {
 		Scene() = default;
 
 		inline std::vector<std::shared_ptr<Object>>& getDynamicObjects() { return dynamicObjects; }
-		//inline const std::vector<std::shared_ptr<Object>>& getStaticObjects() { return staticObjects; }
+		inline std::vector<std::shared_ptr<Object>>& getStaticObjects() { return staticObjects; }
 		inline std::shared_ptr<Object>& getCamera() { return cameraObj; }//Temporary until I figure out what to do with cameras
 
 		std::shared_ptr<Object> createObject(const bool& isStatic = false);
@@ -39,7 +39,7 @@ namespace Strike {
 
 	protected:
 		std::vector<std::shared_ptr<Object>> dynamicObjects;
-		//std::vector<std::shared_ptr<Object>> staticObjects;
+		std::vector<std::shared_ptr<Object>> staticObjects;
 		
 		entt::registry registry;
 		std::shared_ptr<Object> cameraObj = std::make_shared<Object>(registry, true, false);

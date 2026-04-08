@@ -10,15 +10,19 @@
 namespace Strike {
 
     std::shared_ptr<Object> Scene::createObject(const bool& isStatic) {
-        /*TODO!!! Replace with below
-        if(isStatic)
-            staticObjects.push_back(std::make_shared<Object>(registry, true));
-        else
-            dynamicObjects.push_back(std::make_shared<Object>(registry, true));
-        */
 
-        dynamicObjects.push_back(std::make_shared<Object>(registry, true, isStatic));
-        return dynamicObjects[dynamicObjects.size() - 1];
+        if(isStatic){
+            
+            staticObjects.push_back(std::make_shared<Object>(registry, true, isStatic));
+            return staticObjects[staticObjects.size() - 1];
+
+        } else {
+
+            dynamicObjects.push_back(std::make_shared<Object>(registry, true, isStatic));
+            return dynamicObjects[dynamicObjects.size() - 1];
+
+        }
+
     }
 
     void Scene::onStart() {

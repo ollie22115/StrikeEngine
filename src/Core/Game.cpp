@@ -27,11 +27,11 @@ namespace Strike {
 
 		loadedScene = scene;
 		
-		for(std::shared_ptr<Object>& object : loadedScene->getDynamicObjects()/*loadedScene->getStaticObjects()*/)
+		for(std::shared_ptr<Object>& object : loadedScene->getStaticObjects())
 			if(object->isRenderable() && object->isVisible()){
 
-				if(object->isStatic()) renderer->loadStaticRenderable(object->getRenderable());
-				//for(Renderable& renderable : object->getRenderables()) renderer->loadStaticRenderable(renderable);
+				renderer->loadStaticRenderable(object->getRenderable());
+
 			}
 
 		loadedScene->onStart();
@@ -74,9 +74,9 @@ namespace Strike {
 		for(std::shared_ptr<Object>& object : loadedScene->getDynamicObjects()){
 			if(object->isRenderable() && object->isVisible())
 
-				//for(Renderable& renderable : object->getRenderables()) renderer->drawDynamicRenderable(renderable);
-				if(!object->isStatic()) renderer->drawDynamicRenderable(object->getRenderable());
+				renderer->drawDynamicRenderable(object->getRenderable());
 		}
+		
 		renderer->flush(window, loadedScene->getViewMatrix(), loadedScene->getProjectionMatrix());
 	}
 
