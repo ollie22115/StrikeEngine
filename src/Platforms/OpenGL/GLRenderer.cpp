@@ -48,100 +48,63 @@ namespace Strike {
 		window->swapBuffers();
 	}
 
-	void GLRenderer::loadObject(std::shared_ptr<Object>& object) {
+    
 
-		STRIKE_ASSERT(object->isRenderable(), LOG_PLATFORM_OPENGL, 
-			"object must have a renderable component to be loaded into the Renderer!");
+	void GLRenderer::loadStaticRenderable(const Renderable& renderable) {
+		const std::vector<Vertex>& objectVertices = renderable.getVertices();
 
-		std::vector<Vertex>& vertices = (object->isStatic()) ? staticVertices : dynamicVertices;
-		std::vector<uint32_t>& indices = (object->isStatic()) ? staticIndices : dynamicIndices;
-
-		Renderable renderable = object->getRenderable();
-
-		std::vector<Vertex>& objectVertices = renderable.getVertices();
-
-		Object* meshBaseObjectPtr = object.get();
 		size_t meshVertexCount = objectVertices.size();
-		size_t meshOffset = indices.size();
+		size_t meshOffset = staticIndices.size();
+		ResourcePointer<Material> meshMaterial = renderable.materialPtr;
 
-		for (Vertex& objectVertex : objectVertices) {
+		for (const Vertex& objectVertex : objectVertices) {
 			int32_t index = -1;
 
-			for (int i = 0; i < vertices.size(); i++) 
-				if (vertices[i] == objectVertex) {
+			for (int i = 0; i < staticVertices.size(); i++) 
+				if (staticVertices[i] == objectVertex) {
 					index = i;
 					break;
 			}
 
 			if (index < 0) {
-				vertices.push_back(objectVertex);
-				index = (int32_t)vertices.size() - 1;
+				staticVertices.push_back(objectVertex);
+				index = (int32_t)staticVertices.size() - 1;
 			}
 
-			indices.push_back(index);
+			staticIndices.push_back(index);
 		}
 
+		rendererObjectsStatic.emplace_back(meshMaterial, meshVertexCount, meshOffset);
+	}
+
+	void GLRenderer::drawDynamicRenderable(const Renderable& renderable) {
+		const std::vector<Vertex>& objectVertices = renderable.getVertices();
+
+		size_t meshVertexCount = objectVertices.size();
+		size_t meshOffset = dynamicIndices.size();
 		ResourcePointer<Material> meshMaterial = renderable.materialPtr;
 
-		if(object->isStatic())
-			rendererObjectsStatic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
-		else
-			rendererObjectsDynamic.emplace_back(meshBaseObjectPtr, meshMaterial, meshVertexCount, meshOffset);
+		for (const Vertex& objectVertex : objectVertices) {
+			int32_t index = -1;
 
-		if (!object->isStatic() && !dynamicIndices.empty()) {
-			glBindVertexArray(dynamicVertexArrayID);
-			vertexBufferDynamic->bind();
-			indexBufferDynamic->bind();
-			vertexBufferDynamic->setVertexLayout(Vertex::getLayout());
-
-			vertexBufferDynamic->setData((uint32_t)dynamicVertices.size() * Vertex::getLayout().size(), &dynamicVertices[0], GL_DYNAMIC_DRAW);
-			indexBufferDynamic->setData((uint32_t)dynamicIndices.size() * 4, &dynamicIndices[0], GL_DYNAMIC_DRAW);
-		}
-	}
-
-	void GLRenderer::update() {
-		//TODO!!! for now method will only update dynamic vertex buffer
-		glBindVertexArray(dynamicVertexArrayID);
-		vertexBufferDynamic->bind();
-		indexBufferDynamic->bind();
-
-		std::vector<Vertex> dynamicVertices;
-		std::vector<uint32_t> dynamicIndices;
-
-		for (GLMesh& mesh : rendererObjectsDynamic) {
-			Object& coreObject = *mesh.object;
-			
-			Renderable renderable = coreObject.getRenderable();
-			if (!renderable.isRenderable())
-				continue;
-
-			std::vector<Vertex> objectVertices = renderable.getVertices();
-
-			for (Vertex& objectVertex : objectVertices) {
-				int32_t index = -1;
-
-				for (int i = 0; i < dynamicVertices.size(); i++) if (dynamicVertices[i] == objectVertex) {
+			for (int i = 0; i < dynamicVertices.size(); i++) 
+				if (dynamicVertices[i] == objectVertex) {
 					index = i;
 					break;
-				}
-
-				if (index < 0) {
-					dynamicVertices.push_back(objectVertex);
-					index = (int32_t)dynamicVertices.size() - 1;
-				}
-
-				dynamicIndices.push_back(index);
 			}
-		}
 
-		if(!dynamicVertices.empty())
-			glBufferSubData(GL_ARRAY_BUFFER, 0, dynamicVertices.size() * Vertex::getLayout().size(), &dynamicVertices[0]);
-		if (!dynamicIndices.empty())
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, dynamicIndices.size() * sizeof(uint32_t), &dynamicIndices[0]);
+			if (index < 0) {
+				dynamicVertices.push_back(objectVertex);
+				index = (int32_t)dynamicVertices.size() - 1;
+			}
+
+			dynamicIndices.push_back(index);
+		}
+			
+		rendererObjectsDynamic.emplace_back(meshMaterial, meshVertexCount, meshOffset);
 	}
 
-	void GLRenderer::draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
-		
+	void GLRenderer::flush(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
 		if (!staticIndices.empty()) {
 			glBindVertexArray(staticVertexArrayID);
 			vertexBufferStatic->bind();
@@ -155,6 +118,19 @@ namespace Strike {
 			staticIndices.clear();
 		}
 
+		if (!dynamicIndices.empty()) {
+			glBindVertexArray(dynamicVertexArrayID);
+			vertexBufferDynamic->bind();
+			indexBufferDynamic->bind();
+			vertexBufferDynamic->setVertexLayout(Vertex::getLayout());
+
+			vertexBufferDynamic->setData((uint32_t)dynamicVertices.size() * Vertex::getLayout().size(), &dynamicVertices[0], GL_DYNAMIC_DRAW);
+			indexBufferDynamic->setData((uint32_t)dynamicIndices.size() * 4, &dynamicIndices[0], GL_DYNAMIC_DRAW);
+
+			dynamicVertices.clear();
+			dynamicIndices.clear();
+		}
+
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -163,9 +139,6 @@ namespace Strike {
 		glBindVertexArray(staticVertexArrayID);
 		
 		for (GLMesh& mesh : rendererObjectsStatic) {
-			if (!mesh.object->isVisible()) 
-				continue;
-
 			mesh.materialPtr->bind(viewMatrix, projectionMatrix);
 
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*) (mesh.offset * sizeof(uint32_t)));
@@ -175,10 +148,6 @@ namespace Strike {
 		glBindVertexArray(dynamicVertexArrayID);
 
 		for (GLMesh& mesh : rendererObjectsDynamic) {
-			if (!mesh.object->isVisible())
-				continue;
-
-			//Renderer::getResource<Material>(mesh.materialPtr)->bind(viewMatrix, projectionMatrix);
 			mesh.materialPtr->bind(viewMatrix, projectionMatrix);
 
 			glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, (const void*)(mesh.offset * sizeof(uint32_t)));
@@ -186,13 +155,17 @@ namespace Strike {
 
 		swapBuffers(window);
 
+		rendererObjectsDynamic.clear();
 	}
 
-    
-	/*
+    GLRenderer::~GLRenderer() {
+		//TODO!!! 
+    }
+
+    /*
       GLRenderer::~GLRenderer() {
           //TODO!!!
 
       }
-      */
+    */
 }

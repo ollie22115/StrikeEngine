@@ -27,7 +27,13 @@ namespace Strike {
 
 		loadedScene = scene;
 		
-		scene->load(renderer);
+		for(std::shared_ptr<Object>& object : loadedScene->getDynamicObjects()/*loadedScene->getStaticObjects()*/)
+			if(object->isRenderable() && object->isVisible()){
+
+				if(object->isStatic()) renderer->loadStaticRenderable(object->getRenderable());
+				//for(Renderable& renderable : object->getRenderables()) renderer->loadStaticRenderable(renderable);
+			}
+
 		loadedScene->onStart();
 	}
 
@@ -64,9 +70,14 @@ namespace Strike {
 #endif
 
 		loadedScene->onUpdate(window->getEventState(), deltaTime);
-		renderer->update();
 
-		renderer->draw(window, loadedScene->getViewMatrix(), loadedScene->getProjectionMatrix());
+		for(std::shared_ptr<Object>& object : loadedScene->getDynamicObjects()){
+			if(object->isRenderable() && object->isVisible())
+
+				//for(Renderable& renderable : object->getRenderables()) renderer->drawDynamicRenderable(renderable);
+				if(!object->isStatic()) renderer->drawDynamicRenderable(object->getRenderable());
+		}
+		renderer->flush(window, loadedScene->getViewMatrix(), loadedScene->getProjectionMatrix());
 	}
 
 	Game::~Game() {

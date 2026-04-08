@@ -17,12 +17,11 @@ namespace Strike {
 	public:
 		Scene() = default;
 
-		inline std::vector<std::shared_ptr<Object>>& getObjects() { return objects; }
-		inline std::shared_ptr<Object>& getCamera() { return cameraObj; }//Temporary until I figure out what to do with cameraz
+		inline std::vector<std::shared_ptr<Object>>& getDynamicObjects() { return dynamicObjects; }
+		//inline const std::vector<std::shared_ptr<Object>>& getStaticObjects() { return staticObjects; }
+		inline std::shared_ptr<Object>& getCamera() { return cameraObj; }//Temporary until I figure out what to do with cameras
 
 		std::shared_ptr<Object> createObject(const bool& isStatic = false);
-
-		void load(std::unique_ptr<Renderer>& renderer);
 
 		virtual void onStart(); //method that is called when scene is first loaded
 		virtual void onUpdate(const EventState& eventState, const uint64_t& deltaTime); //called every frame
@@ -39,7 +38,8 @@ namespace Strike {
 		~Scene() = default;
 
 	protected:
-		std::vector<std::shared_ptr<Object>> objects;
+		std::vector<std::shared_ptr<Object>> dynamicObjects;
+		//std::vector<std::shared_ptr<Object>> staticObjects;
 		
 		entt::registry registry;
 		std::shared_ptr<Object> cameraObj = std::make_shared<Object>(registry, true, false);

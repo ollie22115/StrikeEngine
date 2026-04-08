@@ -26,6 +26,10 @@ namespace Strike {
 			type(type), offset(offset), count(count) {}
 	};
 
+	enum class RenderDrawMode {
+		None = 0, Triangles, Quads, Lines
+	};
+
 	class Renderer {
 	public:
 		enum class RendererPlatform {
@@ -42,11 +46,11 @@ namespace Strike {
 		
 		virtual void swapBuffers(const std::shared_ptr<Window>& window) = 0;
 
-		virtual void loadObject(std::shared_ptr<Object>& object) = 0;
+		virtual void loadStaticRenderable(const Renderable& renderable) = 0;
 
-		virtual void draw(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) = 0;
-
-		virtual void update() = 0;
+		virtual void drawDynamicRenderable(const Renderable& renderable) = 0;
+		
+		virtual void flush(std::shared_ptr<Window>& window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) = 0;
 
 		//virtual void clearData() = 0;
 

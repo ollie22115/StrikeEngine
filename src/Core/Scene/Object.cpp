@@ -22,18 +22,18 @@ namespace Strike {
 		registry.emplace<CoreObjectData>(objectHandle);
 	}
 
-	Object::Object(entt::registry& registry, const bool& isVisible, const bool& isStatic) :
+	Object::Object(entt::registry& registry, const bool& isVisible, const bool& isStatic/*TODO!!! Remove*/) :
 		registry(&registry), objectHandle(registry.create()) {
 
 		registry.emplace<Transform>(objectHandle);
-		registry.emplace<CoreObjectData>(objectHandle, isVisible, isStatic);
+		registry.emplace<CoreObjectData>(objectHandle, isVisible, isStatic/*TODO!!! Remove*/);
 	}
 
-	Object::Object(entt::registry& registry, const Transform& transform, const bool& isVisible, const bool& isStatic) : 
+	Object::Object(entt::registry& registry, const Transform& transform, const bool& isVisible, const bool& isStatic/*TODO!!! Remove*/) : 
 		registry(&registry), objectHandle(registry.create()) {
 
 		registry.emplace<Transform>(objectHandle, transform);
-		registry.emplace<CoreObjectData>(objectHandle, isVisible, isStatic);
+		registry.emplace<CoreObjectData>(objectHandle, isVisible, isStatic/*TODO!!! Remove*/);
 	}
 
 	Object::Object(entt::entity objectHandle, entt::registry& registry) : 
@@ -52,6 +52,23 @@ namespace Strike {
 
 		return Renderable();
 	}
+	/*
+	std::vector<Renderable> Object::getRenderables() {
+		//STRIKE_ASSERT(!(hasComponent<MeshRenderer>() && hasComponent<SpriteRenderer>()), LOG_PLATFORM_CORE, "Object cannot have two renderable components!");
+
+		std::vector<Renderable> renderables;
+		
+		if(hasComponent<SpriteRenderer>())
+			renderables.push_back(Renderable::createRenderable(getComponent<SpriteRenderer>(), getComponent<Transform>()));
+		//else if(hasComponent<MeshRenderer>){
+			//TODO!!! Add MeshRenderer support
+		//} 
+		else
+			renderables.push_back(Renderable::createNonRenderable());
+		
+		return renderables;
+	}
+	*/
 
 	bool Object::isRenderable() {
 		//STRIKE_ASSERT(!(hasComponent<MeshRenderer>() && hasComponent<SpriteRenderer>()), LOG_PLATFORM_CORE,  "Object cannot have two renderable components!");

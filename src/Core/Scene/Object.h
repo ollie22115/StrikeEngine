@@ -24,12 +24,12 @@ namespace Strike {
 
 		Object(/*const Scene* scene, */entt::registry& registry);
 		Object(/*const Scene* scene, */entt::registry& registry, const Transform& transform);
-		Object(/*const Scene* scene, */entt::registry& registry, const bool& isVisible, const bool& isStatic);
-		Object(/*const Scene* scene, */entt::registry& registry, const Transform& transform, const bool& isVisible, const bool& isStatic);
+		Object(/*const Scene* scene, */entt::registry& registry, const bool& isVisible, const bool& isStatic/*TODO!!! Remove*/);
+		Object(/*const Scene* scene, */entt::registry& registry, const Transform& transform, const bool& isVisible, const bool& isStatic/*TODO!!! Remove*/);
 
 		Object(/*const Scene* scene, */entt::entity objectHandle, entt::registry& registry);
 
-		inline bool isStatic() {
+		inline bool isStatic() {//TODO!!! Remove
 			return getComponent<CoreObjectData>().isStatic;
 		}
 
@@ -55,6 +55,7 @@ namespace Strike {
 		}
 
 		Renderable getRenderable();
+		//std::vector<Renderable> getRenderables(); //TODO!!! Replace with above
 
 		bool isRenderable();
 
