@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <MaxRectsBinPack.h>
 #include "GLTexture.h"
 #include "Resource/ResourceData.h"
 #include "Resource/ResourcePointer.h"
@@ -32,6 +33,9 @@ namespace Strike{
         inline uint32_t getHeight() { return texture->getHeight(); }
         inline uint32_t getHeight() const { return texture->getHeight(); }
 
+
+        bool addSubTexture(const TextureData2D& textureData, const uint32_t& border = 2);
+
         const SubTexture& getSubTexture(const uint32_t& index) const {
             return subTextures[index];
         }
@@ -48,6 +52,8 @@ namespace Strike{
         ResourcePointer<GLTexture2D> texture;
 
         std::vector<SubTexture> subTextures;
+
+        rbp::MaxRectsBinPack binPacker; 
     };
 
 }

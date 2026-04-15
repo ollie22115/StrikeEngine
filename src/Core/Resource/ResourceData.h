@@ -34,33 +34,22 @@ namespace Strike{
         
         
         ~TextureData2D() = default;
+
+        static TextureData2D createBorderedTexture(const TextureData2D& textureData, const uint32_t& borderSizePx = 2);
     };
 
 
     struct TextureAtlasData{
-        struct SubTexture {
-            TextureData2D textureData;
-            uint32_t x, y, width, height;
-
-            SubTexture(TextureData2D& textureData, 
-                const uint32_t& x, const uint32_t& y, const uint32_t& width, const uint32_t& height) :
-                textureData(textureData), x(x), y(y), width(width), height(height) {}
-
-            ~SubTexture() = default;
-        };
-
         TextureAtlasData() = default;
         TextureAtlasData(const uint32_t& width, const uint32_t& height, const uint32_t& bitsPerPixel);
 
-        uint32_t width, height, bitsPerPixel = 4;
-        std::vector<SubTexture> subTextures;
-
         //TODO!!! change to unique_ptr of TextureData2D
-        bool addSubTexture(TextureData2D& textureData, const uint32_t& borderSize = 2);
-
-    private:
+        inline void addSubTexture(TextureData2D& textureData, const uint32_t& borderSizePx = 2) {
+            subTextures.push_back(TextureData2D::createBorderedTexture(textureData, borderSizePx));
+        };
         
-        rbp::MaxRectsBinPack binPacker; 
+        uint32_t width, height, bitsPerPixel = 4;
+        std::vector<TextureData2D> subTextures;
     };
 
     //FontData uses Freetype, 
@@ -71,7 +60,7 @@ namespace Strike{
 
             GlyphData() = default;
 
-            GlyphData(std::unique_ptr<unsigned char[]>& data, const uint32_t& width, const uint32_t& height,
+            GlyphData(std::unique_ptr<unsigned char[]> data, const uint32_t& width, const uint32_t& height,
                 const uint32_t& advance, const uint32_t& bearingX, const uint32_t& bearingY, const uint32_t& pitch) :
                     textureData(data, width, height, 1, 1, TextureParams::Wrap::ClampToBorder, TextureParams::Wrap::ClampToBorder), 
                     advance(advance), bearingX(bearingX), bearingY(bearingY), pitch(pitch) {}
@@ -83,21 +72,20 @@ namespace Strike{
         
         FontData() = default;
 
-        FontData(FontData&& other);
+        FontData(std::unique_ptr<FreeTypeFace> freeTypeFace, const uint32_t& fontSize, const std::string& charactersToGenerate = "") : 
+            fontSize(fontSize), charactersToGenerate(charactersToGenerate), freeTypeFace(std::move(freeTypeFace)) {};
 
-        FontData(std::unique_ptr<FT_Library>& freeTypeHandle, std::unique_ptr<FT_Face>& freeTypeFace, const uint32_t& fontSize, const std::string& charactersToGenerate = "") :
-            freeTypeHandle(std::move(freeTypeHandle)), freeTypeFaceHandle(std::move(freeTypeFace)), charactersToGenerate(charactersToGenerate) {};
+        FontData(FontData&& other) : fontSize(other.fontSize), charactersToGenerate(charactersToGenerate), freeTypeFace(std::move(other.freeTypeFace)) {}
 
-        GlyphData operator[](const char& c);
+        GlyphData operator[](const char& c) const;
 
-        ~FontData();
+        ~FontData() = default;
 
         uint32_t fontSize = 32;
         std::string charactersToGenerate = "";
 
     private:
-        std::unique_ptr<FT_Library> freeTypeHandle;
-        std::unique_ptr<FT_Face> freeTypeFaceHandle;
+        std::unique_ptr<FreeTypeFace> freeTypeFace;
     };
 
     struct ShaderData{
