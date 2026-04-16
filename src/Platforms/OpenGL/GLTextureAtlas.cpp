@@ -27,7 +27,7 @@ namespace Strike {
             float u1 = ((float) packedRect.x + (float) packedRect.width) / (float) getWidth();
             float v1 = ((float) packedRect.y + (float) packedRect.height) / (float) getHeight();
 
-            subTextures.emplace_back(u0, v0, u1, v1);
+            subTextures.emplace_back(texture, u0, v0, u1, v1);
             
         }
     }
@@ -55,7 +55,7 @@ namespace Strike {
         float u1 = ((float) packedRect.x + (float) packedRect.width) / (float) getWidth();
         float v1 = ((float) packedRect.y + (float) packedRect.height) / (float) getHeight();
 
-        subTextures.emplace_back(u0, v0, u1, v1);
+        subTextures.emplace_back(texture, u0, v0, u1, v1);
 
         return true;
     }

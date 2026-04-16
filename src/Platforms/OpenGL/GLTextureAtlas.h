@@ -12,10 +12,11 @@ namespace Strike{
     public:
         struct SubTexture { //TODO!!! Give SubTexture a ResourcePointer to texture (will help with paging)
             //TODO!!! unionise this with glm::vec4
+            ResourcePointer<GLTexture2D> texture;
             float u0, v0, u1, v1;
 
-            SubTexture(const float& u0, const float& v0, const float& u1, const float& v1) :
-                u0(u0), v0(v0), u1(u1), v1(v1) {}
+            SubTexture(ResourcePointer<GLTexture2D> texture, const float& u0, const float& v0, const float& u1, const float& v1) :
+                texture(texture), u0(u0), v0(v0), u1(u1), v1(v1) {}
 
             ~SubTexture() = default;
         };
