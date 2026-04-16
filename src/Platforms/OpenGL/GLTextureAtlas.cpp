@@ -32,6 +32,11 @@ namespace Strike {
         }
     }
 
+    GLTextureAtlas::GLTextureAtlas(const uint32_t& width, const uint32_t& height, const uint32_t& bitsPerPixel){
+        binPacker.Init(width, height, false);
+        texture = Renderer::emplaceResource<GLTexture2D>("", bitsPerPixel, width, height);
+    }
+
     bool GLTextureAtlas::addSubTexture(const TextureData2D& textureData, const uint32_t& border){
         rbp::Rect packedRect = binPacker.Insert(textureData.width + border * 2, textureData.height + border * 2, 
             rbp::MaxRectsBinPack::RectBestAreaFit);

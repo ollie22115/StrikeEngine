@@ -10,7 +10,8 @@ namespace Strike{
 
     class GLTextureAtlas{
     public:
-        struct SubTexture {
+        struct SubTexture { //TODO!!! Give SubTexture a ResourcePointer to texture (will help with paging)
+            //TODO!!! unionise this with glm::vec4
             float u0, v0, u1, v1;
 
             SubTexture(const float& u0, const float& v0, const float& u1, const float& v1) :
@@ -20,6 +21,7 @@ namespace Strike{
         };
 
         GLTextureAtlas(const TextureAtlasData& textureAtlasData);
+        GLTextureAtlas(const uint32_t& width, const uint32_t& height, const uint32_t& bitsPerPixel);
 
         inline ResourcePointer<GLTexture2D>& getTexture() { return texture; }
         inline const ResourcePointer<GLTexture2D>& getTexture() const { return texture; }
@@ -36,13 +38,15 @@ namespace Strike{
 
         bool addSubTexture(const TextureData2D& textureData, const uint32_t& border = 2);
 
-        const SubTexture& getSubTexture(const uint32_t& index) const {
+        inline const SubTexture& getSubTexture(const uint32_t& index) const {
             return subTextures[index];
         }
 
-        const SubTexture& operator[](const uint32_t& index){
+        inline const SubTexture& operator[](const uint32_t& index){
             return subTextures[index];
         }
+
+        inline size_t subTextureCount() const { return subTextures.size(); }
 
         void bind(const uint32_t& slot = 0) const;
 
