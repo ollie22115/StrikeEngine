@@ -7,3 +7,6 @@
 [submodule "Dependencies/Vendor/RectangleBinPack"]
 	path = Dependencies/Vendor/RectangleBinPack
 	url = https://github.com/juj/RectangleBinPack.git
+[submodule "Dependencies/Vendor/unordered_dense/unordered_dense"]
+	path = Dependencies/Vendor/unordered_dense/unordered_dense
+	url = https://github.com/martinus/unordered_dense.git

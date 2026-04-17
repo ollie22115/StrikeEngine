@@ -11,13 +11,26 @@ namespace Strike{
     class GLTextureAtlas{
     public:
         struct SubTexture { //TODO!!! Give SubTexture a ResourcePointer to texture (will help with paging)
-            //TODO!!! unionise this with glm::vec4
             ResourcePointer<GLTexture2D> texture;
-            float u0, v0, u1, v1;
+            glm::vec4 textureCoords;
 
             SubTexture(ResourcePointer<GLTexture2D> texture, const float& u0, const float& v0, const float& u1, const float& v1) :
-                texture(texture), u0(u0), v0(v0), u1(u1), v1(v1) {}
+                texture(texture), textureCoords(glm::vec4(u0, v0, u1, v1)) {}
 
+
+            inline float& u0() { return textureCoords[0]; }
+            inline const float& u0() const { return textureCoords[0]; }
+
+            inline float& v0() { return textureCoords[1]; }
+            inline const float& v0() const { return textureCoords[1]; }
+
+            inline float& u1() { return textureCoords[2]; }
+            inline const float& u1() const { return textureCoords[2]; }
+
+            inline float& v1() { return textureCoords[3]; }
+            inline const float& v1() const { return textureCoords[3]; }
+
+            
             ~SubTexture() = default;
         };
 
